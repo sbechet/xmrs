@@ -9,19 +9,25 @@ pub enum ModuleFlag {
     AmigaFrequencies,
 }
 
+/// A row contains its column elements
 pub type Row = Vec<PatternSlot>;
+
+/// Patterns are sequences of lines
 pub type Pattern = Vec<Row>;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Module {
     pub name: String,
     pub flags: ModuleFlag,
+    /// Restart index in `pattern_order`
     pub restart_position: u16,
     pub default_tempo: u16,
     pub default_bpm: u16,    
-    pub pattern_order: Vec<u8>, // Defines the exact order for the XM patterns playback.
+    /// Defines the exact order for the patterns playback
+    pub pattern_order: Vec<u8>, 
     pub pattern: Vec<Pattern>,
-    pub instrument: Vec<Instrument>, // Instrument 1 has index 0, instrument 2 has index 1, etc.
+    /// Instrument 1 has index 0, instrument 2 has index 1, etc.
+    pub instrument: Vec<Instrument>, 
 }
 
 impl Default for Module {
