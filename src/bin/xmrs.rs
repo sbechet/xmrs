@@ -4,6 +4,7 @@ use bincode::ErrorKind;
 use xmrs::xm::xmmodule::XmModule;
 use xmrs::module::Module;
 
+
 const XM: &[u8] = include_bytes!("note.xm");
 
 fn main() -> Result<(), Box<ErrorKind>> {
@@ -23,10 +24,17 @@ fn main() -> Result<(), Box<ErrorKind>> {
     let xmmodule3: XmModule = XmModule::load(&xmodule2_se)?;
     println!("Load Again: {:#x?}", xmmodule3);
 
-    let bcok = bincode::serialize(&module)?;
-    let mut file = File::create("output_debug.module.bincode")?;
+    // Not to create a new file format but because it's sooo simple to use bincode.
+    let bcok = module.save()?;
+    let mut file = File::create("output_debug.xmrs")?;
     file.write_all(&bcok)?;
-    println!("Create bincode serialized module `output_debug.module.bincode`");
+    println!("Create bincode serialized module");
+
+    let bcoks = bcok.as_slice();
+    let bcread_xmrs = Module::load(bcoks)?;
+
+    println!("reread from bincode: {:x?}", bcread_xmrs);
+
 
     Ok(())
 }

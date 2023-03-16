@@ -42,8 +42,8 @@ impl Default for XmHeader {
             id_text: "Extended Module: ".to_string(),
             name: "".to_string(),
             right_arrow: 0x1A,
-            tracker_name: "XMusic".to_string(),   // or "Fasttracker II clone"
-            version_number: 0x0104, // else Fasttracker II clone refuse to load
+            tracker_name: "XMrs".to_string(),   // or "Fasttracker II clone"
+            version_number: 0x0104, // minimal version number supported
             header_size: 20,
             song_length: 0,
             restart_position: 0,

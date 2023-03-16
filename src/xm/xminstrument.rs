@@ -5,8 +5,10 @@ use serde_big_array::BigArray;
 use crate::module::Module;
 use crate::envelope::{Envelope, EnvelopePoint};
 use crate::vibrato::{ Vibrato, Waveform};
-use crate::instrument::{ Instrument, InstrumentType, InstrDefault};
+use crate::instrument::{ Instrument, InstrumentType, InstrDefault };
 use crate::sample::Sample;
+
+use crate::instr_midi::InstrMidi;
 
 use super::serde_helper::{ serialize_string_22, deserialize_string_22};
 use super::xmsample::XmSample;
@@ -57,10 +59,9 @@ impl XmInstrumentType {
     // reserved: u16,
     midi_on: u8,
     midi_channel: u8,
-    // +5
-    // midi_program: u16,
-    // midi_bend: u16,
-    // mute: u8,
+    midi_program: u16,
+    midi_bend: u16,
+    midi_mute_computer: u8,
 
 }
 
@@ -89,8 +90,11 @@ impl Default for XmInstrDefault {
         
             volume_fadeout: 0,
         
-            midi_on: 0,
+            midi_on: 1,
             midi_channel: 0,
+            midi_program: 0,
+            midi_bend: 0,
+            midi_mute_computer: 0,
         }
     }
 }
@@ -155,6 +159,13 @@ impl XmInstrDefault {
                 xmid.vibrato_rate = id.vibrato.speed;
 
                 xmid.volume_fadeout = id.volume_fadeout;
+
+                xmid.midi_on = if id.midi.on { 1 } else { 0 };
+                xmid.midi_channel = id.midi.channel;
+                xmid.midi_program = id.midi.program;
+                xmid.midi_bend = id.midi.bend;
+                xmid.midi_mute_computer = if id.midi_mute_computer { 1 } else { 0 };
+
                 XmInstrumentType::Default(xmid)  
             }
             _ => {
@@ -179,7 +190,7 @@ pub struct XmInstrumentHeader {
 impl Default for XmInstrumentHeader {
     fn default() -> Self {
         Self {
-            instrument_header_len: 29,
+            instrument_header_len: XMINSTRUMENT_SIZE as u32,
             name: String::new(),
             instr_type: 0,
             num_samples: 0,
@@ -271,7 +282,7 @@ impl XmInstrument {
         }
 
         self.header.num_samples = self.sample.len() as u16;
-        self.header.instrument_header_len = 29 + i.len() as u32;
+        self.header.instrument_header_len = XMINSTRUMENT_SIZE as u32 + i.len() as u32;
         let mut h = self.header.save()?;
 
         let mut all: Vec<u8> = vec![];
@@ -324,6 +335,8 @@ impl XmInstrument {
                     panning_envelope: Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt]).unwrap(),
                     vibrato: Vibrato::default(),
                     volume_fadeout: xmi.volume_fadeout,
+                    midi: InstrMidi::default(),
+                    midi_mute_computer: false,
                     sample: sample,
                 };
 
@@ -371,6 +384,12 @@ impl XmInstrument {
                 id.vibrato.speed = xmi.vibrato_rate;
                 id.vibrato.depth = xmi.vibrato_depth;
                 id.vibrato.sweep = xmi.vibrato_sweep;
+
+                id.midi.on = xmi.midi_on == 1;
+                id.midi.channel = xmi.midi_channel;
+                id.midi.program = xmi.midi_program;
+                id.midi.bend = xmi.midi_bend;
+                id.midi_mute_computer = xmi.midi_mute_computer == 1;
 
                 InstrumentType::Default(id)
             },

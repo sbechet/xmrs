@@ -1,4 +1,8 @@
 use serde::{Serialize, Deserialize};
+use bincode::ErrorKind;
+
+use core2::io::{ Read, Write };
+use libflate::deflate::*;
 
 use crate::patternslot::PatternSlot;
 use crate::instrument::Instrument;
@@ -42,5 +46,44 @@ impl Default for Module {
             pattern: vec![],
             instrument: vec![],
         }
+    }
+}
+
+impl Module {
+    /// Load module using bincode
+    pub fn load(data: &[u8]) -> Result<Module, Box<ErrorKind>> {
+        let version = env!("CARGO_PKG_VERSION_MAJOR");
+        let mut header: [u8; 5] = *b"XMrs ";
+        header[4] = version.as_bytes()[0];
+
+        let ver_data = &data[0..5];
+        let real_data = &data[5..];
+        if ver_data != header {
+            return Err(Box::new(ErrorKind::Custom("Bad Module version".to_string())));
+        } else {
+            let mut decoder = Decoder::new(real_data);
+            let mut decoded_data = Vec::new();
+            decoder.read_to_end(&mut decoded_data).unwrap();
+
+            return Ok(bincode::deserialize(&decoded_data)?);
+        }
+    }
+
+    /// Save module using bincode
+    pub fn save(&self) -> Result<Vec<u8>, Box<ErrorKind>> {
+        let version = env!("CARGO_PKG_VERSION_MAJOR");
+        let mut header: [u8; 5] = *b"XMrs ";
+        header[4] = version.as_bytes()[0];
+
+        let mut ser_all = header.to_vec();
+
+        let ser_mod1 = bincode::serialize(&self)?;
+        let mut encoder = Encoder::new(Vec::new());
+        encoder.write_all(&ser_mod1)?;
+        let mut ser_mod2 = encoder.finish().into_result()?;
+
+        ser_all.append(&mut ser_mod2);
+
+        Ok(ser_all)
     }
 }

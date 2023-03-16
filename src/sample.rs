@@ -7,7 +7,6 @@ pub enum LoopType {
     No = 0,
     Forward = 1,
     PingPong = 2,
-    Reverse = 3,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

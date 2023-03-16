@@ -25,8 +25,3 @@ To save XM file:
 2. Serialize using `XmModule` `save()` fn
 
 Edit data using rustified structs, use `Module` struct.
-
-# TODO
-
-- [ ] Load and Save stereo samples
-- [ ] Add XM midi compatibility
