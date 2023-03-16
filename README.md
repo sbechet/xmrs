@@ -14,14 +14,22 @@ Useful struct parts:
     - Vibrato
     - Sample
 
-To load XM file:
+## Load XM file
 
 1. Deserialize `XmModule` struct using `XmModule::load(&XM)`
 2. Convert to struct `Module` using `.to_module()`
 
-To save XM file:
+## Save XM file
 
 1. Convert `Module` to `XmModule`: `XmModule::from_module(&module)`
 2. Serialize using `XmModule` `save()` fn
 
 Edit data using rustified structs, use `Module` struct.
+
+## Load XMrs fileformat (deflate + bincode)
+
+let mut mod = Module::load(&data)?;
+
+## Save XMrs fileformat (bincode + deflate)
+
+let data = mod.save()?;
