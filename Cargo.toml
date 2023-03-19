@@ -1,6 +1,6 @@
 [package]
 name = "xmrs"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "XM FastTracker II library in full rust"
 license = "MIT"
