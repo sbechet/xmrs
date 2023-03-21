@@ -26,10 +26,12 @@ Useful struct parts:
 
 Edit data using rustified structs, use `Module` struct.
 
-## Load XMrs fileformat (deflate + bincode)
+## Load XMrs fileformat (deflate then bincode)
 
 let mut mod = Module::load(&data)?;
 
-## Save XMrs fileformat (bincode + deflate)
+## Save XMrs fileformat (bincode then deflate)
 
 let data = mod.save()?;
+
+data contain a small five bytes header b"XMrs" + version coming from CARGO_PKG_VERSION_MAJOR.
