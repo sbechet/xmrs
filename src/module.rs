@@ -22,6 +22,7 @@ pub type Pattern = Vec<Row>;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Module {
     pub name: String,
+    pub comment: String,
     pub flags: ModuleFlag,
     /// Restart index in `pattern_order`
     pub restart_position: u16,
@@ -38,6 +39,7 @@ impl Default for Module {
     fn default() -> Self {
         Module {
             name: "".to_string(),
+            comment: "".to_string(),
             flags: ModuleFlag::LinearFrequencies,
             restart_position: 0,
             default_tempo: 6,

@@ -60,6 +60,7 @@ impl XmModule {
         // Create module from xm
         let mut module = Module {
             name: self.header.name.clone(),
+            comment: "".to_string(),
             flags: match self.header.flags {
                 XmFlagType::XmAmigaFrequencies => ModuleFlag::AmigaFrequencies,
                 XmFlagType::XmLinearFrequencies => ModuleFlag::LinearFrequencies,
