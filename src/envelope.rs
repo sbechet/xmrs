@@ -1,5 +1,6 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
+/// Envelope Point, frame for the abscissa, value for the ordinate
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 pub struct EnvelopePoint {
     /// Frame number of the point (X-coordinate)
@@ -10,13 +11,11 @@ pub struct EnvelopePoint {
 
 impl Default for EnvelopePoint {
     fn default() -> Self {
-        Self {
-            frame: 0,
-            value: 0,
-        }
+        Self { frame: 0, value: 0 }
     }
 }
 
+/// Envelope with Steroid
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Envelope {
     pub enabled: bool,

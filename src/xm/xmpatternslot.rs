@@ -1,5 +1,6 @@
+/// Original XM Pattern Slot
+use crate::patternslot::{Note, PatternSlot};
 use bincode::ErrorKind;
-use crate::patternslot::{ PatternSlot, Note };
 
 pub type XmPatternSlot = PatternSlot;
 
@@ -9,7 +10,8 @@ impl XmPatternSlot {
         let mut i = 0;
         let mut j = 0;
 
-        let note = src[i]; i+=1;
+        let note = src[i];
+        i+=1;
         if note & 0b1000_0000 != 0 {
             dst[j] = if note & 0b0000_0001 != 0 { i+=1; src[i-1] } else { 0 }; j+=1;
             dst[j] = if note & 0b0000_0010 != 0 { i+=1; src[i-1] } else { 0 }; j+=1;
@@ -22,19 +24,21 @@ impl XmPatternSlot {
             dst[j] = src[i]; i+=1; j+=1;
             dst[j] = src[i]; i+=1; j+=1;
             dst[j] = src[i]; i+=1;
-
         }
 
-        Ok( (&src[i..], XmPatternSlot {
-            note: match Note::try_from(dst[0]) {
-                Ok(n) => n,
-                Err(_e) => Note::None,
-            },
-            instrument: dst[1],
-            volume: dst[2],
-            effect_type: dst[3],
-            effect_parameter: dst[4],
-        }) )
+        Ok((
+            &src[i..],
+            XmPatternSlot {
+                note: match Note::try_from(dst[0]) {
+                    Ok(n) => n,
+                    Err(_e) => Note::None,
+                },
+                instrument: dst[1],
+                volume: dst[2],
+                effect_type: dst[3],
+                effect_parameter: dst[4],
+            }
+        ))
     }
 
     pub fn save(&self) -> Vec<u8> {
@@ -58,7 +62,11 @@ impl XmPatternSlot {
             return bytes.to_vec();
         }
 
-        if bytes[4] > 0 { pack_bits |= 16; dst[i]=bytes[4]; i+=1; } // effect parameter
+        if bytes[4] > 0 {
+            pack_bits |= 16;
+            dst[i]=bytes[4];
+            i+=1;
+        } // effect parameter
         dst[0] = pack_bits | 0b1000_0000;
         return (&dst[0..i]).to_vec();
     }

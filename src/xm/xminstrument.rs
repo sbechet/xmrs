@@ -1,16 +1,18 @@
-use serde::{Serialize, Deserialize};
+/// Original XM Instrument
 use bincode::ErrorKind;
+use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
 
-use crate::module::Module;
 use crate::envelope::{Envelope, EnvelopePoint};
-use crate::vibrato::{ Vibrato, Waveform};
-use crate::instrument::{ Instrument, InstrumentType, InstrDefault };
+use crate::instr_default::InstrDefault;
+use crate::instrument::{Instrument, InstrumentType};
+use crate::module::Module;
 use crate::sample::Sample;
+use crate::vibrato::{Vibrato, Waveform};
 
 use crate::instr_midi::InstrMidi;
 
-use super::serde_helper::{ serialize_string_22, deserialize_string_22};
+use super::serde_helper::{deserialize_string_22, serialize_string_22};
 use super::xmsample::XmSample;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -28,16 +30,16 @@ impl XmInstrumentType {
     }
 }
 
- #[derive(Serialize, Deserialize, Debug)]
- pub struct XmInstrDefault {
-    sample_header_size: u32,    // not used?
+#[derive(Serialize, Deserialize, Debug)]
+pub struct XmInstrDefault {
+    sample_header_size: u32, // not used?
     #[serde(with = "BigArray")]
     sample_for_notes: [u8; 96],
 
     #[serde(with = "BigArray")]
-    volume_envelope: [u8; 4*12],
+    volume_envelope: [u8; 4 * 12],
     #[serde(with = "BigArray")]
-    panning_envelope: [u8; 4*12],
+    panning_envelope: [u8; 4 * 12],
     number_of_volume_points: u8,
     number_of_panning_points: u8,
     volume_sustain_point: u8,
@@ -62,7 +64,6 @@ impl XmInstrumentType {
     midi_program: u16,
     midi_bend: u16,
     midi_mute_computer: u8,
-
 }
 
 impl Default for XmInstrDefault {
@@ -70,8 +71,8 @@ impl Default for XmInstrDefault {
         Self {
             sample_header_size: 40,
             sample_for_notes: [0; 96],
-            volume_envelope: [0; 4*12],
-            panning_envelope: [0; 4*12],
+            volume_envelope: [0; 4 * 12],
+            panning_envelope: [0; 4 * 12],
             number_of_volume_points: 0,
             number_of_panning_points: 0,
             volume_sustain_point: 0,
@@ -82,14 +83,14 @@ impl Default for XmInstrDefault {
             panning_loop_end_point: 0,
             volume_flag: 0,
             panning_flag: 0,
-        
+
             vibrato_type: 0,
             vibrato_sweep: 0,
             vibrato_depth: 0,
             vibrato_rate: 0,
-        
+
             volume_fadeout: 0,
-        
+
             midi_on: 1,
             midi_channel: 0,
             midi_program: 0,
@@ -99,20 +100,18 @@ impl Default for XmInstrDefault {
     }
 }
 
-
 impl XmInstrDefault {
-    
     fn from_envelope(e: &Envelope) -> [u8; 48] {
         let mut dst: [u8; 48] = [0; 48];
         let mut i = 0;
         for ep in &e.point {
             let f = ep.frame.to_le_bytes();
             let v = ep.value.to_le_bytes();
-            dst[i+0] = f[0];
-            dst[i+1] = f[1];
-            dst[i+2] = v[0];
-            dst[i+3] = v[1];
-            i+=4;
+            dst[i + 0] = f[0];
+            dst[i + 1] = f[1];
+            dst[i + 2] = v[0];
+            dst[i + 3] = v[1];
+            i += 4;
         }
         dst
     }
@@ -166,22 +165,22 @@ impl XmInstrDefault {
                 xmid.midi_bend = id.midi.bend;
                 xmid.midi_mute_computer = if id.midi_mute_computer { 1 } else { 0 };
 
-                XmInstrumentType::Default(xmid)  
+                XmInstrumentType::Default(xmid)
             }
-            _ => {
-                XmInstrumentType::Empty
-            },
+            _ => XmInstrumentType::Empty,
         }
     }
 }
-
 
 const XMINSTRUMENT_SIZE: usize = 29;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XmInstrumentHeader {
     instrument_header_len: u32,
-    #[serde(deserialize_with = "deserialize_string_22", serialize_with = "serialize_string_22")]
+    #[serde(
+        deserialize_with = "deserialize_string_22",
+        serialize_with = "serialize_string_22"
+    )]
     name: String,
     instr_type: u8, // must be 0, be random...
     num_samples: u16,
@@ -199,7 +198,6 @@ impl Default for XmInstrumentHeader {
 }
 
 impl XmInstrumentHeader {
-
     pub fn save(&self) -> Result<Vec<u8>, Box<ErrorKind>> {
         bincode::serialize(&self)
     }
@@ -208,9 +206,7 @@ impl XmInstrumentHeader {
         let mut xmih = XmInstrumentHeader::default();
         xmih.name = i.name.clone();
         xmih.num_samples = match &i.instr_type {
-            InstrumentType::Default(it) => {
-                it.sample.len() as u16
-            },
+            InstrumentType::Default(it) => it.sample.len() as u16,
             _ => 0,
         };
         xmih
@@ -236,7 +232,7 @@ impl Default for XmInstrument {
 
 impl XmInstrument {
     pub fn load(data: &[u8]) -> Result<(&[u8], XmInstrument), Box<ErrorKind>> {
-        let mut sample: Vec<XmSample> = vec![]; 
+        let mut sample: Vec<XmSample> = vec![];
 
         // xmih
         let xmih = bincode::deserialize::<XmInstrumentHeader>(data)?;
@@ -249,13 +245,12 @@ impl XmInstrument {
                 instr: XmInstrumentType::Empty,
                 sample: vec![],
             };
-            return Ok( (data, xmi) );
+            return Ok((data, xmi));
         }
 
         // samples header
         let d2 = &data[XMINSTRUMENT_SIZE..];
         let xmid = bincode::deserialize::<XmInstrDefault>(d2)?;
-
 
         let mut d3 = &data[xmih_len..];
         for _ in 0..xmih.num_samples {
@@ -270,12 +265,12 @@ impl XmInstrument {
             sample: sample,
         };
         let data = d3;
-        Ok( (data, xmi) )
+        Ok((data, xmi))
     }
 
     pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
         let mut i = self.instr.save()?;
-        let mut vs : Vec<u8> = vec![];
+        let mut vs: Vec<u8> = vec![];
         for s in &mut self.sample {
             let mut b = s.save()?;
             vs.append(&mut b);
@@ -294,8 +289,10 @@ impl XmInstrument {
 
     fn envelope_from_slice(src: &[u8]) -> Option<Envelope> {
         let mut e = Envelope::default();
-        let mut iter = src.chunks_exact(2).map(|chunk| { u16::from_le_bytes([chunk[0], chunk[1]])});
-        for _i in 0..src.len()/4 {
+        let mut iter = src
+            .chunks_exact(2)
+            .map(|chunk| u16::from_le_bytes([chunk[0], chunk[1]]));
+        for _i in 0..src.len() / 4 {
             let ep = EnvelopePoint {
                 frame: iter.next()?,
                 value: iter.next()?,
@@ -306,11 +303,12 @@ impl XmInstrument {
     }
 
     fn is_envelope_nok(e: &Envelope) -> bool {
-        if e.point.len() > 12 || 
-            e.sustain_point >= e.point.len() as u8||
-            e.loop_start_point >= e.point.len()  as u8 ||
-            e.loop_end_point >= e.point.len()  as u8 ||
-            e.loop_start_point > e.loop_end_point {
+        if e.point.len() > 12
+            || e.sustain_point >= e.point.len() as u8
+            || e.loop_start_point >= e.point.len() as u8
+            || e.loop_end_point >= e.point.len() as u8
+            || e.loop_start_point > e.loop_end_point
+        {
             return true;
         } else {
             return false;
@@ -318,7 +316,7 @@ impl XmInstrument {
     }
 
     pub fn to_instrument(&self) -> Instrument {
-        let it:InstrumentType = match &self.instr {
+        let it: InstrumentType = match &self.instr {
             XmInstrumentType::Empty => InstrumentType::Empty,
             XmInstrumentType::Default(xmi) => {
                 let mut sample: Vec<Sample> = vec![];
@@ -327,12 +325,24 @@ impl XmInstrument {
                     sample.push(s);
                 }
 
-                let num_vol_pt = if xmi.number_of_volume_points as usize <= 12 { 4*xmi.number_of_volume_points as usize } else { 0 };
-                let num_pan_pt = if xmi.number_of_panning_points as usize <= 12 { 4*xmi.number_of_panning_points as usize } else { 0 };
+                let num_vol_pt = if xmi.number_of_volume_points as usize <= 12 {
+                    4 * xmi.number_of_volume_points as usize
+                } else {
+                    0
+                };
+                let num_pan_pt = if xmi.number_of_panning_points as usize <= 12 {
+                    4 * xmi.number_of_panning_points as usize
+                } else {
+                    0
+                };
                 let mut id = InstrDefault {
                     sample_for_note: xmi.sample_for_notes.to_vec(),
-                    volume_envelope: Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt]).unwrap(),
-                    panning_envelope: Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt]).unwrap(),
+                    volume_envelope: Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt])
+                        .unwrap(),
+                    panning_envelope: Self::envelope_from_slice(
+                        &xmi.panning_envelope[0..num_pan_pt],
+                    )
+                    .unwrap(),
                     vibrato: Vibrato::default(),
                     volume_fadeout: xmi.volume_fadeout,
                     midi: InstrMidi::default(),
@@ -392,14 +402,13 @@ impl XmInstrument {
                 id.midi_mute_computer = xmi.midi_mute_computer == 1;
 
                 InstrumentType::Default(id)
-            },
+            }
         };
         Instrument {
             name: self.header.name.clone(),
             instr_type: it,
         }
     }
-
 
     // All instr
     pub fn from_module(module: &Module) -> Vec<Self> {

@@ -1,10 +1,11 @@
-use serde::{Serialize, Deserialize};
+/// Original XM Sample
 use bincode::ErrorKind;
+use serde::{Deserialize, Serialize};
 
 use super::helper::*;
-use super::serde_helper::{ serialize_string_22, deserialize_string_22};
-use crate::instrument::{ InstrumentType, Instrument };
-use crate::sample::{ Sample, LoopType, SampleDataType };
+use super::serde_helper::{deserialize_string_22, serialize_string_22};
+use crate::instrument::{Instrument, InstrumentType};
+use crate::sample::{LoopType, Sample, SampleDataType};
 
 const XMSAMPLE_HEADER_SIZE: usize = 40;
 
@@ -20,7 +21,10 @@ pub struct XmSampleHeader {
     panning: u8,
     relative_note: i8,
     reserved: u8,
-    #[serde(deserialize_with = "deserialize_string_22", serialize_with = "serialize_string_22")]
+    #[serde(
+        deserialize_with = "deserialize_string_22",
+        serialize_with = "serialize_string_22"
+    )]
     name: String,
 }
 
@@ -57,7 +61,6 @@ impl Default for XmSample {
 }
 
 impl XmSample {
-
     pub fn load(data: &[u8]) -> Result<(&[u8], XmSample), Box<ErrorKind>> {
         let sh = bincode::deserialize::<XmSampleHeader>(data)?;
 
@@ -87,21 +90,21 @@ impl XmSample {
         };
 
         let packet_size = XMSAMPLE_HEADER_SIZE + data_len as usize;
-        Ok( (&data[packet_size..], xms) )
+        Ok((&data[packet_size..], xms))
     }
 
     pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
         self.header.length = match &self.data {
             SampleDataType::Depth8(d) => d.len() as u32,
-            SampleDataType::Depth16(d) => 2*d.len() as u32,
+            SampleDataType::Depth16(d) => 2 * d.len() as u32,
         };
 
         let mut v = match &self.data {
             SampleDataType::Depth8(d) => sample8_to_delta(d),
-            SampleDataType::Depth16(d) => { 
+            SampleDataType::Depth16(d) => {
                 let d = sample16_to_delta(d);
                 vec_u16_to_u8_slice(d)
-            },
+            }
         };
 
         let mut all = bincode::serialize(&self.header)?;
@@ -138,7 +141,7 @@ impl XmSample {
                     let mut xms = XmSample::default();
                     xms.header.length = match &s.data {
                         SampleDataType::Depth8(d) => d.len() as u32,
-                        SampleDataType::Depth16(d) => 2*d.len() as u32,
+                        SampleDataType::Depth16(d) => 2 * d.len() as u32,
                     };
                     xms.header.loop_start = s.loop_start;
                     xms.header.loop_length = s.loop_length;
@@ -151,10 +154,9 @@ impl XmSample {
                     xms.data = s.data.clone();
                     output.push(xms);
                 }
-            },
-            _ => {},
+            }
+            _ => {}
         }
         output
     }
-
 }

@@ -1,5 +1,6 @@
-use serde::{Serialize, Deserialize};
+/// Original XM Pattern
 use bincode::ErrorKind;
+use serde::{Deserialize, Serialize};
 
 use crate::module::Module;
 
@@ -19,7 +20,7 @@ impl Default for XmPatternHeader {
             pattern_header_len: 9,
             packing_type: 0,
             num_rows: 0,
-            pattern_data_size: 0,        
+            pattern_data_size: 0,
         }
     }
 }
@@ -29,8 +30,8 @@ impl XmPatternHeader {
         match bincode::deserialize::<XmPatternHeader>(data) {
             Ok(xmph) => {
                 let hl = xmph.pattern_header_len as usize;
-                Ok( (&data[hl..], xmph) )
-            },
+                Ok((&data[hl..], xmph))
+            }
             Err(e) => Err(e),
         }
     }
@@ -54,9 +55,16 @@ impl Default for XmPattern {
 }
 
 impl XmPattern {
-    pub fn load(data: &[u8], number_of_channels: u16) -> Result<(&[u8], XmPattern), Box<ErrorKind>> {
+    pub fn load(
+        data: &[u8],
+        number_of_channels: u16,
+    ) -> Result<(&[u8], XmPattern), Box<ErrorKind>> {
         let (data, xmph) = XmPatternHeader::load(data)?;
-        let (_, xmps) = Self::get_slots(&data[0..xmph.pattern_data_size as usize], number_of_channels).unwrap();
+        let (_, xmps) = Self::get_slots(
+            &data[0..xmph.pattern_data_size as usize],
+            number_of_channels,
+        )
+        .unwrap();
         let seek = xmph.pattern_data_size as usize;
 
         let xmp = XmPattern {
@@ -64,10 +72,13 @@ impl XmPattern {
             pattern: xmps,
         };
 
-        Ok( (&data[seek..], xmp) )
+        Ok((&data[seek..], xmp))
     }
 
-    fn get_slots<'a>(data: &'a[u8], number_of_channels: u16) -> Result<(&'a[u8], Vec<Vec<XmPatternSlot>>), Box<ErrorKind>> {
+    fn get_slots<'a>(
+        data: &'a [u8],
+        number_of_channels: u16,
+    ) -> Result<(&'a [u8], Vec<Vec<XmPatternSlot>>), Box<ErrorKind>> {
         let mut lines: Vec<Vec<XmPatternSlot>> = vec![];
         let mut row: Vec<XmPatternSlot> = vec![];
 
@@ -82,10 +93,10 @@ impl XmPattern {
             if row.len() == number_of_channels as usize {
                 lines.push(row);
                 row = vec![];
-            }    
+            }
         }
 
-        Ok( (data, lines) )
+        Ok((data, lines))
     }
 
     /// All patterns
@@ -117,11 +128,4 @@ impl XmPattern {
         output.append(&mut p_output);
         Ok(output)
     }
-
 }
-
-
-
-
-
-

@@ -6,13 +6,19 @@ For now XM **FastTracker II** files are supported.
 
 Useful struct parts:
 
-- module
-  - Pattern
-    - PatternSlot
-  - Instrument
-    - Envelope
-    - Vibrato
-    - Sample
+- [Module](https://docs.rs/xmrs/latest/xmrs/module/struct.Module.html)
+  - [Pattern](https://docs.rs/xmrs/latest/xmrs/module/type.Pattern.html)
+    - [PatternSlot](https://docs.rs/xmrs/latest/xmrs/patternslot/struct.PatternSlot.html)
+  - [Instrument](https://docs.rs/xmrs/latest/xmrs/instrument/struct.Instrument.html)
+    - [InstDefault](https://docs.rs/xmrs/latest/xmrs/instrument/struct.InstrDefault.html) for Historical XM Instrument
+      - [Envelope](https://docs.rs/xmrs/latest/xmrs/envelope/struct.Envelope.html)
+      - [Vibrato](https://docs.rs/xmrs/latest/xmrs/vibrato/struct.Vibrato.html)
+      - [Sample](https://docs.rs/xmrs/latest/xmrs/sample/struct.Sample.html)
+    - [InstrEkn](https://docs.rs/xmrs/latest/xmrs/instr_ekn/struct.InstrEkn.html) for Euclidian Rythm Instrument
+    - [InstrMidi](https://docs.rs/xmrs/latest/xmrs/instr_midi/struct.InstrMidi.html) for Midi Instrument
+    - [InstrSid](https://docs.rs/xmrs/latest/xmrs/instr_sid/struct.InstrSid.html) for MOS6581 SID Instrument
+    - [InstrRobRs](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.InstrRobSid.html) for historical Rob Hubbard Instrument
+      - [RobEffects](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.RobEffects.html)
 
 ## Load XM file
 

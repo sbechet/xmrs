@@ -1,9 +1,8 @@
+use bincode::ErrorKind;
 use std::fs::File;
 use std::io::prelude::*;
-use bincode::ErrorKind;
-use xmrs::xm::xmmodule::XmModule;
 use xmrs::module::Module;
-
+use xmrs::xm::xmmodule::XmModule;
 
 const XM: &[u8] = include_bytes!("note.xm");
 
@@ -35,8 +34,5 @@ fn main() -> Result<(), Box<ErrorKind>> {
 
     println!("reread from bincode: {:x?}", bcread_xmrs);
 
-
     Ok(())
 }
-
-

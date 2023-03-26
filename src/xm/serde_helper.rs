@@ -1,5 +1,5 @@
-use serde::{Serializer, Deserializer};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use serde::{Deserializer, Serializer};
 
 // --- deserialize -------------------------
 
@@ -10,8 +10,10 @@ macro_rules! make_deserialize_string_fn {
             D: Deserializer<'de>,
         {
             let bytes = <[u8; $limit]>::deserialize(deserializer)?;
-            let s = std::str::from_utf8(&bytes).map_err(|e| serde::de::Error::custom(format!("{}", e)))?.to_owned();
-            let s = s.trim_matches(char::from(0)).trim().to_string();   // cleanup
+            let s = std::str::from_utf8(&bytes)
+                .map_err(|e| serde::de::Error::custom(format!("{}", e)))?
+                .to_owned();
+            let s = s.trim_matches(char::from(0)).trim().to_string(); // cleanup
             Ok(s)
         }
     };
@@ -67,4 +69,3 @@ fn utf8_char_width(ch: u8) -> usize {
 make_serialize_string_fn!(serialize_string_17, 17);
 make_serialize_string_fn!(serialize_string_20, 20);
 make_serialize_string_fn!(serialize_string_22, 22);
-

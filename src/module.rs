@@ -1,12 +1,13 @@
-use serde::{Serialize, Deserialize};
 use bincode::ErrorKind;
+use serde::{Deserialize, Serialize};
 
-use core2::io::{ Read, Write };
+use core2::io::{Read, Write};
 use libflate::deflate::*;
 
-use crate::patternslot::PatternSlot;
 use crate::instrument::Instrument;
+use crate::patternslot::PatternSlot;
 
+/// Historical Frequencies to load old data. Default is Linear.
 #[derive(Serialize, Deserialize, Debug)]
 pub enum ModuleFlag {
     LinearFrequencies,
@@ -19,6 +20,7 @@ pub type Row = Vec<PatternSlot>;
 /// Patterns are sequences of lines
 pub type Pattern = Vec<Row>;
 
+/// SoundTracker Module with Steroid
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Module {
     pub name: String,
@@ -27,12 +29,12 @@ pub struct Module {
     /// Restart index in `pattern_order`
     pub restart_position: u16,
     pub default_tempo: u16,
-    pub default_bpm: u16,    
+    pub default_bpm: u16,
     /// Defines the exact order for the patterns playback
-    pub pattern_order: Vec<u8>, 
+    pub pattern_order: Vec<u8>,
     pub pattern: Vec<Pattern>,
     /// Instrument 1 has index 0, instrument 2 has index 1, etc.
-    pub instrument: Vec<Instrument>, 
+    pub instrument: Vec<Instrument>,
 }
 
 impl Default for Module {
@@ -61,7 +63,9 @@ impl Module {
         let ver_data = &data[0..5];
         let real_data = &data[5..];
         if ver_data != header {
-            return Err(Box::new(ErrorKind::Custom("Bad Module version".to_string())));
+            return Err(Box::new(ErrorKind::Custom(
+                "Bad Module version".to_string(),
+            )));
         } else {
             let mut decoder = Decoder::new(real_data);
             let mut decoded_data = Vec::new();

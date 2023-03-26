@@ -1,16 +1,16 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// Euclidian Rythm Instrument
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InstrEkn {
     /// Pulsation k
-    pub events: u8, 
+    pub events: u8,
     /// Duration n
-    pub steps: u8,  
+    pub steps: u8,
     /// Rotation
     pub rotation: u8,
     /// Instrument number
-    pub instr: u8, 
+    pub instr: u8,
 }
 
 impl Default for InstrEkn {

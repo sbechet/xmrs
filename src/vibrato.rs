@@ -1,6 +1,7 @@
-use serde::{Serialize, Deserialize};
-use num_enum::{ IntoPrimitive, TryFromPrimitive };
+use num_enum::{IntoPrimitive, TryFromPrimitive};
+use serde::{Deserialize, Serialize};
 
+/// Vibrato Waveform 
 #[derive(Serialize, Deserialize, Clone, Copy, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]
 pub enum Waveform {
@@ -11,12 +12,13 @@ pub enum Waveform {
     RampUp = 4,
 }
 
+/// Vibrato with Steroid
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Vibrato {
     pub waveform: Waveform,
-    pub speed: u8,   // 0x00..0x3F
-    pub depth: u8,  // 0x00..0x0F
-    pub sweep: u8,  // 0x00..0xFF (In other trackers may be 0..FFFF !)
+    pub speed: u8, // 0x00..0x3F
+    pub depth: u8, // 0x00..0x0F
+    pub sweep: u8, // 0x00..0xFF (In other trackers may be 0..FFFF !)
 }
 
 impl Default for Vibrato {

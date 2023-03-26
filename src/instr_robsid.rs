@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::instr_sid::InstrSid;
 
@@ -25,9 +25,8 @@ pub struct RobEffects {
 
     // 5. Arpeggio
     pub arpeggio: bool,
-    pub arpeggio_reset_mask: u8,    // if version=15 { 12=>-value } else { odd=>+12, even=>0 }
+    pub arpeggio_reset_mask: u8, // if version=15 { 12=>-value } else { odd=>+12, even=>0 }
 }
-
 
 impl Default for RobEffects {
     fn default() -> Self {
@@ -43,12 +42,12 @@ impl Default for RobEffects {
             skydive_config_if: 0,
             skydive_config_add: 0,
             arpeggio: false,
-            arpeggio_reset_mask: 0
+            arpeggio_reset_mask: 0,
         }
     }
 }
 
-/// Rob Hubbard Instrument
+/// Rob Hubbard Generalized Instrument
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InstrRobSid {
     pub sid: InstrSid,

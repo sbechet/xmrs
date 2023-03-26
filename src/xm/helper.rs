@@ -1,13 +1,14 @@
 pub fn u8_slice_to_vec_u16(u8_slice: &[u8]) -> Vec<u16> {
     // u8 slice must have an even number of elements: do the better w/o error
     let src = if u8_slice.len() % 2 != 0 {
-        &u8_slice[0..u8_slice.len()-1]
+        &u8_slice[0..u8_slice.len() - 1]
     } else {
         u8_slice
     };
-    let u16_vec: Vec<u16> = src.chunks_exact(2).map(|chunk| {
-        u16::from_le_bytes([chunk[0], chunk[1]])
-    }).collect();
+    let u16_vec: Vec<u16> = src
+        .chunks_exact(2)
+        .map(|chunk| u16::from_le_bytes([chunk[0], chunk[1]]))
+        .collect();
     u16_vec
 }
 
@@ -19,8 +20,8 @@ pub fn vec_u16_to_u8_slice(u16_vec: Vec<u16>) -> Vec<u8> {
     // convert each u16 to a little-endian byte array and copy into byte_vec
     for (i, u16_val) in u16_vec.iter().enumerate() {
         let bytes = u16_val.to_le_bytes();
-        byte_vec[i*2] = bytes[0];
-        byte_vec[i*2 + 1] = bytes[1];
+        byte_vec[i * 2] = bytes[0];
+        byte_vec[i * 2 + 1] = bytes[1];
     }
     byte_vec
 }

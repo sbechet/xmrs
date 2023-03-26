@@ -1,12 +1,12 @@
-use serde::{Serialize, Deserialize};
+/// Original XM Module
 use bincode::ErrorKind;
+use serde::{Deserialize, Serialize};
 
-
-use super::xmheader::{ XmHeader, XmFlagType };
-use super::xmpattern::XmPattern;
+use super::xmheader::{XmFlagType, XmHeader};
 use super::xminstrument::XmInstrument;
+use super::xmpattern::XmPattern;
 
-use crate::module::{ Module, ModuleFlag };
+use crate::module::{Module, ModuleFlag};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XmModule {
@@ -39,7 +39,7 @@ impl XmModule {
             data = d2;
             pattern.push(xmp);
         }
-        
+
         let mut instrument: Vec<XmInstrument> = vec![];
         for _i in 0..header.number_of_instruments {
             // Create instruments form xm
@@ -47,7 +47,7 @@ impl XmModule {
             data = d2;
             instrument.push(xmi);
         }
-        
+
         Ok(XmModule {
             header,
             pattern_order,
@@ -82,9 +82,7 @@ impl XmModule {
         }
 
         module
-
     }
-
 
     pub fn from_module(module: &Module) -> Self {
         // Create XmModule from Module
@@ -102,13 +100,13 @@ impl XmModule {
         self.header.header_size = 20 + po_len as u32;
         let mut header_ser = bincode::serialize(&self.header).unwrap();
         let mut pattern_order_ser = self.pattern_order.clone();
-        let mut pattern_ser: Vec <u8> = vec![];
+        let mut pattern_ser: Vec<u8> = vec![];
         for xmp in &mut self.pattern {
             let mut b = xmp.save()?;
             pattern_ser.append(&mut b);
         }
-        
-        let mut instr_ser: Vec <u8> = vec![];
+
+        let mut instr_ser: Vec<u8> = vec![];
         for xmi in &mut self.instrument {
             let mut b = xmi.save()?;
             instr_ser.append(&mut b);
@@ -121,6 +119,4 @@ impl XmModule {
         all.append(&mut instr_ser);
         Ok(all)
     }
-
-
 }

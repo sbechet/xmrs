@@ -1,18 +1,18 @@
 [package]
 name = "xmrs"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
-description = "XM FastTracker II library in full rust"
+description = "XMrs is Safe a SoundTracker Library"
 license = "MIT"
 authors = ["Sebastien Bechet"]
 
 [dependencies]
-bincode = "1.3.3"
-core2 = "0.4.0"
-libflate = "1.3.0"
-num_enum = "0.5.11"
+bincode = "1.3"
+core2 = "0.4"
+libflate = "1.3"
+num_enum = "0.5"
 serde = { version = "1.0", features = ["derive"] }
-serde-big-array = "0.5.0"
+serde-big-array = "0.5"
 
 [lib]
 name = "xmrs"

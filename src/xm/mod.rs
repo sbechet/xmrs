@@ -1,12 +1,12 @@
 /*
  * All to load and save Fast Tracker 2 XM Modules
  */
-mod serde_helper;
 mod helper;
+mod serde_helper;
 
-pub mod xmmodule;
 pub mod xmheader;
+pub mod xminstrument;
+pub mod xmmodule;
 pub mod xmpattern;
 pub mod xmpatternslot;
-pub mod xminstrument;
 pub mod xmsample;

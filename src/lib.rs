@@ -1,16 +1,48 @@
-pub mod module;
-pub mod patternslot;
-pub mod instrument;
+//!
+//! XMrs is Safe a SoundTracker Library
+//! 
+//! ```
+//! module+--->instrument+--->instr_defaut+--->sample
+//!       |              |                +--->envelope
+//!       |              |                +--->vibrato
+//!       |              +--->instr_ekn
+//!       |              +--->instr_midi
+//!       |              +--->instr_sid
+//!       |              +-+->instr_robrs
+//!       |                +--->instr_sid
+//!       +--->Pattern--->Row--->patternslot
+//! ```
+//! 
+//! You can load (and save) historical XM files using `xm` (see `README.md`)
+//! 
+//! You can load (and save) your work using `load()` and `save()` serde fn
+//! 
+
+
+/// Envelope with Steroid
 pub mod envelope;
-pub mod vibrato;
+/// Instrument with Steroid
+pub mod instrument;
+/// SoundTracker Module with Steroid
+pub mod module;
+/// A typical pattern slot
+pub mod patternslot;
+/// Sample with Steroid
 pub mod sample;
-
+/// Vibrato with Steroid
+pub mod vibrato;
+/// Historical XM Instrument
+pub mod instr_default;
+/// Euclidian Rythm Instrument
 pub mod instr_ekn;
+/// Midi Instrument
 pub mod instr_midi;
-pub mod instr_sid;
+/// Rob Hubbard Instrument
 pub mod instr_robsid;
+/// MOS6581 SID Instrument
+pub mod instr_sid;
 
-// load and save xm
+/// Load and Save Historical XM files
 pub mod xm;
 
 #[cfg(test)]

@@ -1,6 +1,7 @@
-use serde::{Serialize, Deserialize};
-use num_enum::{ TryFromPrimitive, IntoPrimitive };
+use num_enum::{IntoPrimitive, TryFromPrimitive};
+use serde::{Deserialize, Serialize};
 
+/// 8 octaves with notes
 #[derive(Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone, Debug)]
 #[repr(u8)]
 pub enum Note {
@@ -26,6 +27,7 @@ pub enum Note {
     KeyOff = 97,
 }
 
+/// A typical pattern slot
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 #[repr(C)]
 pub struct PatternSlot {
