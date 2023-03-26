@@ -1,5 +1,5 @@
 //!
-//! XMrs is Safe a SoundTracker Library
+//! XMrs is a Safe SoundTracker Library
 //! 
 //! ```
 //! module+--->instrument+--->instr_defaut+--->sample

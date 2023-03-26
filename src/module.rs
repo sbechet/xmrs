@@ -1,7 +1,7 @@
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 
-use core2::io::{Read, Write};
+use std::io::{Read, Write};
 use libflate::deflate::*;
 
 use crate::instrument::Instrument;
