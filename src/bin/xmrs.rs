@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 use bincode::ErrorKind;
 use std::fs::File;
 use std::io::prelude::*;

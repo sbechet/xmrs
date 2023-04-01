@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 /*
  * All to load and save Fast Tracker 2 XM Modules
  */

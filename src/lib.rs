@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //!
 //! XMrs is a Safe SoundTracker Library
 //!
