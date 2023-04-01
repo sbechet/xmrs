@@ -8,23 +8,12 @@ use super::xmpattern::XmPattern;
 
 use crate::module::{Module, ModuleFlag};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmModule {
     pub header: XmHeader,
     pub pattern_order: Vec<u8>,
     pub pattern: Vec<XmPattern>,
     pub instrument: Vec<XmInstrument>,
-}
-
-impl Default for XmModule {
-    fn default() -> Self {
-        XmModule {
-            header: XmHeader::default(),
-            pattern_order: vec![],
-            pattern: vec![],
-            instrument: vec![],
-        }
-    }
 }
 
 impl XmModule {
@@ -87,11 +76,11 @@ impl XmModule {
     pub fn from_module(module: &Module) -> Self {
         // Create XmModule from Module
         let mut xmm = XmModule::default();
-        let (header, pattern_order) = XmHeader::from_module(&module);
+        let (header, pattern_order) = XmHeader::from_module(module);
         xmm.header = header;
-        xmm.pattern_order = pattern_order.try_into().unwrap();
-        xmm.pattern = XmPattern::from_module(&module);
-        xmm.instrument = XmInstrument::from_module(&module);
+        xmm.pattern_order = pattern_order;
+        xmm.pattern = XmPattern::from_module(module);
+        xmm.instrument = XmInstrument::from_module(module);
         xmm
     }
 

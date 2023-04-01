@@ -18,7 +18,7 @@ use super::xmsample::XmSample;
 #[derive(Serialize, Deserialize, Debug)]
 pub enum XmInstrumentType {
     Empty,
-    Default(XmInstrDefault),
+    Default(Box<XmInstrDefault>),
 }
 
 impl XmInstrumentType {
@@ -107,7 +107,7 @@ impl XmInstrDefault {
         for ep in &e.point {
             let f = ep.frame.to_le_bytes();
             let v = ep.value.to_le_bytes();
-            dst[i + 0] = f[0];
+            dst[i] = f[0];
             dst[i + 1] = f[1];
             dst[i + 2] = v[0];
             dst[i + 3] = v[1];
@@ -117,7 +117,7 @@ impl XmInstrDefault {
     }
 
     pub fn from_instr(i: &Instrument) -> XmInstrumentType {
-        let mut xmid: Self = XmInstrDefault::default();
+        let mut xmid: Box<Self> = Box::default();
         match &i.instr_type {
             InstrumentType::Default(id) => {
                 xmid.sample_for_notes = id.sample_for_note.clone().try_into().unwrap();
@@ -203,13 +203,14 @@ impl XmInstrumentHeader {
     }
 
     pub fn from_instr(i: &Instrument) -> Self {
-        let mut xmih = XmInstrumentHeader::default();
-        xmih.name = i.name.clone();
-        xmih.num_samples = match &i.instr_type {
-            InstrumentType::Default(it) => it.sample.len() as u16,
-            _ => 0,
-        };
-        xmih
+        XmInstrumentHeader {
+            name: i.name.clone(),
+            num_samples: match &i.instr_type {
+                InstrumentType::Default(it) => it.sample.len() as u16,
+                _ => 0,
+            },
+            ..Default::default()
+        }
     }
 }
 
@@ -250,11 +251,11 @@ impl XmInstrument {
 
         // samples header
         let d2 = &data[XMINSTRUMENT_SIZE..];
-        let xmid = bincode::deserialize::<XmInstrDefault>(d2)?;
+        let xmid = Box::new(bincode::deserialize::<XmInstrDefault>(d2)?);
 
         let mut d3 = &data[xmih_len..];
         for _ in 0..xmih.num_samples {
-            let (d, s) = XmSample::load(&d3)?;
+            let (d, s) = XmSample::load(d3)?;
             sample.push(s);
             d3 = d;
         }
@@ -262,7 +263,7 @@ impl XmInstrument {
         let xmi = XmInstrument {
             header: xmih,
             instr: XmInstrumentType::Default(xmid),
-            sample: sample,
+            sample,
         };
         let data = d3;
         Ok((data, xmi))
@@ -303,16 +304,11 @@ impl XmInstrument {
     }
 
     fn is_envelope_nok(e: &Envelope) -> bool {
-        if e.point.len() > 12
+        e.point.len() > 12
             || e.sustain_point >= e.point.len() as u8
             || e.loop_start_point >= e.point.len() as u8
             || e.loop_end_point >= e.point.len() as u8
             || e.loop_start_point > e.loop_end_point
-        {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     pub fn to_instrument(&self) -> Instrument {
@@ -336,7 +332,7 @@ impl XmInstrument {
                     0
                 };
                 let mut id = InstrDefault {
-                    sample_for_note: xmi.sample_for_notes.to_vec(),
+                    sample_for_note: xmi.sample_for_notes,
                     volume_envelope: Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt])
                         .unwrap(),
                     panning_envelope: Self::envelope_from_slice(
@@ -347,7 +343,7 @@ impl XmInstrument {
                     volume_fadeout: xmi.volume_fadeout,
                     midi: InstrMidi::default(),
                     midi_mute_computer: false,
-                    sample: sample,
+                    sample,
                 };
 
                 // copy volume envelope data
@@ -414,11 +410,11 @@ impl XmInstrument {
     pub fn from_module(module: &Module) -> Vec<Self> {
         let mut all: Vec<XmInstrument> = vec![];
         for i in &module.instrument {
-            let mut xmi = XmInstrument::default();
-            xmi.header = XmInstrumentHeader::from_instr(&i);
-            xmi.instr = XmInstrDefault::from_instr(&i);
-            xmi.sample = XmSample::from_instr(&i);
-            all.push(xmi);
+            all.push(XmInstrument {
+                header: XmInstrumentHeader::from_instr(i),
+                instr: XmInstrDefault::from_instr(i),
+                sample: XmSample::from_instr(i),
+            });
         }
         all
     }

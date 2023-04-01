@@ -1,5 +1,6 @@
 /// Original XM Pattern Slot
-use crate::patternslot::{Note, PatternSlot};
+use crate::note::Note;
+use crate::patternslot::PatternSlot;
 use bincode::ErrorKind;
 
 pub type XmPatternSlot = PatternSlot;
@@ -11,19 +12,56 @@ impl XmPatternSlot {
         let mut j = 0;
 
         let note = src[i];
-        i+=1;
+        i += 1;
         if note & 0b1000_0000 != 0 {
-            dst[j] = if note & 0b0000_0001 != 0 { i+=1; src[i-1] } else { 0 }; j+=1;
-            dst[j] = if note & 0b0000_0010 != 0 { i+=1; src[i-1] } else { 0 }; j+=1;
-            dst[j] = if note & 0b0000_0100 != 0 { i+=1; src[i-1] } else { 0 }; j+=1;
-            dst[j] = if note & 0b0000_1000 != 0 { i+=1; src[i-1] } else { 0 }; j+=1;
-            dst[j] = if note & 0b0001_0000 != 0 { i+=1; src[i-1] } else { 0 };
+            dst[j] = if note & 0b0000_0001 != 0 {
+                i += 1;
+                src[i - 1]
+            } else {
+                0
+            };
+            j += 1;
+            dst[j] = if note & 0b0000_0010 != 0 {
+                i += 1;
+                src[i - 1]
+            } else {
+                0
+            };
+            j += 1;
+            dst[j] = if note & 0b0000_0100 != 0 {
+                i += 1;
+                src[i - 1]
+            } else {
+                0
+            };
+            j += 1;
+            dst[j] = if note & 0b0000_1000 != 0 {
+                i += 1;
+                src[i - 1]
+            } else {
+                0
+            };
+            j += 1;
+            dst[j] = if note & 0b0001_0000 != 0 {
+                i += 1;
+                src[i - 1]
+            } else {
+                0
+            };
         } else {
-            dst[j] = note; j+=1;
-            dst[j] = src[i]; i+=1; j+=1;
-            dst[j] = src[i]; i+=1; j+=1;
-            dst[j] = src[i]; i+=1; j+=1;
-            dst[j] = src[i]; i+=1;
+            dst[j] = note;
+            j += 1;
+            dst[j] = src[i];
+            i += 1;
+            j += 1;
+            dst[j] = src[i];
+            i += 1;
+            j += 1;
+            dst[j] = src[i];
+            i += 1;
+            j += 1;
+            dst[j] = src[i];
+            i += 1;
         }
 
         Ok((
@@ -37,7 +75,7 @@ impl XmPatternSlot {
                 volume: dst[2],
                 effect_type: dst[3],
                 effect_parameter: dst[4],
-            }
+            },
         ))
     }
 
@@ -52,10 +90,26 @@ impl XmPatternSlot {
         let mut dst: [u8; 5] = [0; 5];
         let mut pack_bits = 0;
         let mut i = 1;
-        if bytes[0] > 0 { pack_bits |= 0b0001; dst[i]=bytes[0]; i+=1; } // note
-        if bytes[1] > 0 { pack_bits |= 0b0010; dst[i]=bytes[1]; i+=1; } // instrument
-        if bytes[2] > 0 { pack_bits |= 0b0100; dst[i]=bytes[2]; i+=1; } // volume
-        if bytes[3] > 0 { pack_bits |= 0b1000; dst[i]=bytes[3]; i+=1; } // effect type
+        if bytes[0] > 0 {
+            pack_bits |= 0b0001;
+            dst[i] = bytes[0];
+            i += 1;
+        } // note
+        if bytes[1] > 0 {
+            pack_bits |= 0b0010;
+            dst[i] = bytes[1];
+            i += 1;
+        } // instrument
+        if bytes[2] > 0 {
+            pack_bits |= 0b0100;
+            dst[i] = bytes[2];
+            i += 1;
+        } // volume
+        if bytes[3] > 0 {
+            pack_bits |= 0b1000;
+            dst[i] = bytes[3];
+            i += 1;
+        } // effect type
 
         if pack_bits == 15 {
             // first four bits set? no packing needed.
@@ -64,11 +118,10 @@ impl XmPatternSlot {
 
         if bytes[4] > 0 {
             pack_bits |= 16;
-            dst[i]=bytes[4];
-            i+=1;
+            dst[i] = bytes[4];
+            i += 1;
         } // effect parameter
         dst[0] = pack_bits | 0b1000_0000;
-        return (&dst[0..i]).to_vec();
+        dst[0..i].to_vec()
     }
-
 }

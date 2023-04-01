@@ -9,7 +9,7 @@ use crate::sample::{LoopType, Sample, SampleDataType};
 
 const XMSAMPLE_HEADER_SIZE: usize = 40;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[repr(C)]
 pub struct XmSampleHeader {
     length: u32,
@@ -26,23 +26,6 @@ pub struct XmSampleHeader {
         serialize_with = "serialize_string_22"
     )]
     name: String,
-}
-
-impl Default for XmSampleHeader {
-    fn default() -> Self {
-        XmSampleHeader {
-            length: 0,
-            loop_start: 0,
-            loop_length: 0,
-            volume: 0,
-            finetune: 0,
-            flags: 0,
-            panning: 0,
-            relative_note: 0,
-            reserved: 0,
-            name: String::from(""),
-        }
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -89,7 +72,7 @@ impl XmSample {
             data: d3,
         };
 
-        let packet_size = XMSAMPLE_HEADER_SIZE + data_len as usize;
+        let packet_size = XMSAMPLE_HEADER_SIZE + data_len;
         Ok((&data[packet_size..], xms))
     }
 
@@ -135,27 +118,24 @@ impl XmSample {
 
     pub fn from_instr(i: &Instrument) -> Vec<XmSample> {
         let mut output: Vec<XmSample> = vec![];
-        match &i.instr_type {
-            InstrumentType::Default(id) => {
-                for s in &id.sample {
-                    let mut xms = XmSample::default();
-                    xms.header.length = match &s.data {
-                        SampleDataType::Depth8(d) => d.len() as u32,
-                        SampleDataType::Depth16(d) => 2 * d.len() as u32,
-                    };
-                    xms.header.loop_start = s.loop_start;
-                    xms.header.loop_length = s.loop_length;
-                    xms.header.volume = s.volume;
-                    xms.header.finetune = s.finetune;
-                    xms.header.flags = s.flags.into();
-                    xms.header.panning = s.panning;
-                    xms.header.relative_note = s.relative_note;
-                    xms.header.name = s.name.clone();
-                    xms.data = s.data.clone();
-                    output.push(xms);
-                }
+        if let InstrumentType::Default(id) = &i.instr_type {
+            for s in &id.sample {
+                let mut xms = XmSample::default();
+                xms.header.length = match &s.data {
+                    SampleDataType::Depth8(d) => d.len() as u32,
+                    SampleDataType::Depth16(d) => 2 * d.len() as u32,
+                };
+                xms.header.loop_start = s.loop_start;
+                xms.header.loop_length = s.loop_length;
+                xms.header.volume = s.volume;
+                xms.header.finetune = s.finetune;
+                xms.header.flags = s.flags.into();
+                xms.header.panning = s.panning;
+                xms.header.relative_note = s.relative_note;
+                xms.header.name = s.name.clone();
+                xms.data = s.data.clone();
+                output.push(xms);
             }
-            _ => {}
         }
         output
     }

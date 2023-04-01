@@ -9,9 +9,10 @@ use crate::instr_sid::InstrSid;
 //===========================================================================
 
 /// Instrument Type
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub enum InstrumentType {
     /// No Instrument
+    #[default]
     Empty,
     /// Historical XM Instrument
     Default(InstrDefault),
@@ -26,22 +27,10 @@ pub enum InstrumentType {
 }
 
 /// Instrument with Steroid
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct Instrument {
     pub name: String,
     pub instr_type: InstrumentType,
-}
-
-
-//===========================================================================
-
-impl Default for Instrument {
-    fn default() -> Self {
-        Self {
-            name: String::new(),
-            instr_type: InstrumentType::Default(InstrDefault::default()),
-        }
-    }
 }
 
 impl Instrument {

@@ -7,7 +7,7 @@ use xmrs::xm::xmmodule::XmModule;
 const XM: &[u8] = include_bytes!("note.xm");
 
 fn main() -> Result<(), Box<ErrorKind>> {
-    let xmmodule: XmModule = XmModule::load(&XM)?;
+    let xmmodule: XmModule = XmModule::load(XM)?;
     println!("Load XM: {:#x?}", xmmodule);
     let module: Module = xmmodule.to_module();
     println!("Convert to module: {:#x?}", module);

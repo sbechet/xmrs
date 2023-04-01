@@ -39,19 +39,10 @@ impl XmPatternHeader {
 
 type Lines = Vec<Vec<XmPatternSlot>>;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmPattern {
     pub header: XmPatternHeader,
     pub pattern: Lines,
-}
-
-impl Default for XmPattern {
-    fn default() -> Self {
-        Self {
-            header: XmPatternHeader::default(),
-            pattern: vec![],
-        }
-    }
 }
 
 impl XmPattern {
@@ -75,16 +66,16 @@ impl XmPattern {
         Ok((&data[seek..], xmp))
     }
 
-    fn get_slots<'a>(
-        data: &'a [u8],
+    fn get_slots(
+        data: &[u8],
         number_of_channels: u16,
-    ) -> Result<(&'a [u8], Vec<Vec<XmPatternSlot>>), Box<ErrorKind>> {
+    ) -> Result<(&[u8], Vec<Vec<XmPatternSlot>>), Box<ErrorKind>> {
         let mut lines: Vec<Vec<XmPatternSlot>> = vec![];
         let mut row: Vec<XmPatternSlot> = vec![];
 
         let mut d2 = data;
         loop {
-            if d2.len() == 0 {
+            if d2.is_empty() {
                 break;
             }
             let (d3, xps) = XmPatternSlot::load(d2)?;
@@ -103,8 +94,10 @@ impl XmPattern {
     pub fn from_module(module: &Module) -> Vec<Self> {
         let mut all: Vec<Self> = vec![];
         for p in &module.pattern {
-            let mut xmp = Self::default();
-            xmp.pattern = p.clone();
+            let mut xmp = XmPattern {
+                pattern: p.clone(),
+                ..Default::default()
+            };
             xmp.header.num_rows = p.len() as u16;
             // uncompressed patternslot
             xmp.header.pattern_data_size = (p.len() * p[0].len() * 5) as u16;

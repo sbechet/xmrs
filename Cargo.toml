@@ -1,10 +1,16 @@
 [package]
 name = "xmrs"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2021"
 description = "XMrs is Safe a SoundTracker Library"
 license = "MIT"
 authors = ["Sebastien Bechet"]
+documentation = "https://docs.rs/xmrs"
+repository = "https://github.com/sbechet/xmrs"
+readme = "README.md"
+
+keywords = ["soundtracker", "demo", "scene", "xm", "module", "mod", "s3m", "fasttracker", "protracker", "tracker"]
+categories = ["music", "audio"]
 
 [dependencies]
 bincode = "1.3"

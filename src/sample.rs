@@ -2,9 +2,10 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
 /// How to play sample
-#[derive(Serialize, Deserialize, Copy, Clone, IntoPrimitive, TryFromPrimitive, Debug)]
+#[derive(Default, Serialize, Deserialize, Copy, Clone, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]
 pub enum LoopType {
+    #[default]
     No = 0,
     Forward = 1,
     PingPong = 2,

@@ -84,34 +84,36 @@ impl XmHeader {
         if data.len() >= pattern_order_and_maybe_more_len
             && self.song_length as usize <= pattern_order_and_maybe_more_len
         {
-            let pattern_order: Vec<u8> = (&data[0..self.song_length as usize]).to_vec();
+            let pattern_order: Vec<u8> = data[0..self.song_length as usize].to_vec();
             Ok((&data[pattern_order_and_maybe_more_len..], pattern_order))
         } else {
             Err(serde::de::Error::custom("XmHeader.header_size too big?"))
         }
     }
 
+    /// Extract XmHeader and pattern_order from Module
     pub fn from_module(module: &Module) -> (Self, Vec<u8>) {
-        let mut xmh = XmHeader::default();
-
-        xmh.name = module.name.clone();
+        let mut xmh = XmHeader {
+            name: module.name.clone(),
+            song_length: module.pattern_order.len() as u16,
+            restart_position: module.restart_position,
+            number_of_channels: if !module.pattern.is_empty() {
+                module.pattern[0][0].len() as u16
+            } else {
+                8
+            },
+            number_of_patterns: module.pattern.len() as u16,
+            number_of_instruments: module.instrument.len() as u16,
+            flags: match module.flags {
+                ModuleFlag::LinearFrequencies => XmFlagType::XmLinearFrequencies,
+                ModuleFlag::AmigaFrequencies => XmFlagType::XmAmigaFrequencies,
+            },
+            default_tempo: module.default_tempo,
+            default_bpm: module.default_bpm,
+            ..Default::default()
+        };
         let pattern_order = module.pattern_order.clone();
         xmh.header_size += 256;
-        xmh.song_length = module.pattern_order.len() as u16;
-        xmh.restart_position = module.restart_position;
-        xmh.number_of_channels = if module.pattern.len() != 0 {
-            module.pattern[0][0].len() as u16
-        } else {
-            8
-        };
-        xmh.number_of_patterns = module.pattern.len() as u16;
-        xmh.number_of_instruments = module.instrument.len() as u16;
-        xmh.flags = match module.flags {
-            ModuleFlag::LinearFrequencies => XmFlagType::XmLinearFrequencies,
-            ModuleFlag::AmigaFrequencies => XmFlagType::XmAmigaFrequencies,
-        };
-        xmh.default_tempo = module.default_tempo;
-        xmh.default_bpm = module.default_bpm;
 
         (xmh, pattern_order)
     }

@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 /// - voice0: from voice2
 /// - voice1: from voice0
 /// - voice2: from voice1
-#[derive(Serialize, Deserialize, Copy, Clone, Debug)]
+#[derive(Default, Serialize, Deserialize, Copy, Clone, Debug)]
 pub struct SidVoice {
     //pub freq: u16,
     /// pulse wave duty cycle
@@ -25,25 +25,6 @@ pub struct SidVoice {
     pub ad: u8,
     /// sustain (0..15), release (0..15)
     pub sr: u8,
-}
-
-impl Default for SidVoice {
-    fn default() -> Self {
-        Self {
-            //freq: 0,
-            pw: 0,
-            ctrl_noise: false,
-            ctrl_pulse: false,
-            ctrl_sawtooth: false,
-            ctrl_triangle: false,
-            ctrl_test: false,
-            ctrl_rm: false,
-            ctrl_sync: false,
-            ctrl_gate: false,
-            ad: 0,
-            sr: 0,
-        }
-    }
 }
 
 /// MOS6581 SID Instrument

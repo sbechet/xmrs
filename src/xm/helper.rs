@@ -30,8 +30,8 @@ pub fn delta8_to_sample(delta: Vec<u8>) -> Vec<i8> {
     let mut sample: Vec<i8> = vec![];
     if delta.len() > 2 {
         let mut old = 0;
-        for i in 0..delta.len() {
-            let new = delta[i].overflowing_add(old).0;
+        for item in &delta {
+            let new = item.overflowing_add(old).0;
             sample.push(new as i8);
             old = new;
         }
@@ -45,8 +45,8 @@ pub fn delta16_to_sample(delta: Vec<u16>) -> Vec<i16> {
     }
     let mut sample: Vec<i16> = vec![];
     let mut old = 0;
-    for i in 0..delta.len() {
-        let new = delta[i].overflowing_add(old).0;
+    for item in &delta {
+        let new = item.overflowing_add(old).0;
         sample.push(new as i16);
         old = new;
     }
@@ -56,10 +56,10 @@ pub fn delta16_to_sample(delta: Vec<u16>) -> Vec<i16> {
 pub fn sample8_to_delta(sample: &Vec<i8>) -> Vec<u8> {
     let mut delta: Vec<u8> = vec![];
     let mut new: i8 = 0;
-    for i in 0..sample.len() {
-        let d = sample[i].overflowing_sub(new).0;
+    for item in sample {
+        let d = item.overflowing_sub(new).0;
         delta.push(d as u8);
-        new = sample[i];
+        new = *item;
     }
     delta
 }
@@ -67,10 +67,10 @@ pub fn sample8_to_delta(sample: &Vec<i8>) -> Vec<u8> {
 pub fn sample16_to_delta(sample: &Vec<i16>) -> Vec<u16> {
     let mut delta: Vec<u16> = vec![];
     let mut new: i16 = 0;
-    for i in 0..sample.len() {
-        let d = sample[i].overflowing_sub(new).0;
+    for item in sample {
+        let d = item.overflowing_sub(new).0;
         delta.push(d as u16);
-        new = sample[i];
+        new = *item;
     }
     delta
 }

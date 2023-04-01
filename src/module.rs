@@ -1,8 +1,8 @@
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 
-use std::io::{Read, Write};
 use libflate::deflate::*;
+use std::io::{Read, Write};
 
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
@@ -63,15 +63,15 @@ impl Module {
         let ver_data = &data[0..5];
         let real_data = &data[5..];
         if ver_data != header {
-            return Err(Box::new(ErrorKind::Custom(
+            Err(Box::new(ErrorKind::Custom(
                 "Bad Module version".to_string(),
-            )));
+            )))
         } else {
             let mut decoder = Decoder::new(real_data);
             let mut decoded_data = Vec::new();
             decoder.read_to_end(&mut decoded_data).unwrap();
 
-            return Ok(bincode::deserialize(&decoded_data)?);
+            Ok(bincode::deserialize(&decoded_data)?)
         }
     }
 
