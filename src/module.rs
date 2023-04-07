@@ -7,6 +7,8 @@ use std::io::{Read, Write};
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
 
+pub const DEFAULT_PATTERN_LENGTH: usize = 64;
+
 /// Historical Frequencies to load old data. Default is Linear.
 #[derive(Serialize, Deserialize, Debug)]
 pub enum ModuleFlag {
@@ -91,5 +93,14 @@ impl Module {
         ser_all.append(&mut ser_mod2);
 
         Ok(ser_all)
+    }
+
+    /// get num_channel
+    pub fn get_num_channels(&self) -> usize {
+        if self.pattern.len() != 0 {
+            self.pattern[0][0].len()
+        } else {
+            0
+        }
     }
 }

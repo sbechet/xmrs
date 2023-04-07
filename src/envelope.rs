@@ -9,6 +9,20 @@ pub struct EnvelopePoint {
     pub value: u16,
 }
 
+impl EnvelopePoint {
+    /// Linear interpolation between two envelope points
+    pub fn lerp(a: &EnvelopePoint, b: &EnvelopePoint, pos: u16) -> f32 {
+        if pos <= a.frame {
+            return a.value as f32;
+        } else if pos >= b.frame {
+            return b.value as f32;
+        } else {
+            let p: f32 = (pos - a.frame) as f32 / (b.frame - a.frame) as f32;
+            return a.value as f32 * (1.0 - p) + b.value as f32 * p;
+        }
+    }
+}
+
 /// Envelope with Steroid
 #[derive(Default, Serialize, Deserialize, Clone, Debug)]
 pub struct Envelope {

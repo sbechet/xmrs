@@ -13,6 +13,26 @@ pub enum Waveform {
     RampUp = 4,
 }
 
+impl Waveform {
+    /// Get waveform. Step in range 0..64
+    pub fn waveform(&self, step: u16) -> f32 {
+        let step = step % 64;
+        return match &self {
+            Waveform::Sine => -(std::f32::consts::TAU * step as f32 / 64.0).sin(),
+            Waveform::RampDown => ((32 - step) / 32) as f32, // 1.0 when step = 0; -1.0 when step = 0x40
+            Waveform::Square => {
+                if step >= 32 {
+                    1.0
+                } else {
+                    -1.0
+                }
+            }
+            Waveform::Random => rand::random::<f32>(),
+            Waveform::RampUp => ((step - 32) / 32) as f32,
+        };
+    }
+}
+
 /// Vibrato with Steroid
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct Vibrato {

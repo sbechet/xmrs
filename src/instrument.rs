@@ -31,6 +31,7 @@ pub enum InstrumentType {
 pub struct Instrument {
     pub name: String,
     pub instr_type: InstrumentType,
+    pub muted: bool,
 }
 
 impl Instrument {

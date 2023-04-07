@@ -31,3 +31,29 @@ pub struct Sample {
     pub relative_note: i8,
     pub data: SampleDataType,
 }
+
+impl Sample {
+    /// return sample length
+    pub fn len(&self) -> usize {
+        match &self.data {
+            SampleDataType::Depth8(v) => v.len(),
+            SampleDataType::Depth16(v) => v.len(),
+        }
+    }
+
+    /// return sample at seek
+    pub fn at(&self, seek: usize) -> f32 {
+        match &self.data {
+            SampleDataType::Depth8(v) => v[seek] as f32 / 128.0,
+            SampleDataType::Depth16(v) => v[seek] as f32 / 32768.0,
+        }
+    }
+
+    /// return sample size (8 or 16 bits)
+    pub fn bits(&self) -> u8 {
+        match &self.data {
+            SampleDataType::Depth8(_) => 8,
+            SampleDataType::Depth16(_) => 16,
+        }
+    }
+}

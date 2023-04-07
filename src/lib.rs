@@ -47,6 +47,9 @@ pub mod vibrato;
 /// Load and Save Historical XM files
 pub mod xm;
 
+/// The Xmrs Prelude
+pub mod prelude;
+
 #[cfg(test)]
 mod tests {
     #[test]

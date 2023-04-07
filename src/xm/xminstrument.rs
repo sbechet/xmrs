@@ -403,6 +403,7 @@ impl XmInstrument {
         Instrument {
             name: self.header.name.clone(),
             instr_type: it,
+            muted: false,
         }
     }
 
