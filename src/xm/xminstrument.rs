@@ -154,7 +154,7 @@ impl XmInstrDefault {
 
                 xmid.vibrato_type = id.vibrato.waveform.try_into().unwrap();
                 xmid.vibrato_sweep = id.vibrato.sweep;
-                xmid.vibrato_depth = id.vibrato.depth;
+                xmid.vibrato_depth = id.vibrato.depth as u8 * 15;
                 xmid.vibrato_rate = id.vibrato.speed;
 
                 xmid.volume_fadeout = id.volume_fadeout;
@@ -388,7 +388,7 @@ impl XmInstrument {
                     _ => Waveform::Sine,
                 };
                 id.vibrato.speed = xmi.vibrato_rate;
-                id.vibrato.depth = xmi.vibrato_depth;
+                id.vibrato.depth = xmi.vibrato_depth as f32 / 15.0;
                 id.vibrato.sweep = xmi.vibrato_sweep;
 
                 id.midi.on = xmi.midi_on == 1;

@@ -24,10 +24,10 @@ pub struct Sample {
     pub name: String,
     pub loop_start: u32,
     pub loop_length: u32,
-    pub volume: u8,
-    pub finetune: i8,
+    pub volume: f32,
+    pub finetune: f32,  // see relative_note
     pub flags: LoopType,
-    pub panning: u8,
+    pub panning: f32,
     pub relative_note: i8,
     pub data: SampleDataType,
 }

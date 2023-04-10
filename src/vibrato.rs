@@ -19,7 +19,7 @@ impl Waveform {
         let step = step % 64;
         return match &self {
             Waveform::Sine => -(std::f32::consts::TAU * step as f32 / 64.0).sin(),
-            Waveform::RampDown => ((32 - step) / 32) as f32, // 1.0 when step = 0; -1.0 when step = 0x40
+            Waveform::RampDown => (32.0 - step as f32) / 32.0, // 1.0 when step = 0; -1.0 when step = 0x40
             Waveform::Square => {
                 if step >= 32 {
                     1.0
@@ -28,7 +28,7 @@ impl Waveform {
                 }
             }
             Waveform::Random => rand::random::<f32>(),
-            Waveform::RampUp => ((step - 32) / 32) as f32,
+            Waveform::RampUp => (step as f32 - 32.0) / 32.0,
         };
     }
 }
@@ -38,6 +38,6 @@ impl Waveform {
 pub struct Vibrato {
     pub waveform: Waveform,
     pub speed: u8, // 0x00..0x3F
-    pub depth: u8, // 0x00..0x0F
+    pub depth: f32, // 0.0..1.0
     pub sweep: u8, // 0x00..0xFF (In other trackers may be 0..FFFF !)
 }
