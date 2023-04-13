@@ -10,9 +10,7 @@ macro_rules! make_deserialize_string_fn {
             D: Deserializer<'de>,
         {
             let bytes = <[u8; $limit]>::deserialize(deserializer)?;
-            let s = std::str::from_utf8(&bytes)
-                .map_err(|e| serde::de::Error::custom(format!("{}", e)))?
-                .to_owned();
+            let s = String::from_utf8_lossy(&bytes).to_string();
             let s = s.trim_matches(char::from(0)).trim().to_string(); // cleanup
             Ok(s)
         }

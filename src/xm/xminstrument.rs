@@ -157,7 +157,7 @@ impl XmInstrDefault {
                 xmid.vibrato_depth = id.vibrato.depth as u8 * 15;
                 xmid.vibrato_rate = id.vibrato.speed;
 
-                xmid.volume_fadeout = id.volume_fadeout;
+                xmid.volume_fadeout = (id.volume_fadeout * 32768.0) as u16;
 
                 xmid.midi_on = if id.midi.on { 1 } else { 0 };
                 xmid.midi_channel = id.midi.channel;
@@ -340,7 +340,7 @@ impl XmInstrument {
                     )
                     .unwrap(),
                     vibrato: Vibrato::default(),
-                    volume_fadeout: xmi.volume_fadeout,
+                    volume_fadeout: xmi.volume_fadeout as f32 / 32768.0,
                     midi: InstrMidi::default(),
                     midi_mute_computer: false,
                     sample,

@@ -14,7 +14,7 @@ pub struct InstrDefault {
     pub volume_envelope: Envelope, // Envelope.points[].value: 0x00..0x3F
     pub panning_envelope: Envelope, // Envelope.points[].value: 0x00..0x3F
     pub vibrato: Vibrato,
-    pub volume_fadeout: u16, // 0x0000..0x0FFF
+    pub volume_fadeout: f32,    // 0.0..1.0
     pub sample: Vec<Sample>,
     pub midi: InstrMidi,
     pub midi_mute_computer: bool,
@@ -27,7 +27,7 @@ impl Default for InstrDefault {
             volume_envelope: Envelope::default(),
             panning_envelope: Envelope::default(),
             vibrato: Vibrato::default(),
-            volume_fadeout: 0,
+            volume_fadeout: 0.0,
             sample: vec![],
             midi: InstrMidi::default(),
             midi_mute_computer: false,

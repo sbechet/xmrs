@@ -33,8 +33,3 @@ pub struct Instrument {
     pub instr_type: InstrumentType,
     pub muted: bool,
 }
-
-impl Instrument {
-    // FinalVol = (FadeOutVol/65536)*(EnvelopeVol/64)*(GlobalVol/64)*(Vol/64)*Scale;
-    // FinalPan = Pan + ( (EnvelopePan-32)*(128-Abs(Pan-128)) / 32 );
-}

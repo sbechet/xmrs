@@ -8,12 +8,19 @@ use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
 
 pub const DEFAULT_PATTERN_LENGTH: usize = 64;
+pub const MAX_NUM_ROWS: usize = 256;
 
 /// Historical Frequencies to load old data. Default is Linear.
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum ModuleFlag {
     LinearFrequencies,
     AmigaFrequencies,
+}
+
+impl Default for ModuleFlag {
+    fn default() -> Self {
+        Self::LinearFrequencies
+    }
 }
 
 /// A row contains its column elements
@@ -95,7 +102,13 @@ impl Module {
         Ok(ser_all)
     }
 
-    /// get num_channel
+
+    /// get song length
+    pub fn get_song_length(&self) -> usize {
+        self.pattern_order.len()
+    }
+
+    /// get number of channels
     pub fn get_num_channels(&self) -> usize {
         if self.pattern.len() != 0 {
             self.pattern[0][0].len()
@@ -103,4 +116,14 @@ impl Module {
             0
         }
     }
+
+    /// get number of rows
+    pub fn get_num_rows(&self, pat_idx: usize) -> usize {
+        if self.pattern.len() != 0 {
+            self.pattern[pat_idx].len()
+        } else {
+            0
+        }
+    }
+
 }

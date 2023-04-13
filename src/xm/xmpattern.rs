@@ -51,9 +51,10 @@ impl XmPattern {
         number_of_channels: u16,
     ) -> Result<(&[u8], XmPattern), Box<ErrorKind>> {
         let (data, xmph) = XmPatternHeader::load(data)?;
-        let (_, xmps) = Self::get_slots(
+        let (_data_out, xmps) = Self::get_slots(
             &data[0..xmph.pattern_data_size as usize],
-            number_of_channels,
+            number_of_channels as usize,
+            xmph.num_rows as usize,
         )
         .unwrap();
         let seek = xmph.pattern_data_size as usize;
@@ -66,9 +67,19 @@ impl XmPattern {
         Ok((&data[seek..], xmp))
     }
 
+    fn get_empty_line(number_of_channels: usize) -> Vec<XmPatternSlot> {
+        let mut row: Vec<XmPatternSlot> = vec![];
+        let xmps = XmPatternSlot::default();
+        for _ in 0..number_of_channels {
+            row.push(xmps.clone());
+        }
+        row
+    }
+
     fn get_slots(
         data: &[u8],
-        number_of_channels: u16,
+        number_of_channels: usize,
+        number_of_rows: usize,
     ) -> Result<(&[u8], Vec<Vec<XmPatternSlot>>), Box<ErrorKind>> {
         let mut lines: Vec<Vec<XmPatternSlot>> = vec![];
         let mut row: Vec<XmPatternSlot> = vec![];
@@ -81,13 +92,17 @@ impl XmPattern {
             let (d3, xps) = XmPatternSlot::load(d2)?;
             d2 = d3;
             row.push(xps);
-            if row.len() == number_of_channels as usize {
+            if row.len() == number_of_channels {
                 lines.push(row);
                 row = vec![];
             }
         }
 
-        Ok((data, lines))
+        while lines.len() < number_of_rows {
+            lines.push(Self::get_empty_line(number_of_channels));
+        }
+
+        Ok((d2, lines))
     }
 
     /// All patterns
