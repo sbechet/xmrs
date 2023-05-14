@@ -31,14 +31,14 @@ pub struct XmSampleHeader {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XmSample {
     header: XmSampleHeader,
-    data: SampleDataType,
+    data: Option<SampleDataType>,
 }
 
 impl Default for XmSample {
     fn default() -> Self {
         XmSample {
             header: XmSampleHeader::default(),
-            data: SampleDataType::Depth8(vec![]),
+            data: None,
         }
     }
 }
@@ -46,14 +46,19 @@ impl Default for XmSample {
 impl XmSample {
     pub fn load(data: &[u8]) -> Result<(&[u8], XmSample), Box<ErrorKind>> {
         let sh = bincode::deserialize::<XmSampleHeader>(data)?;
+        // Now create XmSample
+        let xms = XmSample {
+            header: sh,
+            data: None,
+        };
+        Ok((&data[XMSAMPLE_HEADER_SIZE..], xms))
+    }
 
-        // std::mem::size_of::<XmSampleHeader>() not working because alignement?
-        let d2 = &data[XMSAMPLE_HEADER_SIZE..];
+    pub fn add_sample<'a>(&mut self, data: &'a [u8]) -> Result<&'a [u8], Box<ErrorKind>> {
+        let data_len: usize = self.header.length as usize;
+        let slice = &data[..data_len];
 
-        let data_len: usize = sh.length as usize;
-        let slice = &d2[..data_len];
-
-        let d3 = if sh.flags & 0b0001_0000 != 0 {
+        let d3 = if self.header.flags & 0b0001_0000 != 0 {
             // 16 bits data
             let sample = u8_slice_to_vec_u16(slice);
             let sample2 = delta16_to_sample(sample);
@@ -64,45 +69,54 @@ impl XmSample {
             let sample2 = delta8_to_sample(sample);
             SampleDataType::Depth8(sample2)
         };
+        self.data = Some(d3);
 
-        // Now create XmSample
-
-        let xms = XmSample {
-            header: sh,
-            data: d3,
-        };
-
-        let packet_size = XMSAMPLE_HEADER_SIZE + data_len;
-        Ok((&data[packet_size..], xms))
+        Ok(&data[data_len..])
     }
 
     pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
         self.header.length = match &self.data {
-            SampleDataType::Depth8(d) => d.len() as u32,
-            SampleDataType::Depth16(d) => 2 * d.len() as u32,
+            Some(SampleDataType::Depth8(d)) => d.len() as u32,
+            Some(SampleDataType::Depth16(d)) => 2 * d.len() as u32,
+            None => 0,
         };
+        self.header.flags |= 0b0001_0000;
 
-        let mut v = match &self.data {
-            SampleDataType::Depth8(d) => sample8_to_delta(d),
-            SampleDataType::Depth16(d) => {
+        let h = bincode::serialize(&self.header)?;
+        Ok(h)
+    }
+
+    /// You must call save() before to save good length size to header
+    pub fn save_sample(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+        let d = match &self.data {
+            Some(SampleDataType::Depth8(d)) => sample8_to_delta(d),
+            Some(SampleDataType::Depth16(d)) => {
                 let d = sample16_to_delta(d);
                 vec_u16_to_u8_slice(d)
-            }
+            },
+            None => vec![],
         };
-
-        let mut all = bincode::serialize(&self.header)?;
-        all.append(&mut v);
-        Ok(all)
+        Ok(d)
     }
+
 
     pub fn to_sample(&self) -> Sample {
         let mut loop_start = self.header.loop_start;
         let mut loop_length = self.header.loop_length;
 
-        if let SampleDataType::Depth16(_) = &self.data {
+        if let Some(SampleDataType::Depth16(_)) = &self.data {
             loop_start >>= 1;
             loop_length >>= 1;
         }
+
+        let data: SampleDataType = match &self.data {
+            Some(d) => {
+                d.clone()
+            }
+            None => {
+                SampleDataType::Depth8(vec![])
+            },
+        };
 
         Sample {
             name: self.header.name.clone(),
@@ -117,7 +131,7 @@ impl XmSample {
             },
             panning: self.header.panning as f32 / 255.0,
             relative_note: self.header.relative_note,
-            data: self.data.clone(),
+            data: data,
         }
     }
 
@@ -146,7 +160,7 @@ impl XmSample {
                 xms.header.panning = (s.panning * 255.0) as u8;
                 xms.header.relative_note = s.relative_note;
                 xms.header.name = s.name.clone();
-                xms.data = s.data.clone();
+                xms.data = Some(s.data.clone());
                 output.push(xms);
             }
         }

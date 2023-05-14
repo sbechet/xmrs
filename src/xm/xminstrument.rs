@@ -253,10 +253,17 @@ impl XmInstrument {
         let d2 = &data[XMINSTRUMENT_SIZE..];
         let xmid = Box::new(bincode::deserialize::<XmInstrDefault>(d2)?);
 
+        // all samples headers, then data...
+
         let mut d3 = &data[xmih_len..];
         for _ in 0..xmih.num_samples {
             let (d, s) = XmSample::load(d3)?;
             sample.push(s);
+            d3 = d;
+        }
+
+        for s in &mut sample {
+            let d = s.add_sample(d3)?;
             d3 = d;
         }
 
@@ -272,8 +279,16 @@ impl XmInstrument {
     pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
         let mut i = self.instr.save()?;
         let mut vs: Vec<u8> = vec![];
+
+        // all headers
         for s in &mut self.sample {
             let mut b = s.save()?;
+            vs.append(&mut b);
+        }
+
+        // then samples
+        for s in &mut self.sample {
+            let mut b = s.save_sample()?;
             vs.append(&mut b);
         }
 
