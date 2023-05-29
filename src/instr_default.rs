@@ -15,7 +15,7 @@ pub struct InstrDefault {
     pub volume_envelope: Arc<Envelope>, // Envelope.points[].value: 0x00..0x3F
     pub panning_envelope: Arc<Envelope>, // Envelope.points[].value: 0x00..0x3F
     pub vibrato: Arc<Vibrato>,
-    pub volume_fadeout: f32,    // 0.0..1.0
+    pub volume_fadeout: f32, // 0.0..1.0
     pub sample: Vec<Arc<Sample>>,
     pub midi: InstrMidi,
     pub midi_mute_computer: bool,
@@ -35,4 +35,3 @@ impl Default for InstrDefault {
         }
     }
 }
-

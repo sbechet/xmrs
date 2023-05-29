@@ -34,14 +34,13 @@ impl Waveform {
 }
 
 /// Vibrato with Steroid
-#[derive(Default, Serialize, Deserialize,  Clone, Copy, Debug)]
+#[derive(Default, Serialize, Deserialize, Clone, Copy, Debug)]
 pub struct Vibrato {
     pub waveform: Waveform,
-    pub speed: u8, // 0x00..0x3F
+    pub speed: u8,  // 0x00..0x3F
     pub depth: f32, // 0.0..1.0
-    pub sweep: u8, // 0x00..0xFF (In other trackers may be 0..FFFF !)
+    pub sweep: u8,  // 0x00..0xFF (In other trackers may be 0..FFFF !)
 }
-
 
 impl Vibrato {
     pub fn get_value(&self, counter: u16) -> f32 {

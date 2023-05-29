@@ -93,12 +93,11 @@ impl XmSample {
             Some(SampleDataType::Depth16(d)) => {
                 let d = sample16_to_delta(d);
                 vec_u16_to_u8_slice(d)
-            },
+            }
             None => vec![],
         };
         Ok(d)
     }
-
 
     pub fn to_sample(&self) -> Sample {
         let mut loop_start = self.header.loop_start;
@@ -110,12 +109,8 @@ impl XmSample {
         }
 
         let data: SampleDataType = match &self.data {
-            Some(d) => {
-                d.clone()
-            }
-            None => {
-                SampleDataType::Depth8(vec![])
-            },
+            Some(d) => d.clone(),
+            None => SampleDataType::Depth8(vec![]),
         };
 
         Sample {
@@ -141,7 +136,7 @@ impl XmSample {
             for s in &id.sample {
                 let mut loop_start = s.loop_start;
                 let mut loop_length = s.loop_length;
-        
+
                 if let SampleDataType::Depth16(_) = &s.data {
                     loop_start <<= 1;
                     loop_length <<= 1;

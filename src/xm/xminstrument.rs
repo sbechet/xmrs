@@ -349,8 +349,12 @@ impl XmInstrument {
                 };
                 let mut id = InstrDefault {
                     sample_for_note: xmi.sample_for_notes,
-                    volume_envelope: Arc::new(Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt]).unwrap()),
-                    panning_envelope: Arc::new(Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt],).unwrap()),
+                    volume_envelope: Arc::new(
+                        Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt]).unwrap(),
+                    ),
+                    panning_envelope: Arc::new(
+                        Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt]).unwrap(),
+                    ),
                     vibrato: Arc::new(Vibrato::default()),
                     volume_fadeout: xmi.volume_fadeout as f32 / 32768.0,
                     midi: InstrMidi::default(),
@@ -367,8 +371,8 @@ impl XmInstrument {
                         ve.loop_enabled = xmi.volume_flag & 0b0100 != 0;
                         ve.loop_start_point = xmi.volume_loop_start_point;
                         ve.loop_end_point = xmi.volume_loop_end_point;
-                    },
-                    None => {},
+                    }
+                    None => {}
                 }
 
                 // copy panning envelope data
@@ -380,8 +384,8 @@ impl XmInstrument {
                         pe.loop_enabled = xmi.panning_flag & 0b0100 != 0;
                         pe.loop_start_point = xmi.panning_loop_start_point;
                         pe.loop_end_point = xmi.panning_loop_end_point;
-                    },
-                    None => {},
+                    }
+                    None => {}
                 }
 
                 // cleanup bad envelope
@@ -414,8 +418,8 @@ impl XmInstrument {
                         v.speed = xmi.vibrato_rate;
                         v.depth = xmi.vibrato_depth as f32 / 15.0;
                         v.sweep = xmi.vibrato_sweep;
-                    },
-                    None => {},
+                    }
+                    None => {}
                 }
 
                 id.midi.on = xmi.midi_on == 1;

@@ -103,7 +103,6 @@ impl Module {
         Ok(ser_all)
     }
 
-
     /// get song length
     pub fn get_song_length(&self) -> usize {
         self.pattern_order.len()
@@ -126,5 +125,4 @@ impl Module {
             0
         }
     }
-
 }

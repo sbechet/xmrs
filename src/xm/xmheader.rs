@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use super::serde_helper::{deserialize_string_17, serialize_string_17};
 use super::serde_helper::{deserialize_string_20, serialize_string_20};
 
-use crate::module::{Module, FrequencyType};
+use crate::module::{FrequencyType, Module};
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
 #[serde(into = "u16", try_from = "u16")]

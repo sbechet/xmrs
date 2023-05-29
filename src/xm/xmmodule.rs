@@ -7,7 +7,7 @@ use super::xmheader::{XmFlagType, XmHeader};
 use super::xminstrument::XmInstrument;
 use super::xmpattern::XmPattern;
 
-use crate::module::{Module, FrequencyType};
+use crate::module::{FrequencyType, Module};
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmModule {
