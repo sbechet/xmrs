@@ -34,10 +34,25 @@ impl Waveform {
 }
 
 /// Vibrato with Steroid
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize,  Clone, Copy, Debug)]
 pub struct Vibrato {
     pub waveform: Waveform,
     pub speed: u8, // 0x00..0x3F
     pub depth: f32, // 0.0..1.0
     pub sweep: u8, // 0x00..0xFF (In other trackers may be 0..FFFF !)
+}
+
+
+impl Vibrato {
+    pub fn get_value(&self, counter: u16) -> f32 {
+        let counter = counter & 63;
+        let sweep = if counter < self.sweep as u16 {
+            /* No idea if this is correct, but it sounds close enough… */
+            counter as f32 / self.sweep as f32
+        } else {
+            1.0
+        };
+        let step = (counter * self.speed as u16) / 4;
+        self.waveform.waveform(step) * self.depth * sweep / 4.0
+    }
 }

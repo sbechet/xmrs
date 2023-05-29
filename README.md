@@ -1,6 +1,6 @@
 # XMrs File format library
 
-A library to edit Tracker data with pleasure.
+A library to edit Sound Tracker data with pleasure.
 
 Because "Representation is the Essence of Programming".
 
@@ -12,7 +12,7 @@ Useful struct parts:
   - [Pattern](https://docs.rs/xmrs/latest/xmrs/module/type.Pattern.html)
     - [PatternSlot](https://docs.rs/xmrs/latest/xmrs/patternslot/struct.PatternSlot.html)
   - [Instrument](https://docs.rs/xmrs/latest/xmrs/instrument/struct.Instrument.html)
-    - [InstrDefault](https://docs.rs/xmrs/latest/xmrs/instrument/struct.InstrDefault.html) for Historical XM Instrument
+    - [InstrDefault](https://docs.rs/xmrs/latest/xmrs/instr_default/struct.InstrDefault.html) for Historical XM Instrument
       - [Envelope](https://docs.rs/xmrs/latest/xmrs/envelope/struct.Envelope.html)
       - [Vibrato](https://docs.rs/xmrs/latest/xmrs/vibrato/struct.Vibrato.html)
       - [Sample](https://docs.rs/xmrs/latest/xmrs/sample/struct.Sample.html)

@@ -110,7 +110,7 @@ impl XmPattern {
         let mut all: Vec<Self> = vec![];
         for p in &module.pattern {
             let mut xmp = XmPattern {
-                pattern: p.clone(),
+                pattern: (&**p).clone(),
                 ..Default::default()
             };
             xmp.header.num_rows = p.len() as u16;

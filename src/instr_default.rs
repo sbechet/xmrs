@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
+use std::sync::Arc;
 
 use crate::envelope::Envelope;
 use crate::instr_midi::InstrMidi;
@@ -11,11 +12,11 @@ use crate::vibrato::Vibrato;
 pub struct InstrDefault {
     #[serde(with = "BigArray")]
     pub sample_for_note: [u8; 96],
-    pub volume_envelope: Envelope, // Envelope.points[].value: 0x00..0x3F
-    pub panning_envelope: Envelope, // Envelope.points[].value: 0x00..0x3F
-    pub vibrato: Vibrato,
+    pub volume_envelope: Arc<Envelope>, // Envelope.points[].value: 0x00..0x3F
+    pub panning_envelope: Arc<Envelope>, // Envelope.points[].value: 0x00..0x3F
+    pub vibrato: Arc<Vibrato>,
     pub volume_fadeout: f32,    // 0.0..1.0
-    pub sample: Vec<Sample>,
+    pub sample: Vec<Arc<Sample>>,
     pub midi: InstrMidi,
     pub midi_mute_computer: bool,
 }
@@ -24,9 +25,9 @@ impl Default for InstrDefault {
     fn default() -> Self {
         Self {
             sample_for_note: [0; 96],
-            volume_envelope: Envelope::default(),
-            panning_envelope: Envelope::default(),
-            vibrato: Vibrato::default(),
+            volume_envelope: Arc::new(Envelope::default()),
+            panning_envelope: Arc::new(Envelope::default()),
+            vibrato: Arc::new(Vibrato::default()),
             volume_fadeout: 0.0,
             sample: vec![],
             midi: InstrMidi::default(),
@@ -34,3 +35,4 @@ impl Default for InstrDefault {
         }
     }
 }
+

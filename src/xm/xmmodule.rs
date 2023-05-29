@@ -1,12 +1,13 @@
 /// Original XM Module
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 use super::xmheader::{XmFlagType, XmHeader};
 use super::xminstrument::XmInstrument;
 use super::xmpattern::XmPattern;
 
-use crate::module::{Module, ModuleFlag};
+use crate::module::{Module, FrequencyType};
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmModule {
@@ -50,9 +51,9 @@ impl XmModule {
         let mut module = Module {
             name: self.header.name.clone(),
             comment: "".to_string(),
-            flags: match self.header.flags {
-                XmFlagType::XmAmigaFrequencies => ModuleFlag::AmigaFrequencies,
-                XmFlagType::XmLinearFrequencies => ModuleFlag::LinearFrequencies,
+            frequency_type: match self.header.flags {
+                XmFlagType::XmAmigaFrequencies => FrequencyType::AmigaFrequencies,
+                XmFlagType::XmLinearFrequencies => FrequencyType::LinearFrequencies,
             },
             restart_position: self.header.restart_position,
             default_tempo: self.header.default_tempo,
@@ -63,11 +64,11 @@ impl XmModule {
         };
 
         for p in &self.pattern {
-            module.pattern.push(p.pattern.clone());
+            module.pattern.push(Arc::new(p.pattern.clone()));
         }
 
         for i in &self.instrument {
-            module.instrument.push(i.to_instrument())
+            module.instrument.push(Arc::new(i.to_instrument()))
         }
 
         module

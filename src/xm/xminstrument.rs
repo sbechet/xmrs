@@ -2,6 +2,7 @@
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
+use std::sync::Arc;
 
 use crate::envelope::{Envelope, EnvelopePoint};
 use crate::instr_default::InstrDefault;
@@ -330,9 +331,9 @@ impl XmInstrument {
         let it: InstrumentType = match &self.instr {
             XmInstrumentType::Empty => InstrumentType::Empty,
             XmInstrumentType::Default(xmi) => {
-                let mut sample: Vec<Sample> = vec![];
+                let mut sample: Vec<Arc<Sample>> = vec![];
                 for xms in &self.sample {
-                    let s = xms.to_sample();
+                    let s = Arc::new(xms.to_sample());
                     sample.push(s);
                 }
 
@@ -348,13 +349,9 @@ impl XmInstrument {
                 };
                 let mut id = InstrDefault {
                     sample_for_note: xmi.sample_for_notes,
-                    volume_envelope: Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt])
-                        .unwrap(),
-                    panning_envelope: Self::envelope_from_slice(
-                        &xmi.panning_envelope[0..num_pan_pt],
-                    )
-                    .unwrap(),
-                    vibrato: Vibrato::default(),
+                    volume_envelope: Arc::new(Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt]).unwrap()),
+                    panning_envelope: Arc::new(Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt],).unwrap()),
+                    vibrato: Arc::new(Vibrato::default()),
                     volume_fadeout: xmi.volume_fadeout as f32 / 32768.0,
                     midi: InstrMidi::default(),
                     midi_mute_computer: false,
@@ -362,27 +359,37 @@ impl XmInstrument {
                 };
 
                 // copy volume envelope data
-                id.volume_envelope.enabled = xmi.volume_flag & 0b0001 != 0;
-                id.volume_envelope.sustain_enabled = xmi.volume_flag & 0b0010 != 0;
-                id.volume_envelope.sustain_point = xmi.volume_sustain_point;
-                id.volume_envelope.loop_enabled = xmi.volume_flag & 0b0100 != 0;
-                id.volume_envelope.loop_start_point = xmi.volume_loop_start_point;
-                id.volume_envelope.loop_end_point = xmi.volume_loop_end_point;
+                match Arc::<Envelope>::get_mut(&mut id.volume_envelope) {
+                    Some(ve) => {
+                        ve.enabled = xmi.volume_flag & 0b0001 != 0;
+                        ve.sustain_enabled = xmi.volume_flag & 0b0010 != 0;
+                        ve.sustain_point = xmi.volume_sustain_point;
+                        ve.loop_enabled = xmi.volume_flag & 0b0100 != 0;
+                        ve.loop_start_point = xmi.volume_loop_start_point;
+                        ve.loop_end_point = xmi.volume_loop_end_point;
+                    },
+                    None => {},
+                }
 
                 // copy panning envelope data
-                id.panning_envelope.enabled = xmi.panning_flag & 0b0001 != 0;
-                id.panning_envelope.sustain_enabled = xmi.panning_flag & 0b0010 != 0;
-                id.panning_envelope.sustain_point = xmi.panning_sustain_point;
-                id.panning_envelope.loop_enabled = xmi.panning_flag & 0b0100 != 0;
-                id.panning_envelope.loop_start_point = xmi.panning_loop_start_point;
-                id.panning_envelope.loop_end_point = xmi.panning_loop_end_point;
+                match Arc::<Envelope>::get_mut(&mut id.panning_envelope) {
+                    Some(pe) => {
+                        pe.enabled = xmi.panning_flag & 0b0001 != 0;
+                        pe.sustain_enabled = xmi.panning_flag & 0b0010 != 0;
+                        pe.sustain_point = xmi.panning_sustain_point;
+                        pe.loop_enabled = xmi.panning_flag & 0b0100 != 0;
+                        pe.loop_start_point = xmi.panning_loop_start_point;
+                        pe.loop_end_point = xmi.panning_loop_end_point;
+                    },
+                    None => {},
+                }
 
                 // cleanup bad envelope
                 if Self::is_envelope_nok(&id.volume_envelope) {
-                    id.volume_envelope = Envelope::default();
+                    id.volume_envelope = Arc::new(Envelope::default());
                 }
                 if Self::is_envelope_nok(&id.panning_envelope) {
-                    id.panning_envelope = Envelope::default();
+                    id.panning_envelope = Arc::new(Envelope::default());
                 }
 
                 // cleanup bad sample for notes
@@ -394,17 +401,22 @@ impl XmInstrument {
                 }
 
                 // vibrato
-                id.vibrato.waveform = match xmi.vibrato_type {
-                    0 => Waveform::Sine,
-                    1 => Waveform::RampDown,
-                    2 => Waveform::Square,
-                    3 => Waveform::Random,
-                    4 => Waveform::RampUp,
-                    _ => Waveform::Sine,
-                };
-                id.vibrato.speed = xmi.vibrato_rate;
-                id.vibrato.depth = xmi.vibrato_depth as f32 / 15.0;
-                id.vibrato.sweep = xmi.vibrato_sweep;
+                match Arc::<Vibrato>::get_mut(&mut id.vibrato) {
+                    Some(v) => {
+                        v.waveform = match xmi.vibrato_type {
+                            0 => Waveform::Sine,
+                            1 => Waveform::RampDown,
+                            2 => Waveform::Square,
+                            3 => Waveform::Random,
+                            4 => Waveform::RampUp,
+                            _ => Waveform::Sine,
+                        };
+                        v.speed = xmi.vibrato_rate;
+                        v.depth = xmi.vibrato_depth as f32 / 15.0;
+                        v.sweep = xmi.vibrato_sweep;
+                    },
+                    None => {},
+                }
 
                 id.midi.on = xmi.midi_on == 1;
                 id.midi.channel = xmi.midi_channel;
@@ -412,7 +424,7 @@ impl XmInstrument {
                 id.midi.bend = xmi.midi_bend;
                 id.midi_mute_computer = xmi.midi_mute_computer == 1;
 
-                InstrumentType::Default(id)
+                InstrumentType::Default(Arc::new(id))
             }
         };
         Instrument {

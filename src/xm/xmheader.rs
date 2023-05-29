@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use super::serde_helper::{deserialize_string_17, serialize_string_17};
 use super::serde_helper::{deserialize_string_20, serialize_string_20};
 
-use crate::module::{Module, ModuleFlag};
+use crate::module::{Module, FrequencyType};
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
 #[serde(into = "u16", try_from = "u16")]
@@ -104,9 +104,9 @@ impl XmHeader {
             },
             number_of_patterns: module.pattern.len() as u16,
             number_of_instruments: module.instrument.len() as u16,
-            flags: match module.flags {
-                ModuleFlag::LinearFrequencies => XmFlagType::XmLinearFrequencies,
-                ModuleFlag::AmigaFrequencies => XmFlagType::XmAmigaFrequencies,
+            flags: match module.frequency_type {
+                FrequencyType::LinearFrequencies => XmFlagType::XmLinearFrequencies,
+                FrequencyType::AmigaFrequencies => XmFlagType::XmAmigaFrequencies,
             },
             default_tempo: module.default_tempo,
             default_bpm: module.default_bpm,

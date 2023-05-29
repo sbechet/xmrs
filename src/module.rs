@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use libflate::deflate::*;
 use std::io::{Read, Write};
+use std::sync::Arc;
 
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
@@ -12,12 +13,12 @@ pub const MAX_NUM_ROWS: usize = 256;
 
 /// Historical Frequencies to load old data. Default is Linear.
 #[derive(Serialize, Deserialize, Clone, Copy, Debug)]
-pub enum ModuleFlag {
+pub enum FrequencyType {
     LinearFrequencies,
     AmigaFrequencies,
 }
 
-impl Default for ModuleFlag {
+impl Default for FrequencyType {
     fn default() -> Self {
         Self::LinearFrequencies
     }
@@ -34,16 +35,16 @@ pub type Pattern = Vec<Row>;
 pub struct Module {
     pub name: String,
     pub comment: String,
-    pub flags: ModuleFlag,
+    pub frequency_type: FrequencyType,
     /// Restart index in `pattern_order`
     pub restart_position: u16,
     pub default_tempo: u16,
     pub default_bpm: u16,
     /// Defines the exact order for the patterns playback
     pub pattern_order: Vec<u8>,
-    pub pattern: Vec<Pattern>,
+    pub pattern: Vec<Arc<Pattern>>,
     /// Instrument 1 has index 0, instrument 2 has index 1, etc.
-    pub instrument: Vec<Instrument>,
+    pub instrument: Vec<Arc<Instrument>>,
 }
 
 impl Default for Module {
@@ -51,7 +52,7 @@ impl Default for Module {
         Module {
             name: "".to_string(),
             comment: "".to_string(),
-            flags: ModuleFlag::LinearFrequencies,
+            frequency_type: FrequencyType::LinearFrequencies,
             restart_position: 0,
             default_tempo: 6,
             default_bpm: 125,

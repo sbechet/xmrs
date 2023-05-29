@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 use crate::instr_default::InstrDefault;
 use crate::instr_ekn::InstrEkn;
@@ -15,15 +16,15 @@ pub enum InstrumentType {
     #[default]
     Empty,
     /// Historical XM Instrument
-    Default(InstrDefault),
+    Default(Arc<InstrDefault>),
     /// Euclidian Rythm Instrument
-    Euclidian(InstrEkn),
+    Euclidian(Arc<InstrEkn>),
     /// Midi Instrument
-    Midi(InstrMidi),
+    Midi(Arc<InstrMidi>),
     /// MOS6581 SID Voice
-    Sid(InstrSid),
+    Sid(Arc<InstrSid>),
     /// Rob Hubbard Instrument,
-    RobSid(InstrRobSid),
+    RobSid(Arc<InstrRobSid>),
 }
 
 /// Instrument with Steroid
