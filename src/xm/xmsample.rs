@@ -108,6 +108,23 @@ impl XmSample {
             loop_length >>= 1;
         }
 
+        /* Fix invalid loop definitions */
+        let sample_length = match &self.data {
+            Some(SampleDataType::Depth8(d)) => {
+                d.len() as u32
+            }
+            Some(SampleDataType::Depth16(d)) => {
+                d.len() as u32
+            },
+            _ => { 0 }
+        };
+        if loop_start > sample_length {
+            loop_start = sample_length;
+        }
+        if loop_length > sample_length {
+            loop_length = sample_length;
+        }
+
         let data: SampleDataType = match &self.data {
             Some(d) => d.clone(),
             None => SampleDataType::Depth8(vec![]),
