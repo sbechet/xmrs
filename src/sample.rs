@@ -22,8 +22,8 @@ pub enum SampleDataType {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Sample {
     pub name: String,
-    pub loop_start: u32,
-    pub loop_length: u32,
+    pub loop_start: u32,    // 0 <= loop_start < len()
+    pub loop_length: u32,   // 1 <= loop_length <= len() - loop_start
     pub volume: f32,
     pub finetune: f32, // see relative_note
     pub flags: LoopType,

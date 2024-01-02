@@ -109,20 +109,17 @@ impl XmSample {
         }
 
         /* Fix invalid loop definitions */
-        let sample_length = match &self.data {
-            Some(SampleDataType::Depth8(d)) => {
-                d.len() as u32
+        let sample_length = self.len();
+        if sample_length == 0 {
+            loop_start = 0;
+            loop_length = 0;
+        } else {
+            if loop_start >= sample_length {
+                loop_start = sample_length - 1;
             }
-            Some(SampleDataType::Depth16(d)) => {
-                d.len() as u32
-            },
-            _ => { 0 }
-        };
-        if loop_start > sample_length {
-            loop_start = sample_length;
-        }
-        if loop_length > sample_length {
-            loop_length = sample_length;
+            if loop_length > sample_length - loop_start {
+                loop_length = sample_length - loop_start;
+            }
         }
 
         let data: SampleDataType = match &self.data {
@@ -177,5 +174,18 @@ impl XmSample {
             }
         }
         output
+    }
+
+
+    pub fn len(&self) -> u32 {
+        match &self.data {
+            Some(SampleDataType::Depth8(d)) => {
+                d.len() as u32
+            }
+            Some(SampleDataType::Depth16(d)) => {
+                d.len() as u32
+            },
+            _ => { 0 }
+        }
     }
 }
