@@ -136,6 +136,7 @@ impl XmSample {
             flags: match self.header.flags & 0b000000_11 {
                 1 => LoopType::Forward,
                 2 => LoopType::PingPong,
+                3 => LoopType::PingPong,
                 _ => LoopType::No,
             },
             panning: self.header.panning as f32 / 255.0,
