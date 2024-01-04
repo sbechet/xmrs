@@ -11,3 +11,5 @@ pub mod xmmodule;
 pub mod xmpattern;
 pub mod xmpatternslot;
 pub mod xmsample;
+
+pub mod xiinstrument;

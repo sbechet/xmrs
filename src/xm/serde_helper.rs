@@ -19,6 +19,7 @@ macro_rules! make_deserialize_string_fn {
 
 make_deserialize_string_fn!(deserialize_string_17, 17);
 make_deserialize_string_fn!(deserialize_string_20, 20);
+make_deserialize_string_fn!(deserialize_string_21, 21);
 make_deserialize_string_fn!(deserialize_string_22, 22);
 
 // --- serialize ---------------------------
@@ -66,4 +67,5 @@ fn utf8_char_width(ch: u8) -> usize {
 
 make_serialize_string_fn!(serialize_string_17, 17);
 make_serialize_string_fn!(serialize_string_20, 20);
+make_serialize_string_fn!(serialize_string_21, 21);
 make_serialize_string_fn!(serialize_string_22, 22);

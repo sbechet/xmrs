@@ -7,7 +7,7 @@ use super::serde_helper::{deserialize_string_22, serialize_string_22};
 use crate::instrument::{Instrument, InstrumentType};
 use crate::sample::{LoopType, Sample, SampleDataType};
 
-const XMSAMPLE_HEADER_SIZE: usize = 40;
+pub const XMSAMPLE_HEADER_SIZE: usize = 40;
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 #[repr(C)]

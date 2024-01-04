@@ -71,10 +71,17 @@ impl XmHeader {
     /* return like nom (&[u8], (XmHeader, PatternOrder) ) */
     pub fn load(ser_xmheader: &[u8]) -> Result<(&[u8], XmHeader, Vec<u8>), Box<ErrorKind>> {
         match bincode::deserialize::<XmHeader>(ser_xmheader) {
-            Ok(xmh) => match xmh.get_pattern_order(&ser_xmheader[80..]) {
-                Ok((data, pattern_order)) => Ok((data, xmh, pattern_order)),
-                Err(e) => Err(e),
-            },
+            Ok(xmh) => {
+                if xmh.id_text != "Extended Module:" {
+                    return Err(Box::new(ErrorKind::Custom(
+                        "Not an Extended Module?".to_string(),
+                    )));
+                }
+                match xmh.get_pattern_order(&ser_xmheader[80..]) {
+                    Ok((data, pattern_order)) => Ok((data, xmh, pattern_order)),
+                    Err(e) => Err(e),
+                }
+            }
             Err(e) => Err(e),
         }
     }

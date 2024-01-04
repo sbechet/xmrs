@@ -14,7 +14,7 @@ use crate::vibrato::{Vibrato, Waveform};
 use crate::instr_midi::InstrMidi;
 
 use super::serde_helper::{deserialize_string_22, serialize_string_22};
-use super::xmsample::XmSample;
+use super::xmsample::{XmSample, XMSAMPLE_HEADER_SIZE};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum XmInstrumentType {
@@ -31,9 +31,10 @@ impl XmInstrumentType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+pub const XMINSTRDEFAULT_SIZE: usize = 96 + 4 * 12 + 4 * 12 + 14 + 2 + 2 + 2 + 2 + 1;
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub struct XmInstrDefault {
-    sample_header_size: u32, // not used?
     #[serde(with = "BigArray")]
     sample_for_notes: [u8; 96],
 
@@ -59,7 +60,6 @@ pub struct XmInstrDefault {
 
     volume_fadeout: u16,
 
-    // reserved: u16,
     midi_on: u8,
     midi_channel: u8,
     midi_program: u16,
@@ -70,7 +70,6 @@ pub struct XmInstrDefault {
 impl Default for XmInstrDefault {
     fn default() -> Self {
         Self {
-            sample_header_size: 40,
             sample_for_notes: [0; 96],
             volume_envelope: [0; 4 * 12],
             panning_envelope: [0; 4 * 12],
@@ -173,18 +172,18 @@ impl XmInstrDefault {
     }
 }
 
-const XMINSTRUMENT_SIZE: usize = 29;
+pub const XMINSTRUMENT_SIZE: usize = 29;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XmInstrumentHeader {
-    instrument_header_len: u32,
+    pub instrument_header_len: u32,
     #[serde(
         deserialize_with = "deserialize_string_22",
         serialize_with = "serialize_string_22"
     )]
-    name: String,
-    instr_type: u8, // must be 0, be random...
-    num_samples: u16,
+    pub name: String,
+    pub instr_type: u8, // must be 0, be random...
+    pub num_samples: u16,
 }
 
 impl Default for XmInstrumentHeader {
@@ -217,15 +216,17 @@ impl XmInstrumentHeader {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XmInstrument {
-    header: XmInstrumentHeader,
-    instr: XmInstrumentType,
-    sample: Vec<XmSample>,
+    pub header: XmInstrumentHeader,
+    pub sample_header_size: u32,
+    pub instr: XmInstrumentType,
+    pub sample: Vec<XmSample>,
 }
 
 impl Default for XmInstrument {
     fn default() -> Self {
         Self {
             header: XmInstrumentHeader::default(),
+            sample_header_size: XMSAMPLE_HEADER_SIZE as u32,
             instr: XmInstrumentType::Empty,
             sample: vec![],
         }
@@ -244,6 +245,7 @@ impl XmInstrument {
             let data = &data[xmih_len..];
             let xmi = XmInstrument {
                 header: xmih,
+                sample_header_size: XMSAMPLE_HEADER_SIZE as u32,
                 instr: XmInstrumentType::Empty,
                 sample: vec![],
             };
@@ -270,6 +272,7 @@ impl XmInstrument {
 
         let xmi = XmInstrument {
             header: xmih,
+            sample_header_size: XMSAMPLE_HEADER_SIZE as u32,
             instr: XmInstrumentType::Default(xmid),
             sample,
         };
@@ -294,7 +297,7 @@ impl XmInstrument {
         }
 
         self.header.num_samples = self.sample.len() as u16;
-        self.header.instrument_header_len = XMINSTRUMENT_SIZE as u32 + i.len() as u32;
+        self.header.instrument_header_len = XMINSTRUMENT_SIZE as u32 + 4 + i.len() as u32;
         let mut h = self.header.save()?;
 
         let mut all: Vec<u8> = vec![];
@@ -444,6 +447,7 @@ impl XmInstrument {
         for i in &module.instrument {
             all.push(XmInstrument {
                 header: XmInstrumentHeader::from_instr(i),
+                sample_header_size: XMSAMPLE_HEADER_SIZE as u32,
                 instr: XmInstrDefault::from_instr(i),
                 sample: XmSample::from_instr(i),
             });
