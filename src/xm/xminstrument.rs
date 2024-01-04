@@ -254,6 +254,8 @@ impl XmInstrument {
 
         // samples header
         let d2 = &data[XMINSTRUMENT_SIZE..];
+        let _sample_header_size: u32 = bincode::deserialize::<u32>(d2)?;
+        let d2 = &d2[4..];
         let xmid = Box::new(bincode::deserialize::<XmInstrDefault>(d2)?);
 
         // all samples headers, then data...
@@ -299,9 +301,12 @@ impl XmInstrument {
         self.header.num_samples = self.sample.len() as u16;
         self.header.instrument_header_len = XMINSTRUMENT_SIZE as u32 + 4 + i.len() as u32;
         let mut h = self.header.save()?;
+        let sample_header_size = XMSAMPLE_HEADER_SIZE as u32;
+        let mut sample_header_size_v = bincode::serialize::<u32>(&sample_header_size)?;
 
         let mut all: Vec<u8> = vec![];
         all.append(&mut h);
+        all.append(&mut sample_header_size_v);
         all.append(&mut i);
         all.append(&mut vs);
         Ok(all)
