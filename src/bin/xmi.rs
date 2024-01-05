@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 
 use bincode::ErrorKind;
-use xmrs::xm::xiinstrument::XiInstrument;
+use xmrs::xm::xi_instrument::XiInstrument;
 
 const XI: &[u8] = include_bytes!("instr.xi");
 

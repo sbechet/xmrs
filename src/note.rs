@@ -1,8 +1,9 @@
+use std::fmt::*;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
 /// 8 octaves with notes
-#[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone, Debug)]
+#[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]
 #[repr(u8)]
 pub enum Note {
     /// No note
@@ -114,4 +115,119 @@ pub enum Note {
     B7 = 96,
     /// Stop note
     KeyOff = 97,
+}
+
+impl Debug for Note {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        let text = match self {
+            Note::None => "---",
+            // Octave 0
+            Note::C0  => "C-0",
+            Note::Cs0 => "C#0",
+            Note::D0  => "D-0",
+            Note::Ds0 => "D#0",
+            Note::E0  => "E-0",
+            Note::F0  => "F-0",
+            Note::Fs0 => "F#0",
+            Note::G0  => "G-0",
+            Note::Gs0 => "G#0",
+            Note::A0  => "A-0",
+            Note::As0 => "A#0",
+            Note::B0  => "B-0",
+            // Octave 1
+            Note::C1  => "C-1",
+            Note::Cs1 => "C#1",
+            Note::D1  => "D-1",
+            Note::Ds1 => "D#1",
+            Note::E1  => "E-1",
+            Note::F1  => "F-1",
+            Note::Fs1 => "F#1",
+            Note::G1  => "G-1",
+            Note::Gs1 => "G#1",
+            Note::A1  => "A-1",
+            Note::As1 => "A#1",
+            Note::B1  => "B-1",
+            // Octave 2
+            Note::C2  => "C-2",
+            Note::Cs2 => "C#2",
+            Note::D2  => "D-2",
+            Note::Ds2 => "D#2",
+            Note::E2  => "E-2",
+            Note::F2  => "F-2",
+            Note::Fs2 => "F#2",
+            Note::G2  => "G-2",
+            Note::Gs2 => "G#2",
+            Note::A2  => "A-2",
+            Note::As2 => "A#2",
+            Note::B2  => "B-2",
+            // Octave 3
+            Note::C3  => "C-3",
+            Note::Cs3 => "C#3",
+            Note::D3  => "D-3",
+            Note::Ds3 => "D#3",
+            Note::E3  => "E-3",
+            Note::F3  => "F-3",
+            Note::Fs3 => "F#3",
+            Note::G3  => "G-3",
+            Note::Gs3 => "G#3",
+            Note::A3  => "A-3",
+            Note::As3 => "A#3",
+            Note::B3  => "B-3",
+            // Octave 4
+            Note::C4  => "C-4",
+            Note::Cs4 => "C#4",
+            Note::D4  => "D-4",
+            Note::Ds4 => "D#4",
+            Note::E4  => "E-4",
+            Note::F4  => "F-4",
+            Note::Fs4 => "F#4",
+            Note::G4  => "G-4",
+            Note::Gs4 => "G#4",
+            Note::A4  => "A-4",
+            Note::As4 => "A#4",
+            Note::B4  => "B-4",
+            // Octave 5
+            Note::C5  => "C-5",
+            Note::Cs5 => "C#5",
+            Note::D5  => "D-5",
+            Note::Ds5 => "D#5",
+            Note::E5  => "E-5",
+            Note::F5  => "F-5",
+            Note::Fs5 => "F#5",
+            Note::G5  => "G-5",
+            Note::Gs5 => "G#5",
+            Note::A5  => "A-5",
+            Note::As5 => "A#5",
+            Note::B5  => "B-5",
+            // Octave 6
+            Note::C6  => "C-6",
+            Note::Cs6 => "C#6",
+            Note::D6  => "D-6",
+            Note::Ds6 => "D#6",
+            Note::E6  => "E-6",
+            Note::F6  => "F-6",
+            Note::Fs6 => "F#6",
+            Note::G6  => "G-6",
+            Note::Gs6 => "G#6",
+            Note::A6  => "A-6",
+            Note::As6 => "A#6",
+            Note::B6  => "B-6",
+            // Octave 7
+            Note::C7  => "C-7",
+            Note::Cs7 => "C#7",
+            Note::D7  => "D-7",
+            Note::Ds7 => "D#7",
+            Note::E7  => "E-7",
+            Note::F7  => "F-7",
+            Note::Fs7 => "F#7",
+            Note::G7  => "G-7",
+            Note::Gs7 => "G#7",
+            Note::A7  => "A-7",
+            Note::As7 => "A#7",
+            Note::B7  => "B-7",
+            // Stop note
+            Note::KeyOff => "[=]",
+        };
+        write!(f, "{}", text)
+    }
 }

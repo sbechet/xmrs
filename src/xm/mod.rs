@@ -12,4 +12,6 @@ pub mod xmpattern;
 pub mod xmpatternslot;
 pub mod xmsample;
 
-pub mod xiinstrument;
+pub mod xi_instrument;
+pub mod xp_pattern;
+pub mod xt_track;

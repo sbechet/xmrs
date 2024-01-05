@@ -35,3 +35,10 @@ infos = { name = "infos", path = "examples/infos.rs", features=["demo"] }
 [[bin]]
 name = "xmrs"
 path = "src/bin/xmrs.rs"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
+

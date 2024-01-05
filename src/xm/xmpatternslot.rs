@@ -79,6 +79,16 @@ impl XmPatternSlot {
         ))
     }
 
+    pub fn save_unpack(&self) -> Vec<u8> {
+        let mut bytes: [u8; 5] = [0; 5];
+        bytes[0] = self.note.into();
+        bytes[1] = self.instrument;
+        bytes[2] = self.volume;
+        bytes[3] = self.effect_type;
+        bytes[4] = self.effect_parameter;
+        return bytes.to_vec();
+    }
+
     pub fn save(&self) -> Vec<u8> {
         let mut bytes: [u8; 5] = [0; 5];
         bytes[0] = self.note.into();
