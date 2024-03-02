@@ -1,12 +1,12 @@
 [package]
 name = "xmrs"
-version = "0.3.8"
+version = "0.3.9"
 edition = "2021"
 description = "A library to edit SoundTracker data with pleasure "
 license = "MIT"
 authors = ["Sebastien Bechet"]
 documentation = "https://docs.rs/xmrs"
-repository = "https://github.com/sbechet/xmrs"
+repository = "https://codeberg.org/sbechet/xmrs"
 readme = "README.md"
 
 keywords = ["xm", "module", "mod", "s3m", "tracker"]
