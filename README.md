@@ -14,7 +14,7 @@ Useful struct parts:
   - [Instrument](https://docs.rs/xmrs/latest/xmrs/instrument/struct.Instrument.html)
     - [InstrDefault](https://docs.rs/xmrs/latest/xmrs/instr_default/struct.InstrDefault.html) for Historical XM Instrument
       - [Envelope](https://docs.rs/xmrs/latest/xmrs/envelope/struct.Envelope.html)
-      - [Vibrato](https://docs.rs/xmrs/latest/xmrs/vibrato/struct.Vibrato.html)
+      - [Vibrato](https://docs.rs/xmrs/latest/xmrs/vibrato/struct.InstrVibrato.html)
       - [Sample](https://docs.rs/xmrs/latest/xmrs/sample/struct.Sample.html)
     - [InstrEkn](https://docs.rs/xmrs/latest/xmrs/instr_ekn/struct.InstrEkn.html) for Euclidian Rythm Instrument
     - [InstrMidi](https://docs.rs/xmrs/latest/xmrs/instr_midi/struct.InstrMidi.html) for Midi Instrument
