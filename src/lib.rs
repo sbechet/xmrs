@@ -42,7 +42,7 @@ pub mod patternslot;
 /// Sample with Steroid
 pub mod sample;
 /// Vibrato with Steroid
-pub mod vibrato;
+pub mod instr_vibrato;
 
 /// Load and Save Historical XM files
 pub mod xm;

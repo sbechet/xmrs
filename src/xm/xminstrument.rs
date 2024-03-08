@@ -9,7 +9,7 @@ use crate::instr_default::InstrDefault;
 use crate::instrument::{Instrument, InstrumentType};
 use crate::module::Module;
 use crate::sample::Sample;
-use crate::vibrato::{Vibrato, Waveform};
+use crate::instr_vibrato::{InstrVibrato, Waveform};
 
 use crate::instr_midi::InstrMidi;
 
@@ -153,9 +153,9 @@ impl XmInstrDefault {
                 }
 
                 xmid.vibrato_type = id.vibrato.waveform.try_into().unwrap();
-                xmid.vibrato_sweep = id.vibrato.sweep;
-                xmid.vibrato_depth = id.vibrato.depth as u8 * 15;
-                xmid.vibrato_rate = id.vibrato.speed;
+                xmid.vibrato_sweep = id.vibrato.sweep as u8;
+                xmid.vibrato_depth = (id.vibrato.depth * 255.0) as u8;
+                xmid.vibrato_rate = (id.vibrato.speed * 255.0) as u8;
 
                 xmid.volume_fadeout = (id.volume_fadeout * 32768.0) as u16;
 
@@ -363,7 +363,7 @@ impl XmInstrument {
                     panning_envelope: Arc::new(
                         Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt]).unwrap(),
                     ),
-                    vibrato: Arc::new(Vibrato::default()),
+                    vibrato: Arc::new(InstrVibrato::default()),
                     volume_fadeout: xmi.volume_fadeout as f32 / 32768.0,
                     midi: InstrMidi::default(),
                     midi_mute_computer: false,
@@ -413,19 +413,18 @@ impl XmInstrument {
                 }
 
                 // vibrato
-                match Arc::<Vibrato>::get_mut(&mut id.vibrato) {
+                match Arc::<InstrVibrato>::get_mut(&mut id.vibrato) {
                     Some(v) => {
-                        v.waveform = match xmi.vibrato_type {
+                        v.waveform = match xmi.vibrato_type&3 {
                             0 => Waveform::Sine,
-                            1 => Waveform::RampDown,
-                            2 => Waveform::Square,
-                            3 => Waveform::Random,
-                            4 => Waveform::RampUp,
+                            1 => Waveform::Square,
+                            2 => Waveform::RampUp,
+                            3 => Waveform::RampDown,
                             _ => Waveform::Sine,
                         };
-                        v.speed = xmi.vibrato_rate;
-                        v.depth = xmi.vibrato_depth as f32 / 15.0;
-                        v.sweep = xmi.vibrato_sweep;
+                        v.speed = xmi.vibrato_rate as f32 / 255.0;
+                        v.depth = xmi.vibrato_depth as f32 / 255.0;
+                        v.sweep = xmi.vibrato_sweep as f32;
                     }
                     None => {}
                 }

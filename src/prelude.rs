@@ -19,5 +19,5 @@ pub use crate::{
     note::Note,
     patternslot::PatternSlot,
     sample::{LoopType, Sample, SampleDataType},
-    vibrato::{Vibrato, Waveform},
+    instr_vibrato::{InstrVibrato, Waveform},
 };
