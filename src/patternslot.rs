@@ -49,6 +49,10 @@ impl PatternSlot {
         self.effect_type == 4 || self.effect_type == 6 || self.volume >> 4 == 0x0B
     }
 
+    pub fn has_retrigger_note_empty(&self) -> bool {
+        self.effect_type == 0xE && self.effect_parameter == 0x90
+    }
+
 
     pub fn volume_letter(&self) -> char {
         match self.volume >> 4 {

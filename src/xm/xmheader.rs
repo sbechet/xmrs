@@ -12,8 +12,8 @@ use crate::module::{FrequencyType, Module};
 #[serde(into = "u16", try_from = "u16")]
 #[repr(u16)]
 pub enum XmFlagType {
-    XmLinearFrequencies = 0,
-    XmAmigaFrequencies = 1,
+    XmAmigaFrequencies = 0,
+    XmLinearFrequencies = 1,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

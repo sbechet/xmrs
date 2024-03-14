@@ -14,8 +14,8 @@ pub const MAX_NUM_ROWS: usize = 256;
 /// Historical Frequencies to load old data. Default is Linear.
 #[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum FrequencyType {
-    LinearFrequencies,
     AmigaFrequencies,
+    LinearFrequencies,
 }
 
 impl Default for FrequencyType {
