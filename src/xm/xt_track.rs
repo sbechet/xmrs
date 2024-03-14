@@ -3,7 +3,6 @@ use crate::prelude::PatternSlot;
 pub struct XtTrack;
 
 impl XtTrack {
-
     /// Here we use Vec<PatternSlot> like a track _not_ like a Pattern row!
     pub fn save(track: &Vec<PatternSlot>) -> Vec<u8> {
         let mut data: Vec<u8> = vec![];

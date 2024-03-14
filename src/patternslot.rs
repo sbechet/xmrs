@@ -1,6 +1,6 @@
-use std::fmt::*;
 use crate::note::Note;
 use serde::{Deserialize, Serialize};
+use std::fmt::*;
 
 /// A typical pattern slot
 #[derive(Serialize, Deserialize, Copy, Clone)]
@@ -15,7 +15,6 @@ pub struct PatternSlot {
     pub effect_parameter: u8,
 }
 
-
 impl Default for PatternSlot {
     fn default() -> Self {
         PatternSlot {
@@ -23,18 +22,30 @@ impl Default for PatternSlot {
             instrument: 0,
             volume: 0,
             effect_type: 0,
-            effect_parameter: 0
+            effect_parameter: 0,
         }
     }
 }
 
 impl Debug for PatternSlot {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let v = if self.volume == 0 { '-' } else { std::char::from_digit(u32::from(self.volume&0x0f), 16).unwrap() };
-        write!(f, "[{:?} {:>2X} {:>1}{} {}{:02X}]", self.note, self.instrument, self.volume_letter(), v, self.effect_letter(), self.effect_parameter)
+        let v = if self.volume == 0 {
+            '-'
+        } else {
+            std::char::from_digit(u32::from(self.volume & 0x0f), 16).unwrap()
+        };
+        write!(
+            f,
+            "[{:?} {:>2X} {:>1}{} {}{:02X}]",
+            self.note,
+            self.instrument,
+            self.volume_letter(),
+            v,
+            self.effect_letter(),
+            self.effect_parameter
+        )
     }
 }
-
 
 impl PatternSlot {
     pub fn has_tone_portamento(&self) -> bool {
@@ -52,7 +63,6 @@ impl PatternSlot {
     pub fn has_retrigger_note_empty(&self) -> bool {
         self.effect_type == 0xE && self.effect_parameter == 0x90
     }
-
 
     pub fn volume_letter(&self) -> char {
         match self.volume >> 4 {
@@ -72,7 +82,7 @@ impl PatternSlot {
             0xD => 'L',
             0xE => 'R',
             0xF => 'M',
-            _ => ' '
+            _ => ' ',
         }
     }
 
@@ -112,8 +122,7 @@ impl PatternSlot {
             0x1F => ' ',
             0x20 => ' ',
             0x21 => 'X',
-            _ => ' '
+            _ => ' ',
         }
     }
-
 }

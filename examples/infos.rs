@@ -42,14 +42,15 @@ fn main() -> Result<(), std::io::Error> {
                     for mi in &module.instrument {
                         println!("======== New instrument name: {}", mi.name);
                         match &mi.instr_type {
-                            InstrumentType::Empty => { println!("empty");
-                            },
+                            InstrumentType::Empty => {
+                                println!("empty");
+                            }
                             InstrumentType::Default(i) => {
-                                println!("sample_for_note: {:?}",i.sample_for_note);
-                                println!("volume_envelope: {:?}",i.volume_envelope);
-                                println!("panning_envelope: {:?}",i.panning_envelope);
-                                println!("vibrato: {:?}",i.vibrato);
-                                println!("volume_fadeout: {:?}",i.volume_fadeout);
+                                println!("sample_for_note: {:?}", i.sample_for_note);
+                                println!("volume_envelope: {:?}", i.volume_envelope);
+                                println!("panning_envelope: {:?}", i.panning_envelope);
+                                println!("vibrato: {:?}", i.vibrato);
+                                println!("volume_fadeout: {:?}", i.volume_fadeout);
                                 for is in &i.sample {
                                     println!("  ========== New sample name: {}", is.name);
                                     println!("loop_start: {}", is.loop_start);
@@ -60,21 +61,17 @@ fn main() -> Result<(), std::io::Error> {
                                     println!("flags: {:?}", is.flags);
                                     println!("relative_note: {}", is.relative_note);
                                 }
-                                println!("midi: {:?}",i.midi);
-                                println!("midi_mute: {}",i.midi_mute_computer);
+                                println!("midi: {:?}", i.midi);
+                                println!("midi_mute: {}", i.midi_mute_computer);
                             }
                             _ => {}
                         }
                     }
                     if cli.patterns {
                         for p in &module.pattern {
-                            println!("{:?}",p);
+                            println!("{:?}", p);
                         }
-
                     }
-
-
-
                 }
                 Err(e) => {
                     println!("{:?}", e);
@@ -85,4 +82,3 @@ fn main() -> Result<(), std::io::Error> {
     }
     Ok(())
 }
-

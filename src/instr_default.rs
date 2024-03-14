@@ -4,8 +4,8 @@ use std::sync::Arc;
 
 use crate::envelope::Envelope;
 use crate::instr_midi::InstrMidi;
-use crate::sample::Sample;
 use crate::instr_vibrato::InstrVibrato;
+use crate::sample::Sample;
 
 /// Historical XM Instrument
 #[derive(Serialize, Deserialize, Debug)]

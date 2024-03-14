@@ -3,7 +3,6 @@ use crate::prelude::PatternSlot;
 pub struct XpPattern;
 
 impl XpPattern {
-
     /// XP file must have 32 tracks per row
     pub fn save(pattern: &Vec<Vec<PatternSlot>>) -> Option<Vec<u8>> {
         let mut data: Vec<u8> = vec![];

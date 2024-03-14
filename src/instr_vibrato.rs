@@ -27,7 +27,7 @@ impl Waveform {
                 } else {
                     1.0
                 }
-            },
+            }
             Waveform::RampUp => {
                 /*
                  * /
@@ -38,22 +38,20 @@ impl Waveform {
                 } else {
                     2.0 * step - 2.0
                 }
-            },
+            }
             Waveform::RampDown => {
                 /*
                  *  \
                  * \
                  */
                 if step < 0.5 {
-                    - 2.0 * step
+                    -2.0 * step
                 } else {
                     2.0 - 2.0 * step
                 }
-            },
-
+            }
         };
     }
-
 }
 
 /// Instrument Vibrato

@@ -31,6 +31,8 @@ pub mod instr_midi;
 pub mod instr_robsid;
 /// MOS6581 SID Instrument
 pub mod instr_sid;
+/// Vibrato with Steroid
+pub mod instr_vibrato;
 /// Instrument with Steroid
 pub mod instrument;
 /// SoundTracker Module with Steroid
@@ -41,8 +43,6 @@ pub mod note;
 pub mod patternslot;
 /// Sample with Steroid
 pub mod sample;
-/// Vibrato with Steroid
-pub mod instr_vibrato;
 
 /// Load and Save Historical XM files
 pub mod xm;

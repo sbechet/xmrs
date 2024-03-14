@@ -6,7 +6,8 @@ use super::serde_helper::{deserialize_string_21, serialize_string_21};
 use super::serde_helper::{deserialize_string_22, serialize_string_22};
 
 use super::xminstrument::{
-    XmInstrDefault, XmInstrument, XmInstrumentHeader, XmInstrumentType, XMINSTRUMENT_SIZE, XMINSTRDEFAULT_SIZE
+    XmInstrDefault, XmInstrument, XmInstrumentHeader, XmInstrumentType, XMINSTRDEFAULT_SIZE,
+    XMINSTRUMENT_SIZE,
 };
 use super::xmsample::{XmSample, XMSAMPLE_HEADER_SIZE};
 

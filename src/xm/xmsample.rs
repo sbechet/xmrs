@@ -177,16 +177,11 @@ impl XmSample {
         output
     }
 
-
     pub fn len(&self) -> u32 {
         match &self.data {
-            Some(SampleDataType::Depth8(d)) => {
-                d.len() as u32
-            }
-            Some(SampleDataType::Depth16(d)) => {
-                d.len() as u32
-            },
-            _ => { 0 }
+            Some(SampleDataType::Depth8(d)) => d.len() as u32,
+            Some(SampleDataType::Depth16(d)) => d.len() as u32,
+            _ => 0,
         }
     }
 }

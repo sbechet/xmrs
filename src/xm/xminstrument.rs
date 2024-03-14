@@ -6,10 +6,10 @@ use std::sync::Arc;
 
 use crate::envelope::{Envelope, EnvelopePoint};
 use crate::instr_default::InstrDefault;
+use crate::instr_vibrato::{InstrVibrato, Waveform};
 use crate::instrument::{Instrument, InstrumentType};
 use crate::module::Module;
 use crate::sample::Sample;
-use crate::instr_vibrato::{InstrVibrato, Waveform};
 
 use crate::instr_midi::InstrMidi;
 
@@ -415,7 +415,7 @@ impl XmInstrument {
                 // vibrato
                 match Arc::<InstrVibrato>::get_mut(&mut id.vibrato) {
                     Some(v) => {
-                        v.waveform = match xmi.vibrato_type&3 {
+                        v.waveform = match xmi.vibrato_type & 3 {
                             0 => Waveform::Sine,
                             1 => Waveform::Square,
                             2 => Waveform::RampUp,
