@@ -226,7 +226,7 @@ impl Debug for Note {
             Note::As7 => "A#7",
             Note::B7 => "B-7",
             // Stop note
-            Note::KeyOff => "[=]",
+            Note::KeyOff => "===",
         };
         write!(f, "{}", text)
     }
