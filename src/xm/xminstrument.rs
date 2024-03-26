@@ -153,8 +153,8 @@ impl XmInstrDefault {
                 }
 
                 xmid.vibrato_type = id.vibrato.waveform.try_into().unwrap();
-                xmid.vibrato_sweep = (id.vibrato.sweep * 256.0) as u8;
-                xmid.vibrato_depth = (id.vibrato.depth * 16.0) as u8;
+                xmid.vibrato_sweep = (id.vibrato.sweep * 256.0)  as u8;
+                xmid.vibrato_depth = (id.vibrato.depth * 16.0 / 2.0) as u8;
                 xmid.vibrato_rate = (id.vibrato.speed * 64.0 * 4.0) as u8;
 
                 xmid.volume_fadeout = (id.volume_fadeout * 36768.0) as u16;
@@ -423,8 +423,8 @@ impl XmInstrument {
                             _ => Waveform::Sine,
                         };
                         v.speed = xmi.vibrato_rate as f32 / 64.0 / 4.0;
-                        v.depth = xmi.vibrato_depth as f32 / 16.0 / 2.0;
-                        v.sweep = xmi.vibrato_sweep as f32 / 256.0 / 2.0;
+                        v.depth = xmi.vibrato_depth as f32 / 16.0 * 2.0;
+                        v.sweep = xmi.vibrato_sweep as f32 / 256.0;
                     }
                     None => {}
                 }

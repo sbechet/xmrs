@@ -17,7 +17,7 @@ impl Waveform {
     pub fn value(&self, step: f32) -> f32 {
         let step = step % 1.0;
         return match &self {
-            Waveform::Sine => -(std::f32::consts::TAU * step).sin(),
+            Waveform::Sine => (std::f32::consts::TAU * step).sin(),
             Waveform::Square => {
                 if step < 0.5 {
                     1.0
@@ -27,16 +27,16 @@ impl Waveform {
             }
             Waveform::RampUp => {
                 if step < 0.5 {
-                    0.5 * step
+                    -2.0 * step
                 } else {
-                    0.5 * (step + 1.0)
+                    -2.0 * step + 2.0
                 }
             }
             Waveform::RampDown => {
                 if step < 0.5 {
-                    1.0 - 0.5 * step
+                    2.0 * step
                 } else {
-                    0.25 - 0.5 * (step - 0.5)
+                    2.0 * step - 2.0
                 }
             }
         };
