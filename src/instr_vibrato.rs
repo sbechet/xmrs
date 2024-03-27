@@ -27,16 +27,16 @@ impl Waveform {
             }
             Waveform::RampUp => {
                 if step < 0.5 {
-                    -2.0 * step
+                    0.5 * step
                 } else {
-                    -2.0 * step + 2.0
+                    0.5 * step + 0.5
                 }
             }
             Waveform::RampDown => {
                 if step < 0.5 {
-                    2.0 * step
+                    1.0 - 0.5 * step
                 } else {
-                    2.0 * step - 2.0
+                    - 0.5 * step + 0.5
                 }
             }
         };
