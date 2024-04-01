@@ -153,7 +153,7 @@ impl XmInstrDefault {
                 }
 
                 xmid.vibrato_type = id.vibrato.waveform.try_into().unwrap();
-                xmid.vibrato_sweep = (id.vibrato.sweep * 255.0)  as u8;
+                xmid.vibrato_sweep = (id.vibrato.sweep * 255.0) as u8;
                 xmid.vibrato_depth = (id.vibrato.depth * 15.0 * 2.0) as u8;
                 xmid.vibrato_rate = (id.vibrato.speed * 63.0 * 4.0) as u8;
 

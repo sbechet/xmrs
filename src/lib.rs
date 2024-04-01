@@ -47,6 +47,9 @@ pub mod sample;
 /// Load and Save Historical XM files
 pub mod xm;
 
+/// Load only Historical MOD files
+pub mod amiga;
+
 /// The Xmrs Prelude
 pub mod prelude;
 
