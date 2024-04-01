@@ -162,6 +162,8 @@ impl AmigaModule {
         module.name = self.title.clone();
         module.comment = "XmRs reader".to_string();
         module.frequency_type = FrequencyType::AmigaFrequencies;
+        module.default_tempo = 12;
+        module.default_bpm = 255;
         module.pattern_order = self.positions.clone();
 
         for p in &self.patterns {

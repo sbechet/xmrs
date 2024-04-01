@@ -6,7 +6,7 @@ struct Cli {
     #[arg(
         short = 'f',
         long,
-        default_value = "example.mod",
+        default_value = "/home/user/Downloads/ultimate_mod_collection[1433mods][2021-07-19]_compiled_by_spacedrone808/breaks/astral_projection.mod",
         value_name = "filename"
     )]
     filename: Option<String>,

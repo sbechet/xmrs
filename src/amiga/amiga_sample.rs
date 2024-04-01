@@ -53,7 +53,7 @@ impl AmigaSample {
         } else {
             0
         };
-        let rl = if ro + self.repeat_length < self.length {
+        let rl = if ro + self.repeat_length <= self.length {
             self.repeat_length
         } else {
             0
@@ -66,8 +66,8 @@ impl AmigaSample {
 
         Sample {
             name: self.name.clone(),
-            loop_start: self.repeat_offset as u32,
-            loop_length: self.repeat_length as u32,
+            loop_start: ro as u32,
+            loop_length: rl as u32,
             volume: self.volume as f32 / 64.0,
             finetune: f,
             flags: flag,
