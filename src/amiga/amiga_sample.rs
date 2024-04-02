@@ -58,7 +58,7 @@ impl AmigaSample {
         } else {
             0
         };
-        let flag = if rl != 0 {
+        let flag = if rl > 2 {
             LoopType::Forward
         } else {
             LoopType::No
