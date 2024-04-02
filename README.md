@@ -4,7 +4,7 @@ A library to edit Sound Tracker data with pleasure.
 
 Because "Representation is the Essence of Programming".
 
-For now XM **FastTracker II** files are supported.
+For now MOD **Amiga Modules** and XM **FastTracker II** files are supported.
 
 Useful struct parts:
 
@@ -21,6 +21,11 @@ Useful struct parts:
     - [InstrSid](https://docs.rs/xmrs/latest/xmrs/instr_sid/struct.InstrSid.html) for MOS6581 SID Instrument
     - [InstrRobSid](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.InstrRobSid.html) for historical Rob Hubbard Instrument
       - [RobEffects](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.RobEffects.html)
+
+## Load MOD file
+
+1. Deserialize `AmigaModule` struct using `AmigaModule::load(&amiga)`
+2. Convert to struct `Module` using `.to_module()`
 
 ## Load XM file
 

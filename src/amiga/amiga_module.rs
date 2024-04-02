@@ -23,13 +23,13 @@ impl AmigaModule {
             "TDZ1" => Some(1),
             "2CHN" | "TDZ2" => Some(2),
             "TDZ3" => Some(3),
-            "M.K." | "M!K!" | "FLT4" => Some(4),
+            "M.K." | "M!K!" | "FLT4" | "NSMS" | "LARD" | "PATT" | "EXO4" | "N.T." | "M&K!" | "FEST" | "CD61" => Some(4),
             "5CHN" => Some(5),
             "6CHN" => Some(6),
             "7CHN" => Some(7),
-            "8CHN" | "CD81" | "OKTA" | "OCTA" | "FLT8" => Some(8),
+            "8CHN" | "CD81" | "OKTA" | "OCTA" | "FLT8" | "EXO8" => Some(8),
             "9CHN" => Some(9),
-            tag if tag.ends_with("CH") => match &tag[..tag.len() - 2].parse::<u8>().unwrap_or(0) {
+            tag if tag.ends_with("CH") || tag.ends_with("CN")  => match &tag[..tag.len() - 2].parse::<u8>().unwrap_or(0) {
                 0 => None,
                 v @ _ => Some(*v),
             },
@@ -162,8 +162,8 @@ impl AmigaModule {
         module.name = self.title.clone();
         module.comment = "XmRs reader".to_string();
         module.frequency_type = FrequencyType::AmigaFrequencies;
-        module.default_tempo = 12;
-        module.default_bpm = 255;
+        module.default_tempo = 6;
+        module.default_bpm = 125;
         module.pattern_order = self.positions.clone();
 
         for p in &self.patterns {
