@@ -77,11 +77,12 @@ impl XmSample {
     pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
         self.header.length = match &self.data {
             Some(SampleDataType::Depth8(d)) => d.len() as u32,
-            Some(SampleDataType::Depth16(d)) => 2 * d.len() as u32,
+            Some(SampleDataType::Depth16(d)) => {
+                self.header.flags |= 0b0001_0000;
+                2 * d.len() as u32
+            },
             None => 0,
         };
-        self.header.flags |= 0b0001_0000;
-
         let h = bincode::serialize(&self.header)?;
         Ok(h)
     }
