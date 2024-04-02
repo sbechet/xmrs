@@ -115,7 +115,7 @@ impl Element {
     
     fn note_to_text(note: u8) -> Option<&'static str> {
         match note {
-            0 => Some("   "),
+            0 => Some("---"),
             1 => Some("C-2"),
             2 => Some("C#2"),
             3 => Some("D-2"),
