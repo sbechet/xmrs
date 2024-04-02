@@ -1,5 +1,6 @@
 use clap::Parser;
 use xmrs::amiga::amiga_module::AmigaModule;
+use xmrs::xm::xmmodule::XmModule;
 
 #[derive(Parser)]
 struct Cli {
@@ -30,6 +31,9 @@ fn main() -> Result<(), std::io::Error> {
                     // println!("{:?}", amiga);
                     let module = amiga.to_module();
                     println!("{:?}", module);
+                    // let mut xm = XmModule::from_module(&module);
+                    // let xmfile = xm.save().unwrap();
+                    // std::fs::write("/home/user/output.xm", xmfile);
                 }
                 Err(e) => {
                     println!("{:?}", e);
