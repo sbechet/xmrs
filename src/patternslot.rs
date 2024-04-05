@@ -69,6 +69,10 @@ impl PatternSlot {
         self.effect_type == 0xE && self.effect_parameter == 0x90
     }
 
+    pub fn has_note_delay(&self) -> bool {
+        self.effect_type == 0xE && (self.effect_parameter >> 4) == 0xD
+    }
+
     pub fn volume_letter(&self) -> char {
         match self.volume >> 4 {
             0x0 => '-',
