@@ -34,10 +34,10 @@ impl Debug for PatternSlot {
         } else {
             std::char::from_digit(u32::from(self.volume & 0x0f), 16).unwrap()
         };
-        let ninstr = if  self.instrument == 0 {
+        let ninstr = if self.instrument == 0 {
             "  ".to_string()
         } else {
-            format!("{:>2X}",  self.instrument)
+            format!("{:>2X}", self.instrument)
         };
         write!(
             f,

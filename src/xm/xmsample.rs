@@ -80,7 +80,7 @@ impl XmSample {
             Some(SampleDataType::Depth16(d)) => {
                 self.header.flags |= 0b0001_0000;
                 2 * d.len() as u32
-            },
+            }
             None => 0,
         };
         let h = bincode::serialize(&self.header)?;

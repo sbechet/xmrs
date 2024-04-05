@@ -112,7 +112,7 @@ impl Element {
             _ => None,
         }
     }
-    
+
     fn note_to_text(note: u8) -> Option<&'static str> {
         match note {
             0 => Some("---"),
