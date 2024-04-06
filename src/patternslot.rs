@@ -53,24 +53,31 @@ impl Debug for PatternSlot {
 }
 
 impl PatternSlot {
-    pub fn has_tone_portamento(&self) -> bool {
-        self.effect_type == 3 || self.effect_type == 5 || self.volume >> 4 == 0x0F
-    }
-
     pub fn has_arpeggio(&self) -> bool {
         self.effect_type == 0 && self.effect_parameter != 0
+    }
+
+    pub fn has_note_delay(&self) -> bool {
+        self.effect_type == 0xE && (self.effect_parameter >> 4) == 0xD
+    }
+
+    pub fn has_retrigger_note_empty(&self) -> bool {
+        self.effect_type == 0xE && self.effect_parameter == 0x90
+    }
+    pub fn has_tone_portamento(&self) -> bool {
+        self.effect_type == 3 || self.effect_type == 5 || self.volume >> 4 == 0x0F
     }
 
     pub fn has_vibrato(&self) -> bool {
         self.effect_type == 4 || self.effect_type == 6 || self.volume >> 4 == 0x0B
     }
 
-    pub fn has_retrigger_note_empty(&self) -> bool {
-        self.effect_type == 0xE && self.effect_parameter == 0x90
-    }
-
-    pub fn has_note_delay(&self) -> bool {
-        self.effect_type == 0xE && (self.effect_parameter >> 4) == 0xD
+    pub fn has_volume_slide(&self) -> bool {
+        self.effect_type == 5
+            || self.effect_type == 6
+            || self.effect_type == 0xA
+            || (self.effect_type == 0xE && (self.effect_parameter >> 4) == 0xA)
+            || (self.effect_type == 0xE && (self.effect_parameter >> 4) == 0xB)
     }
 
     pub fn volume_letter(&self) -> char {
