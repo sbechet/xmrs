@@ -21,14 +21,23 @@ pub enum SampleDataType {
 /// A Real Data sample
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Sample {
+    /// Name
     pub name: String,
-    pub loop_start: u32,  // 0 <= loop_start < len()
-    pub loop_length: u32, // 1 <= loop_length <= len() - loop_start
+    /// 0 <= loop_start < len()
+    pub loop_start: u32,
+    /// 1 <= loop_length <= len() - loop_start
+    pub loop_length: u32,
+    /// [0..1] linear value
     pub volume: f32,
-    pub finetune: f32, // see relative_note
+    /// [-1..1] <=> [-1/2..+1/2] halftone
+    pub finetune: f32,
+    /// loop type
     pub flags: LoopType,
+    /// [0..1] <=> [left..right]
     pub panning: f32,
+    /// [-96..95] with 0 <=> C-4
     pub relative_note: i8,
+    /// wave data
     pub data: SampleDataType,
 }
 
