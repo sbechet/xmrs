@@ -132,7 +132,7 @@ impl XmSample {
             name: self.header.name.clone(),
             loop_start: loop_start,
             loop_length: loop_length,
-            volume: self.header.volume as f32 / 63.0,
+            volume: self.header.volume as f32 / 64.0,
             finetune: self.header.finetune as f32 / 127.0,
             flags: match self.header.flags & 0b000000_11 {
                 1 => LoopType::Forward,
@@ -165,7 +165,7 @@ impl XmSample {
                 };
                 xms.header.loop_start = loop_start;
                 xms.header.loop_length = loop_length;
-                xms.header.volume = (s.volume * 63.0) as u8;
+                xms.header.volume = (s.volume * 64.0) as u8;
                 xms.header.finetune = (s.finetune * 127.0) as i8;
                 xms.header.flags = s.flags.into();
                 xms.header.panning = (s.panning * 255.0) as u8;
