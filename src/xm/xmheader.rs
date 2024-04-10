@@ -33,8 +33,8 @@ pub struct XmHeader {
         deserialize_with = "deserialize_string_20",
         serialize_with = "serialize_string_20"
     )]
-    tracker_name: String,
-    version_number: u16,
+    pub tracker_name: String,
+    pub version_number: u16,
     pub header_size: u32, // 20 (starting from here to PatternOrder start) + pattern size (default 256, can be less...or more)
     song_length: u16,     // pattern order table "size" in bytes
     pub restart_position: u16, // PatternOrder index

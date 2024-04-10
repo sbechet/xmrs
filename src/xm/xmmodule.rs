@@ -50,7 +50,7 @@ impl XmModule {
         // Create module from xm
         let mut module = Module {
             name: self.header.name.clone(),
-            comment: "".to_string(),
+            comment: format!("{} ({}.{:02})", self.header.tracker_name, self.header.version_number>>8, self.header.version_number&0xFF),
             frequency_type: match self.header.flags {
                 XmFlagType::XmAmigaFrequencies => FrequencyType::AmigaFrequencies,
                 XmFlagType::XmLinearFrequencies => FrequencyType::LinearFrequencies,
