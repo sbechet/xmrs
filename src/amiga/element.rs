@@ -22,7 +22,7 @@ impl Debug for Element {
 }
 
 impl Element {
-    fn period_to_note(period: u16) -> Option<u8> {
+    fn amiga_note(period: u16) -> Option<u8> {
         match period {
             6848 => Some(1),
             6464 => Some(2),
@@ -221,7 +221,7 @@ impl Element {
         let data = (input & 0x00FF) as u8;
 
         // TODO: better error note handle any day
-        let note = match Self::period_to_note(period) {
+        let note = match Self::amiga_note(period) {
             Some(n) => n,
             None => {
                 println!("Amiga Module Strange Period: {}?", period);
