@@ -157,7 +157,7 @@ impl XmInstrDefault {
                 xmid.vibrato_depth = (id.vibrato.depth * 15.0 * 2.0) as u8;
                 xmid.vibrato_rate = (id.vibrato.speed * 63.0 * 4.0) as u8;
 
-                xmid.volume_fadeout = (id.volume_fadeout * 32767.0) as u16;
+                xmid.volume_fadeout = (id.volume_fadeout * 4095.0 * 4.0) as u16;
 
                 xmid.midi_on = if id.midi.on { 1 } else { 0 };
                 xmid.midi_channel = id.midi.channel;
@@ -364,7 +364,7 @@ impl XmInstrument {
                         Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt]).unwrap(),
                     ),
                     vibrato: Arc::new(InstrVibrato::default()),
-                    volume_fadeout: xmi.volume_fadeout as f32 / 32767.0,
+                    volume_fadeout: xmi.volume_fadeout as f32 / 4095.0 / 4.0,
                     midi: InstrMidi::default(),
                     midi_mute_computer: false,
                     sample,
