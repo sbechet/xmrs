@@ -231,3 +231,29 @@ impl Debug for Note {
         write!(f, "{}", text)
     }
 }
+
+impl Note {
+    #[inline(always)]
+    pub fn is_none(&self) -> bool {
+        self.value() == 0
+    }
+
+    #[inline(always)]
+    pub fn is_keyoff(&self) -> bool {
+        self.value() == 97
+    }
+
+    #[inline(always)]
+    pub fn is_valid(&self) -> bool {
+        let n:u8 = *self as u8;
+        n > 0 && n < 97
+    }
+
+    #[inline(always)]
+    pub fn value(&self) -> u8 {
+        *self as u8
+    }
+
+
+
+}
