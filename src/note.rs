@@ -245,7 +245,7 @@ impl Note {
 
     #[inline(always)]
     pub fn is_valid(&self) -> bool {
-        let n:u8 = *self as u8;
+        let n: u8 = *self as u8;
         n > 0 && n < 97
     }
 
@@ -253,7 +253,4 @@ impl Note {
     pub fn value(&self) -> u8 {
         *self as u8
     }
-
-
-
 }
