@@ -6,8 +6,10 @@ use std::f32;
 #[cfg(not(feature = "std"))]
 use core::f32;
 
-#[cfg(not(any(feature = "std", feature = "micromath")))]
-::core::compile_error!("Must enable at least one of features `std` or `micromath`");
+#[cfg(not(any(feature = "std", feature = "libm", feature = "micromath")))]
+::core::compile_error!("Must enable at least one of features `std`, `libm`, or `micromath`");
+#[cfg(feature = "libm")]
+use num_traits::float::Float;
 #[cfg(feature = "micromath")]
 use micromath::F32Ext;
 
