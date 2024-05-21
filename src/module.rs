@@ -3,16 +3,15 @@ use serde::{Deserialize, Serialize};
 
 use libflate::deflate::*;
 
+// With std, this is equal to std::io::{Read, Write}
+use core2::io::{Read, Write};
+
 #[cfg(feature = "std")]
 use std::sync::Arc;
 #[cfg(not(feature = "std"))]
 use alloc::sync::Arc;
 #[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
-use core2::io::Read;
-#[cfg(not(feature = "std"))]
-use core2::io::Write;
 #[cfg(not(feature = "std"))]
 use alloc::string::String;
 #[cfg(not(feature = "std"))]
