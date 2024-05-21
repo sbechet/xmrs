@@ -1,8 +1,18 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
+#[cfg(feature = "std")]
+use std::f32;
+#[cfg(not(feature = "std"))]
+use core::f32;
+
+#[cfg(not(any(feature = "std", feature = "micromath")))]
+::core::compile_error!("Must enable at least one of features `std` or `micromath`");
+#[cfg(feature = "micromath")]
+use micromath::F32Ext;
+
 /// Vibrato Waveform
-#[derive(Default, Serialize, Deserialize, Clone, Copy, IntoPrimitive, TryFromPrimitive, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]
 pub enum Waveform {
     #[default]
@@ -17,7 +27,7 @@ impl Waveform {
     pub fn value(&self, step: f32) -> f32 {
         let step = step % 1.0;
         return match &self {
-            Waveform::Sine => (std::f32::consts::TAU * step).sin(),
+            Waveform::Sine => (f32::consts::TAU * step).sin(),
             Waveform::Square => {
                 if step < 0.5 {
                     1.0
@@ -44,7 +54,7 @@ impl Waveform {
 }
 
 /// Instrument Vibrato
-#[derive(Default, Serialize, Deserialize, Clone, Copy, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, Debug)]
 pub struct InstrVibrato {
     pub waveform: Waveform,
     pub speed: f32,

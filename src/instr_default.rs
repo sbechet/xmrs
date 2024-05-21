@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
+
+#[cfg(feature = "std")]
 use std::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 use crate::envelope::Envelope;
 use crate::instr_midi::InstrMidi;
@@ -8,7 +14,7 @@ use crate::instr_vibrato::InstrVibrato;
 use crate::sample::Sample;
 
 /// Historical XM Instrument
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct InstrDefault {
     #[serde(with = "BigArray")]
     pub sample_for_note: [u8; 96],

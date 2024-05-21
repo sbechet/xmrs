@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 /// - voice0: from voice2
 /// - voice1: from voice0
 /// - voice2: from voice1
-#[derive(Default, Serialize, Deserialize, Copy, Clone, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone, Debug)]
 pub struct SidVoice {
     //pub freq: u16,
     /// pulse wave duty cycle
@@ -28,7 +28,7 @@ pub struct SidVoice {
 }
 
 /// MOS6581 SID Instrument
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct InstrSid {
     pub voice: [SidVoice; 3],
     pub fc: u16, // Filter cutoff frequency (0..2047) - Used by (Low, Band, High)Pass

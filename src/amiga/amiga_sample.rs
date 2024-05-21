@@ -1,11 +1,19 @@
+use bincode::error::DecodeError;
 use super::serde_helper::deserialize_string_22;
-use bincode::ErrorKind;
 use serde::Deserialize;
-use std::fmt::{Debug, Formatter};
+
+#[cfg(feature = "std")]
+use std::fmt;
+#[cfg(not(feature = "std"))]
+use core::fmt;
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
 
 use crate::prelude::*;
 
-#[derive(Default, Deserialize)]
+#[derive(Default, bincode::Decode, Deserialize)]
 pub struct AmigaSample {
     #[serde(deserialize_with = "deserialize_string_22")]
     pub name: String,
@@ -16,8 +24,8 @@ pub struct AmigaSample {
     pub repeat_length: u16,
 }
 
-impl Debug for AmigaSample {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for AmigaSample {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "Sample: {} (v:{}, f:{}, l:{}, ro:{}, rl:{})\n",
@@ -32,9 +40,9 @@ impl Debug for AmigaSample {
 }
 
 impl AmigaSample {
-    pub fn load(ser_sample: &[u8]) -> Result<(&[u8], Self), Box<ErrorKind>> {
-        match bincode::deserialize::<AmigaSample>(&ser_sample) {
-            Ok(mut aspl) => {
+    pub fn load(ser_sample: &[u8]) -> Result<(&[u8], Self), Box<DecodeError>> {
+        match bincode::decode_from_slice::<AmigaSample, _>(&ser_sample, bincode::config::legacy()) {
+            Ok((mut aspl, _)) => {
                 // bincode::DefaultOptions::new().with_big_endian() seems not working?
                 // manual ROR with * 2...
                 aspl.length = 2 * aspl.length.rotate_right(8);
@@ -42,7 +50,7 @@ impl AmigaSample {
                 aspl.repeat_length = 2 * aspl.repeat_length.rotate_right(8);
                 Ok((&ser_sample[30..], aspl))
             }
-            Err(e) => Err(e),
+            Err(e) => Err(Box::new(e)),
         }
     }
 

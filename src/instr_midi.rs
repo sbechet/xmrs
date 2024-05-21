@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Midi Instrument
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct InstrMidi {
     pub on: bool,
     pub channel: u8,

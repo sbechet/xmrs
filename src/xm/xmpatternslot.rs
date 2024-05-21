@@ -1,12 +1,17 @@
 /// Original XM Pattern Slot
+use bincode::error::DecodeError;
 use crate::note::Note;
 use crate::patternslot::PatternSlot;
-use bincode::ErrorKind;
+
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 pub type XmPatternSlot = PatternSlot;
 
 impl XmPatternSlot {
-    pub fn load(src: &[u8]) -> Result<(&[u8], XmPatternSlot), Box<ErrorKind>> {
+    pub fn load(src: &[u8]) -> Result<(&[u8], XmPatternSlot), Box<DecodeError>> {
         let mut dst: [u8; 5] = [0; 5];
         let mut i = 0;
         let mut j = 0;

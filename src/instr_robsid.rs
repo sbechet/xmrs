@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::instr_sid::InstrSid;
 
 /// Rob Hubbard Effects
-#[derive(Default, Serialize, Deserialize, Copy, Clone, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone, Debug)]
 pub struct RobEffects {
     // 1. Vibrato
     pub vibrato: bool,
@@ -29,7 +29,7 @@ pub struct RobEffects {
 }
 
 /// Rob Hubbard Generalized Instrument
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct InstrRobSid {
     pub sid: InstrSid,
     pub fx: [RobEffects; 3],

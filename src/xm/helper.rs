@@ -1,3 +1,6 @@
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
+
 pub fn u8_slice_to_vec_u16(u8_slice: &[u8]) -> Vec<u16> {
     // u8 slice must have an even number of elements: do the better w/o error
     let src = if u8_slice.len() % 2 != 0 {

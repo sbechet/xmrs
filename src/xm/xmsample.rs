@@ -1,5 +1,5 @@
 /// Original XM Sample
-use bincode::ErrorKind;
+use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
 use super::helper::*;
@@ -7,9 +7,16 @@ use super::serde_helper::{deserialize_string_22, serialize_string_22};
 use crate::instrument::{Instrument, InstrumentType};
 use crate::sample::{LoopType, Sample, SampleDataType};
 
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
+
 pub const XMSAMPLE_HEADER_SIZE: usize = 40;
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 #[repr(C)]
 pub struct XmSampleHeader {
     length: u32,
@@ -28,7 +35,7 @@ pub struct XmSampleHeader {
     name: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XmSample {
     header: XmSampleHeader,
     data: Option<SampleDataType>,
@@ -44,8 +51,8 @@ impl Default for XmSample {
 }
 
 impl XmSample {
-    pub fn load(data: &[u8]) -> Result<(&[u8], XmSample), Box<ErrorKind>> {
-        let sh = bincode::deserialize::<XmSampleHeader>(data)?;
+    pub fn load(data: &[u8]) -> Result<(&[u8], XmSample), Box<DecodeError>> {
+        let sh = bincode::decode_from_slice::<XmSampleHeader, _>(data, bincode::config::legacy())?.0;
         // Now create XmSample
         let xms = XmSample {
             header: sh,
@@ -54,7 +61,7 @@ impl XmSample {
         Ok((&data[XMSAMPLE_HEADER_SIZE..], xms))
     }
 
-    pub fn add_sample<'a>(&mut self, data: &'a [u8]) -> Result<&'a [u8], Box<ErrorKind>> {
+    pub fn add_sample<'a>(&mut self, data: &'a [u8]) -> Result<&'a [u8], Box<DecodeError>> {
         let data_len: usize = self.header.length as usize;
         let slice = &data[..data_len];
 
@@ -74,7 +81,7 @@ impl XmSample {
         Ok(&data[data_len..])
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, Box<EncodeError>> {
         self.header.length = match &self.data {
             Some(SampleDataType::Depth8(d)) => d.len() as u32,
             Some(SampleDataType::Depth16(d)) => {
@@ -83,12 +90,12 @@ impl XmSample {
             }
             None => 0,
         };
-        let h = bincode::serialize(&self.header)?;
+        let h = bincode::encode_to_vec(&self.header, bincode::config::legacy())?;
         Ok(h)
     }
 
     /// You must call save() before to save good length size to header
-    pub fn save_sample(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save_sample(&mut self) -> Result<Vec<u8>, Box<EncodeError>> {
         let d = match &self.data {
             Some(SampleDataType::Depth8(d)) => sample8_to_delta(d),
             Some(SampleDataType::Depth16(d)) => {

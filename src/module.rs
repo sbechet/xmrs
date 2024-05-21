@@ -1,9 +1,24 @@
-use bincode::ErrorKind;
+use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
 use libflate::deflate::*;
-use std::io::{Read, Write};
+
+#[cfg(feature = "std")]
 use std::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use core2::io::Read;
+#[cfg(not(feature = "std"))]
+use core2::io::Write;
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::string::ToString;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
@@ -12,7 +27,7 @@ pub const DEFAULT_PATTERN_LENGTH: usize = 64;
 pub const MAX_NUM_ROWS: usize = 256;
 
 /// Historical Frequencies to load old data. Default is Linear.
-#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, Debug)]
 pub enum FrequencyType {
     AmigaFrequencies,
     LinearFrequencies,
@@ -31,7 +46,7 @@ pub type Row = Vec<PatternSlot>;
 pub type Pattern = Vec<Row>;
 
 /// SoundTracker Module with Steroid
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct Module {
     pub name: String,
     pub comment: String,
@@ -65,7 +80,7 @@ impl Default for Module {
 
 impl Module {
     /// Load module using bincode
-    pub fn load(data: &[u8]) -> Result<Module, Box<ErrorKind>> {
+    pub fn load(data: &[u8]) -> Result<Module, Box<DecodeError>> {
         let version = env!("CARGO_PKG_VERSION_MAJOR");
         let mut header: [u8; 5] = *b"XMrs ";
         header[4] = version.as_bytes()[0];
@@ -73,30 +88,35 @@ impl Module {
         let ver_data = &data[0..5];
         let real_data = &data[5..];
         if ver_data != header {
-            Err(Box::new(ErrorKind::Custom(
-                "Bad Module version".to_string(),
+            Err(Box::new(DecodeError::Other(
+                "Bad Module version",
             )))
         } else {
             let mut decoder = Decoder::new(real_data);
             let mut decoded_data = Vec::new();
             decoder.read_to_end(&mut decoded_data).unwrap();
 
-            Ok(bincode::deserialize(&decoded_data)?)
+            Ok(bincode::decode_from_slice(&decoded_data, bincode::config::legacy())?.0)
         }
     }
 
     /// Save module using bincode
-    pub fn save(&self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&self) -> Result<Vec<u8>, Box<EncodeError>> {
         let version = env!("CARGO_PKG_VERSION_MAJOR");
         let mut header: [u8; 5] = *b"XMrs ";
         header[4] = version.as_bytes()[0];
 
         let mut ser_all = header.to_vec();
 
-        let ser_mod1 = bincode::serialize(&self)?;
+        // EncodeError doesn't support core2, only contains Io variant when std present
+        #[cfg(feature = "std")]
+        let io_error_wrap = |e| Box::new(EncodeError::Io{inner:e, index:0});
+        #[cfg(not(feature = "std"))]
+        let io_error_wrap = |_| Box::new(EncodeError::Other("LZ77 compreession failed"));
+        let ser_mod1 = bincode::encode_to_vec(&self, bincode::config::legacy())?;
         let mut encoder = Encoder::new(Vec::new());
-        encoder.write_all(&ser_mod1)?;
-        let mut ser_mod2 = encoder.finish().into_result()?;
+        encoder.write_all(&ser_mod1).map_err(io_error_wrap)?;
+        let mut ser_mod2 = encoder.finish().into_result().map_err(io_error_wrap)?;
 
         ser_all.append(&mut ser_mod2);
 

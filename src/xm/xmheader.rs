@@ -1,5 +1,5 @@
 /// Original XM Header
-use bincode::ErrorKind;
+use bincode::error::DecodeError;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
@@ -8,7 +8,16 @@ use super::serde_helper::{deserialize_string_20, serialize_string_20};
 
 use crate::module::{FrequencyType, Module};
 
-#[derive(Serialize, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::string::ToString;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
+
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
 #[serde(into = "u16", try_from = "u16")]
 #[repr(u16)]
 pub enum XmFlagType {
@@ -16,7 +25,7 @@ pub enum XmFlagType {
     XmLinearFrequencies = 1,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XmHeader {
     #[serde(
         deserialize_with = "deserialize_string_17",
@@ -69,12 +78,12 @@ impl Default for XmHeader {
 
 impl XmHeader {
     /* return like nom (&[u8], (XmHeader, PatternOrder) ) */
-    pub fn load(ser_xmheader: &[u8]) -> Result<(&[u8], XmHeader, Vec<u8>), Box<ErrorKind>> {
-        match bincode::deserialize::<XmHeader>(ser_xmheader) {
-            Ok(xmh) => {
+    pub fn load(ser_xmheader: &[u8]) -> Result<(&[u8], XmHeader, Vec<u8>), Box<DecodeError>> {
+        match bincode::decode_from_slice::<XmHeader, _>(ser_xmheader, bincode::config::legacy()) {
+            Ok((xmh, _)) => {
                 if xmh.id_text != "Extended Module:" {
-                    return Err(Box::new(ErrorKind::Custom(
-                        "Not an Extended Module?".to_string(),
+                    return Err(Box::new(DecodeError::Other(
+                        "Not an Extended Module?",
                     )));
                 }
                 match xmh.get_pattern_order(&ser_xmheader[80..]) {
@@ -82,11 +91,11 @@ impl XmHeader {
                     Err(e) => Err(e),
                 }
             }
-            Err(e) => Err(e),
+            Err(e) => Err(Box::new(e)),
         }
     }
 
-    fn get_pattern_order<'a>(&self, data: &'a [u8]) -> Result<(&'a [u8], Vec<u8>), Box<ErrorKind>> {
+    fn get_pattern_order<'a>(&self, data: &'a [u8]) -> Result<(&'a [u8], Vec<u8>), Box<DecodeError>> {
         let pattern_order_and_maybe_more_len: usize = self.header_size as usize - 20;
         if data.len() >= pattern_order_and_maybe_more_len
             && self.song_length as usize <= pattern_order_and_maybe_more_len
@@ -94,7 +103,7 @@ impl XmHeader {
             let pattern_order: Vec<u8> = data[0..self.song_length as usize].to_vec();
             Ok((&data[pattern_order_and_maybe_more_len..], pattern_order))
         } else {
-            Err(serde::de::Error::custom("XmHeader.header_size too big?"))
+            Err(Box::new(DecodeError::Other("XmHeader.header_size too big?")))
         }
     }
 

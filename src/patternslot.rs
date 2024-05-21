@@ -1,9 +1,19 @@
 use crate::note::Note;
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "std")]
 use std::fmt::*;
+#[cfg(not(feature = "std"))]
+use core::fmt::*;
+#[cfg(feature = "std")]
+use std::char;
+#[cfg(not(feature = "std"))]
+use core::primitive::char;
+#[cfg(not(feature = "std"))]
+use alloc::string::ToString;
 
 /// A typical pattern slot
-#[derive(Serialize, Deserialize, Copy, Clone)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone)]
 #[repr(C)]
 pub struct PatternSlot {
     pub note: Note,
@@ -32,7 +42,7 @@ impl Debug for PatternSlot {
         let v = if self.volume == 0 {
             '-'
         } else {
-            std::char::from_digit(u32::from(self.volume & 0x0f), 16).unwrap()
+            char::from_digit(u32::from(self.volume & 0x0f), 16).unwrap()
         };
         let ninstr = if self.instrument == 0 {
             "  ".to_string()

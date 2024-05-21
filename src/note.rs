@@ -1,9 +1,13 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "std")]
 use std::fmt::*;
+#[cfg(not(feature = "std"))]
+use core::fmt::*;
 
 /// 8 octaves with notes
-#[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]
 #[repr(u8)]
 pub enum Note {
     /// No note

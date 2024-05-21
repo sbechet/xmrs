@@ -1,4 +1,4 @@
-use bincode::ErrorKind;
+use bincode::error::DecodeError;
 use serde::{Deserialize, Serialize};
 
 use super::serde_helper::{deserialize_string_20, serialize_string_20};
@@ -11,9 +11,18 @@ use super::xminstrument::{
 };
 use super::xmsample::{XmSample, XMSAMPLE_HEADER_SIZE};
 
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::string::ToString;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
+
 const XMINSTRUMENT_HEADER: usize = 21 + 22 + 1 + 20 + 2;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XiInstrumentHeader {
     #[serde(
         deserialize_with = "deserialize_string_21",
@@ -46,7 +55,7 @@ impl Default for XiInstrumentHeader {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XiInstrument {
     header: XiInstrumentHeader,
     instr: XmInstrDefault,
@@ -55,14 +64,14 @@ pub struct XiInstrument {
 }
 
 impl XiInstrument {
-    pub fn load(data: &[u8]) -> Result<XmInstrument, Box<ErrorKind>> {
-        let xi = bincode::deserialize::<XiInstrument>(data)?;
+    pub fn load(data: &[u8]) -> Result<XmInstrument, Box<DecodeError>> {
+        let xi = bincode::decode_from_slice::<XiInstrument, _>(data, bincode::config::legacy())?.0;
         let seek = XMINSTRUMENT_HEADER + XMINSTRDEFAULT_SIZE + 15 + 2;
         let data = &data[seek..];
 
         if xi.header.id_text != "Extended Instrument:" {
-            return Err(Box::new(ErrorKind::Custom(
-                "Not an Extended Instrument?".to_string(),
+            return Err(Box::new(DecodeError::Other(
+                "Not an Extended Instrument?",
             )));
         }
 
@@ -86,7 +95,7 @@ impl XiInstrument {
         }
 
         // all samples headers, then data...
-        let mut sample = vec![];
+        let mut sample: Vec<_> = vec![];
 
         let mut d3 = data;
         for _ in 0..xi.num_samples {

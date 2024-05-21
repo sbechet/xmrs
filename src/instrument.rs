@@ -1,5 +1,11 @@
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "std")]
 use std::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
 
 use crate::instr_default::InstrDefault;
 use crate::instr_ekn::InstrEkn;
@@ -10,7 +16,7 @@ use crate::instr_sid::InstrSid;
 //===========================================================================
 
 /// Instrument Type
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub enum InstrumentType {
     /// No Instrument
     #[default]
@@ -28,7 +34,7 @@ pub enum InstrumentType {
 }
 
 /// Instrument with Steroid
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct Instrument {
     pub name: String,
     pub instr_type: InstrumentType,

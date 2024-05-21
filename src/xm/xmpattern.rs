@@ -1,12 +1,17 @@
 /// Original XM Pattern
-use bincode::ErrorKind;
+use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
 use crate::module::Module;
 
 use super::xmpatternslot::XmPatternSlot;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
+
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XmPatternHeader {
     pattern_header_len: u32,
     packing_type: u8,
@@ -26,20 +31,20 @@ impl Default for XmPatternHeader {
 }
 
 impl XmPatternHeader {
-    pub fn load(data: &[u8]) -> Result<(&[u8], XmPatternHeader), Box<ErrorKind>> {
-        match bincode::deserialize::<XmPatternHeader>(data) {
-            Ok(xmph) => {
+    pub fn load(data: &[u8]) -> Result<(&[u8], XmPatternHeader), Box<DecodeError>> {
+        match bincode::decode_from_slice::<XmPatternHeader, _>(data, bincode::config::legacy()) {
+            Ok((xmph, _)) => {
                 let hl = xmph.pattern_header_len as usize;
                 Ok((&data[hl..], xmph))
             }
-            Err(e) => Err(e),
+            Err(e) => Err(Box::new(e)),
         }
     }
 }
 
 type Lines = Vec<Vec<XmPatternSlot>>;
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XmPattern {
     pub header: XmPatternHeader,
     pub pattern: Lines,
@@ -49,7 +54,7 @@ impl XmPattern {
     pub fn load(
         data: &[u8],
         number_of_channels: u16,
-    ) -> Result<(&[u8], XmPattern), Box<ErrorKind>> {
+    ) -> Result<(&[u8], XmPattern), Box<DecodeError>> {
         let (data, xmph) = XmPatternHeader::load(data)?;
         let (_data_out, xmps) = Self::get_slots(
             &data[0..xmph.pattern_data_size as usize],
@@ -80,7 +85,7 @@ impl XmPattern {
         data: &[u8],
         number_of_channels: usize,
         number_of_rows: usize,
-    ) -> Result<(&[u8], Vec<Vec<XmPatternSlot>>), Box<ErrorKind>> {
+    ) -> Result<(&[u8], Vec<Vec<XmPatternSlot>>), Box<DecodeError>> {
         let mut lines: Vec<Vec<XmPatternSlot>> = vec![];
         let mut row: Vec<XmPatternSlot> = vec![];
 
@@ -121,7 +126,7 @@ impl XmPattern {
         all
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, Box<EncodeError>> {
         let mut p_output: Vec<u8> = vec![];
 
         for p in &self.pattern {
@@ -132,7 +137,7 @@ impl XmPattern {
         }
         self.header.pattern_data_size = p_output.len() as u16;
 
-        let mut output = bincode::serialize(&self.header)?;
+        let mut output = bincode::encode_to_vec(&self.header, bincode::config::legacy())?;
         output.append(&mut p_output);
         Ok(output)
     }

@@ -1,8 +1,18 @@
 /// Original XM Instrument
-use bincode::ErrorKind;
+use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
+
+#[cfg(feature = "std")]
 use std::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 use crate::envelope::{Envelope, EnvelopePoint};
 use crate::instr_default::InstrDefault;
@@ -16,16 +26,16 @@ use crate::instr_midi::InstrMidi;
 use super::serde_helper::{deserialize_string_22, serialize_string_22};
 use super::xmsample::{XmSample, XMSAMPLE_HEADER_SIZE};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub enum XmInstrumentType {
     Empty,
     Default(Box<XmInstrDefault>),
 }
 
 impl XmInstrumentType {
-    pub fn save(&self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&self) -> Result<Vec<u8>, Box<EncodeError>> {
         match self {
-            XmInstrumentType::Default(xmid) => bincode::serialize(xmid),
+            XmInstrumentType::Default(xmid) => bincode::encode_to_vec(xmid, bincode::config::legacy()).map_err(|e| Box::new(e)),
             _ => Ok(vec![]),
         }
     }
@@ -33,7 +43,7 @@ impl XmInstrumentType {
 
 pub const XMINSTRDEFAULT_SIZE: usize = 96 + 4 * 12 + 4 * 12 + 14 + 2 + 2 + 2 + 2 + 1;
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, Debug)]
 pub struct XmInstrDefault {
     #[serde(with = "BigArray")]
     sample_for_notes: [u8; 96],
@@ -174,7 +184,7 @@ impl XmInstrDefault {
 
 pub const XMINSTRUMENT_SIZE: usize = 29;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XmInstrumentHeader {
     pub instrument_header_len: u32,
     #[serde(
@@ -198,8 +208,8 @@ impl Default for XmInstrumentHeader {
 }
 
 impl XmInstrumentHeader {
-    pub fn save(&self) -> Result<Vec<u8>, Box<ErrorKind>> {
-        bincode::serialize(&self)
+    pub fn save(&self) -> Result<Vec<u8>, Box<EncodeError>> {
+        bincode::encode_to_vec(&self, bincode::config::legacy()).map_err(|e| Box::new(e))
     }
 
     pub fn from_instr(i: &Instrument) -> Self {
@@ -214,7 +224,7 @@ impl XmInstrumentHeader {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct XmInstrument {
     pub header: XmInstrumentHeader,
     pub sample_header_size: u32,
@@ -234,11 +244,11 @@ impl Default for XmInstrument {
 }
 
 impl XmInstrument {
-    pub fn load(data: &[u8]) -> Result<(&[u8], XmInstrument), Box<ErrorKind>> {
+    pub fn load(data: &[u8]) -> Result<(&[u8], XmInstrument), Box<DecodeError>> {
         let mut sample: Vec<XmSample> = vec![];
 
         // xmih
-        let xmih = bincode::deserialize::<XmInstrumentHeader>(data)?;
+        let xmih = bincode::decode_from_slice::<XmInstrumentHeader, _>(data, bincode::config::legacy())?.0;
         let xmih_len = xmih.instrument_header_len as usize;
 
         if xmih.num_samples == 0 {
@@ -254,9 +264,9 @@ impl XmInstrument {
 
         // samples header
         let d2 = &data[XMINSTRUMENT_SIZE..];
-        let _sample_header_size: u32 = bincode::deserialize::<u32>(d2)?;
+        let _sample_header_size: u32 = bincode::decode_from_slice::<u32, _>(d2, bincode::config::legacy())?.0;
         let d2 = &d2[4..];
-        let xmid = Box::new(bincode::deserialize::<XmInstrDefault>(d2)?);
+        let xmid = Box::new(bincode::decode_from_slice::<XmInstrDefault, _>(d2, bincode::config::legacy())?.0);
 
         // all samples headers, then data...
 
@@ -282,7 +292,7 @@ impl XmInstrument {
         Ok((data, xmi))
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, Box<EncodeError>> {
         let mut i = self.instr.save()?;
         let mut vs: Vec<u8> = vec![];
 
@@ -302,7 +312,7 @@ impl XmInstrument {
         self.header.instrument_header_len = XMINSTRUMENT_SIZE as u32 + 4 + i.len() as u32;
         let mut h = self.header.save()?;
         let sample_header_size = XMSAMPLE_HEADER_SIZE as u32;
-        let mut sample_header_size_v = bincode::serialize::<u32>(&sample_header_size)?;
+        let mut sample_header_size_v = bincode::encode_to_vec::<u32, _>(sample_header_size, bincode::config::legacy())?;
 
         let mut all: Vec<u8> = vec![];
         all.append(&mut h);

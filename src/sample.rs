@@ -1,8 +1,13 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
+
 /// How to play sample
-#[derive(Default, Serialize, Deserialize, Copy, Clone, IntoPrimitive, TryFromPrimitive, Debug)]
+#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]
 pub enum LoopType {
     #[default]
@@ -12,14 +17,14 @@ pub enum LoopType {
 }
 
 /// is sample recorded with 8 or 16 bits depth
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Debug)]
 pub enum SampleDataType {
     Depth8(Vec<i8>),
     Depth16(Vec<i16>),
 }
 
 /// A Real Data sample
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
 pub struct Sample {
     /// Name
     pub name: String,
