@@ -133,7 +133,7 @@ impl XmSample {
             loop_start: loop_start,
             loop_length: loop_length,
             volume: self.header.volume as f32 / 64.0,
-            finetune: self.header.finetune as f32 / 127.0,
+            finetune: (self.header.finetune as f32 / 127.0).clamp(-1.0, 1.0),
             flags: match self.header.flags & 0b000000_11 {
                 1 => LoopType::Forward,
                 2 => LoopType::PingPong,
