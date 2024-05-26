@@ -95,7 +95,7 @@ impl Module {
             let mut decoded_data = Vec::new();
             decoder.read_to_end(&mut decoded_data).unwrap();
 
-            Ok(bincode::decode_from_slice(&decoded_data, bincode::config::legacy())?.0)
+            Ok(bincode::serde::decode_from_slice(&decoded_data, bincode::config::legacy())?.0)
         }
     }
 

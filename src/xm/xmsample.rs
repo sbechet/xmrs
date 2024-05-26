@@ -52,7 +52,7 @@ impl Default for XmSample {
 
 impl XmSample {
     pub fn load(data: &[u8]) -> Result<(&[u8], XmSample), Box<DecodeError>> {
-        let sh = bincode::decode_from_slice::<XmSampleHeader, _>(data, bincode::config::legacy())?.0;
+        let sh = bincode::serde::decode_from_slice::<XmSampleHeader, _>(data, bincode::config::legacy())?.0;
         // Now create XmSample
         let xms = XmSample {
             header: sh,

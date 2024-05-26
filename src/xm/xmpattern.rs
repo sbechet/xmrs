@@ -32,7 +32,7 @@ impl Default for XmPatternHeader {
 
 impl XmPatternHeader {
     pub fn load(data: &[u8]) -> Result<(&[u8], XmPatternHeader), Box<DecodeError>> {
-        match bincode::decode_from_slice::<XmPatternHeader, _>(data, bincode::config::legacy()) {
+        match bincode::serde::decode_from_slice::<XmPatternHeader, _>(data, bincode::config::legacy()) {
             Ok((xmph, _)) => {
                 let hl = xmph.pattern_header_len as usize;
                 Ok((&data[hl..], xmph))

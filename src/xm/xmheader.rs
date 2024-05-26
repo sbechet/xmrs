@@ -79,7 +79,7 @@ impl Default for XmHeader {
 impl XmHeader {
     /* return like nom (&[u8], (XmHeader, PatternOrder) ) */
     pub fn load(ser_xmheader: &[u8]) -> Result<(&[u8], XmHeader, Vec<u8>), Box<DecodeError>> {
-        match bincode::decode_from_slice::<XmHeader, _>(ser_xmheader, bincode::config::legacy()) {
+        match bincode::serde::decode_from_slice::<XmHeader, _>(ser_xmheader, bincode::config::legacy()) {
             Ok((xmh, _)) => {
                 if xmh.id_text != "Extended Module:" {
                     return Err(Box::new(DecodeError::Other(

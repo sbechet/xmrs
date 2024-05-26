@@ -65,7 +65,7 @@ pub struct XiInstrument {
 
 impl XiInstrument {
     pub fn load(data: &[u8]) -> Result<XmInstrument, Box<DecodeError>> {
-        let xi = bincode::decode_from_slice::<XiInstrument, _>(data, bincode::config::legacy())?.0;
+        let xi = bincode::serde::decode_from_slice::<XiInstrument, _>(data, bincode::config::legacy())?.0;
         let seek = XMINSTRUMENT_HEADER + XMINSTRDEFAULT_SIZE + 15 + 2;
         let data = &data[seek..];
 
