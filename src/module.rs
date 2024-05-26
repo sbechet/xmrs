@@ -1,9 +1,13 @@
-use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
-
-use libflate::deflate::*;
-use std::io::{Read, Write};
 use std::sync::Arc;
+
+#[cfg(feature = "compress")]
+use bincode::ErrorKind;
+#[cfg(feature = "compress")]
+use libflate::deflate::*;
+#[cfg(feature = "compress")]
+use std::io::{Read, Write};
+
 
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
@@ -65,6 +69,7 @@ impl Default for Module {
 
 impl Module {
     /// Load module using bincode
+    #[cfg(feature = "compress")]
     pub fn load(data: &[u8]) -> Result<Module, Box<ErrorKind>> {
         let version = env!("CARGO_PKG_VERSION_MAJOR");
         let mut header: [u8; 5] = *b"XMrs ";
@@ -86,6 +91,7 @@ impl Module {
     }
 
     /// Save module using bincode
+    #[cfg(feature = "compress")]
     pub fn save(&self) -> Result<Vec<u8>, Box<ErrorKind>> {
         let version = env!("CARGO_PKG_VERSION_MAJOR");
         let mut header: [u8; 5] = *b"XMrs ";

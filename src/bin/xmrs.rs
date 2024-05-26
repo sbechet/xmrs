@@ -26,15 +26,18 @@ fn main() -> Result<(), Box<ErrorKind>> {
     println!("Load Again: {:#x?}", xmmodule3);
 
     // Not to create a new file format but because it's sooo simple to use bincode.
-    let bcok = module.save()?;
-    let mut file = File::create("output_debug.xmrs")?;
-    file.write_all(&bcok)?;
-    println!("Create bincode serialized module");
+    #[cfg(feature = "compress")]
+    {
+        let bcok = module.save()?;
+        let mut file = File::create("output_debug.xmrs")?;
+        file.write_all(&bcok)?;
+        println!("Create bincode serialized module");
 
-    let bcoks = bcok.as_slice();
-    let bcread_xmrs = Module::load(bcoks)?;
+        let bcoks = bcok.as_slice();
+        let bcread_xmrs = Module::load(bcoks)?;
 
-    println!("reread from bincode: {:x?}", bcread_xmrs);
+        println!("reread from bincode: {:x?}", bcread_xmrs);
+    }
 
     Ok(())
 }
