@@ -90,7 +90,7 @@ impl XmSample {
             }
             None => 0,
         };
-        let h = bincode::encode_to_vec(&self.header, bincode::config::legacy())?;
+        let h = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy())?;
         Ok(h)
     }
 

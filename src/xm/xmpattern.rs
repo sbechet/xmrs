@@ -137,7 +137,7 @@ impl XmPattern {
         }
         self.header.pattern_data_size = p_output.len() as u16;
 
-        let mut output = bincode::encode_to_vec(&self.header, bincode::config::legacy())?;
+        let mut output = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy())?;
         output.append(&mut p_output);
         Ok(output)
     }

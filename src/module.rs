@@ -112,7 +112,7 @@ impl Module {
         let io_error_wrap = |e| Box::new(EncodeError::Io{inner:e, index:0});
         #[cfg(not(feature = "std"))]
         let io_error_wrap = |_| Box::new(EncodeError::Other("LZ77 compreession failed"));
-        let ser_mod1 = bincode::encode_to_vec(&self, bincode::config::legacy())?;
+        let ser_mod1 = bincode::serde::encode_to_vec(&self, bincode::config::legacy())?;
         let mut encoder = Encoder::new(Vec::new());
         encoder.write_all(&ser_mod1).map_err(io_error_wrap)?;
         let mut ser_mod2 = encoder.finish().into_result().map_err(io_error_wrap)?;
