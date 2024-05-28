@@ -26,7 +26,7 @@ use crate::instr_midi::InstrMidi;
 use super::serde_helper::{deserialize_string_22, serialize_string_22};
 use super::xmsample::{XmSample, XMSAMPLE_HEADER_SIZE};
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum XmInstrumentType {
     Empty,
     Default(Box<XmInstrDefault>),
@@ -43,7 +43,7 @@ impl XmInstrumentType {
 
 pub const XMINSTRDEFAULT_SIZE: usize = 96 + 4 * 12 + 4 * 12 + 14 + 2 + 2 + 2 + 2 + 1;
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, Debug)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub struct XmInstrDefault {
     #[serde(with = "BigArray")]
     sample_for_notes: [u8; 96],
@@ -184,7 +184,7 @@ impl XmInstrDefault {
 
 pub const XMINSTRUMENT_SIZE: usize = 29;
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XmInstrumentHeader {
     pub instrument_header_len: u32,
     #[serde(
@@ -224,7 +224,7 @@ impl XmInstrumentHeader {
     }
 }
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XmInstrument {
     pub header: XmInstrumentHeader,
     pub sample_header_size: u32,

@@ -11,7 +11,7 @@ use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XmPatternHeader {
     pattern_header_len: u32,
     packing_type: u8,
@@ -44,7 +44,7 @@ impl XmPatternHeader {
 
 type Lines = Vec<Vec<XmPatternSlot>>;
 
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmPattern {
     pub header: XmPatternHeader,
     pub pattern: Lines,

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Euclidian Rythm Instrument
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct InstrEkn {
     /// Pulsation k
     pub events: u8,

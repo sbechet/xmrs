@@ -26,7 +26,7 @@ pub const DEFAULT_PATTERN_LENGTH: usize = 64;
 pub const MAX_NUM_ROWS: usize = 256;
 
 /// Historical Frequencies to load old data. Default is Linear.
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, Debug)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum FrequencyType {
     AmigaFrequencies,
     LinearFrequencies,
@@ -45,7 +45,7 @@ pub type Row = Vec<PatternSlot>;
 pub type Pattern = Vec<Row>;
 
 /// SoundTracker Module with Steroid
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Module {
     pub name: String,
     pub comment: String,

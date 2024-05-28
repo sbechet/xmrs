@@ -14,7 +14,7 @@ use crate::instr_vibrato::InstrVibrato;
 use crate::sample::Sample;
 
 /// Historical XM Instrument
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct InstrDefault {
     #[serde(with = "BigArray")]
     pub sample_for_note: [u8; 96],

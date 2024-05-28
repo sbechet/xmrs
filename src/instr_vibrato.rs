@@ -14,7 +14,7 @@ use num_traits::float::Float;
 use micromath::F32Ext;
 
 /// Vibrato Waveform
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, IntoPrimitive, TryFromPrimitive, Debug)]
+#[derive(Default, Serialize, Deserialize, Clone, Copy, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]
 pub enum Waveform {
     #[default]
@@ -56,7 +56,7 @@ impl Waveform {
 }
 
 /// Instrument Vibrato
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, Debug)]
+#[derive(Default, Serialize, Deserialize, Clone, Copy, Debug)]
 pub struct InstrVibrato {
     pub waveform: Waveform,
     pub speed: f32,

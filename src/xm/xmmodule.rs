@@ -17,7 +17,7 @@ use super::xmpattern::XmPattern;
 
 use crate::module::{FrequencyType, Module};
 
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmModule {
     pub header: XmHeader,
     pub pattern_order: Vec<u8>,

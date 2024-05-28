@@ -16,7 +16,7 @@ use crate::instr_sid::InstrSid;
 //===========================================================================
 
 /// Instrument Type
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub enum InstrumentType {
     /// No Instrument
     #[default]
@@ -34,7 +34,7 @@ pub enum InstrumentType {
 }
 
 /// Instrument with Steroid
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct Instrument {
     pub name: String,
     pub instr_type: InstrumentType,
