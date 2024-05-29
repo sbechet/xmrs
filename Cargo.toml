@@ -9,7 +9,7 @@ documentation = "https://docs.rs/xmrs"
 repository = "https://codeberg.org/sbechet/xmrs"
 readme = "README.md"
 
-keywords = ["xm", "module", "mod", "s3m", "tracker"]
+keywords = ["xm", "module", "mod", "s3m", "soundtracker"]
 categories = ["multimedia::audio", "embedded", "no-std"]
 
 [dependencies]
