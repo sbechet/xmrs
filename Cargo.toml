@@ -10,7 +10,7 @@ repository = "https://codeberg.org/sbechet/xmrs"
 readme = "README.md"
 
 keywords = ["xm", "module", "mod", "s3m", "tracker"]
-categories = ["multimedia::audio"]
+categories = ["multimedia::audio", "embedded", "no-std"]
 
 [dependencies]
 bincode = "1.3"
