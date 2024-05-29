@@ -4,6 +4,11 @@ use bincode::ErrorKind;
 
 use crate::prelude::*;
 
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::string::ToString;
+use alloc::{vec, vec::Vec};
+
 #[derive(Default, Debug)]
 pub struct AmigaModule {
     title: String,

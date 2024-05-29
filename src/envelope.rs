@@ -1,3 +1,4 @@
+use alloc::vec::Vec;
 use serde::{Deserialize, Serialize};
 
 /// Envelope Point, frame for the abscissa, value for the ordinate

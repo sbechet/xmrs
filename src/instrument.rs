@@ -6,6 +6,9 @@ use crate::instr_midi::InstrMidi;
 use crate::instr_robsid::InstrRobSid;
 use crate::instr_sid::InstrSid;
 
+
+use alloc::string::String;
+
 //===========================================================================
 
 /// Instrument Type

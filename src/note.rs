@@ -1,6 +1,6 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
-use std::fmt::*;
+use core::fmt::*;
 
 /// 8 octaves with notes
 #[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]

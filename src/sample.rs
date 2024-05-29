@@ -1,6 +1,9 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
+use alloc::string::String;
+use alloc::vec::Vec;
+
 /// How to play sample
 #[derive(Default, Serialize, Deserialize, Copy, Clone, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]

@@ -6,6 +6,8 @@ use crate::instr_midi::InstrMidi;
 use crate::instr_vibrato::InstrVibrato;
 use crate::sample::Sample;
 
+use alloc::{vec, vec::Vec};
+
 /// Historical XM Instrument
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InstrDefault {

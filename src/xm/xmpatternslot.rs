@@ -3,6 +3,9 @@ use crate::note::Note;
 use crate::patternslot::PatternSlot;
 use bincode::ErrorKind;
 
+use alloc::boxed::Box;
+use alloc::vec::Vec;
+
 pub type XmPatternSlot = PatternSlot;
 
 impl XmPatternSlot {

@@ -1,4 +1,5 @@
 use crate::prelude::PatternSlot;
+use alloc::{vec, vec::Vec};
 
 pub struct XpPattern;
 

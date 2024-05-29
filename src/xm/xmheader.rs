@@ -3,6 +3,11 @@ use bincode::ErrorKind;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::string::ToString;
+use alloc::vec::Vec;
+
 use super::serde_helper::{deserialize_string_17, serialize_string_17};
 use super::serde_helper::{deserialize_string_20, serialize_string_20};
 

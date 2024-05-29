@@ -2,6 +2,10 @@
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::{vec, vec::Vec};
+
 use super::helper::*;
 use super::serde_helper::{deserialize_string_22, serialize_string_22};
 use crate::instrument::{Instrument, InstrumentType};

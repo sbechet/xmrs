@@ -3,6 +3,10 @@ use serde::{Deserialize, Serialize};
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
 
+use alloc::string::String;
+use alloc::string::ToString;
+use alloc::{vec, vec::Vec};
+
 pub const DEFAULT_PATTERN_LENGTH: usize = 64;
 pub const MAX_NUM_ROWS: usize = 256;
 

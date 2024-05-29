@@ -2,6 +2,9 @@
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::{vec, vec::Vec};
+
 use crate::module::Module;
 
 use super::xmpatternslot::XmPatternSlot;

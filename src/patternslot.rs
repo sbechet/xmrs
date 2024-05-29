@@ -1,6 +1,8 @@
 use crate::note::Note;
 use serde::{Deserialize, Serialize};
-use std::fmt::*;
+use core::fmt::*;
+use alloc::string::ToString;
+use alloc::format;
 
 /// A typical pattern slot
 #[derive(Serialize, Deserialize, Copy, Clone)]
@@ -32,7 +34,7 @@ impl Debug for PatternSlot {
         let v = if self.volume == 0 {
             '-'
         } else {
-            std::char::from_digit(u32::from(self.volume & 0x0f), 16).unwrap()
+            core::char::from_digit(u32::from(self.volume & 0x0f), 16).unwrap()
         };
         let ninstr = if self.instrument == 0 {
             "  ".to_string()

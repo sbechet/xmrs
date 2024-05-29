@@ -1,6 +1,9 @@
 use serde::Deserialize;
 use serde::Deserializer;
 
+use alloc::string::String;
+use alloc::string::ToString;
+
 // --- deserialize -------------------------
 
 macro_rules! make_deserialize_string_fn {

@@ -3,6 +3,10 @@ use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
 
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::{vec, vec::Vec};
+
 use crate::envelope::{Envelope, EnvelopePoint};
 use crate::instr_default::InstrDefault;
 use crate::instr_vibrato::{InstrVibrato, Waveform};

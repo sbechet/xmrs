@@ -2,6 +2,10 @@
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::format;
+use alloc::{vec, vec::Vec};
+
 use super::xmheader::{XmFlagType, XmHeader};
 use super::xminstrument::XmInstrument;
 use super::xmpattern::XmPattern;

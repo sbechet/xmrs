@@ -1,4 +1,4 @@
-use std::fmt::*;
+use core::fmt::*;
 
 pub struct Element {
     pub note: u8,
@@ -224,6 +224,7 @@ impl Element {
         let note = match Self::amiga_note(period) {
             Some(n) => n,
             None => {
+                #[cfg(feature = "std")]
                 println!("Amiga Module Strange Period: {}?", period);
                 0
             }

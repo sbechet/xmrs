@@ -1,7 +1,11 @@
 use super::serde_helper::deserialize_string_22;
 use bincode::ErrorKind;
 use serde::Deserialize;
-use std::fmt::{Debug, Formatter};
+
+use core::fmt;
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::vec;
 
 use crate::prelude::*;
 
@@ -16,8 +20,8 @@ pub struct AmigaSample {
     pub repeat_length: u16,
 }
 
-impl Debug for AmigaSample {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for AmigaSample {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "Sample: {} (v:{}, f:{}, l:{}, ro:{}, rl:{})\n",
