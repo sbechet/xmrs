@@ -1,8 +1,8 @@
 use crate::note::Note;
-use serde::{Deserialize, Serialize};
-use core::fmt::*;
-use alloc::string::ToString;
 use alloc::format;
+use alloc::string::ToString;
+use core::fmt::*;
+use serde::{Deserialize, Serialize};
 
 /// A typical pattern slot
 #[derive(Serialize, Deserialize, Copy, Clone)]

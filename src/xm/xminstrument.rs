@@ -360,10 +360,12 @@ impl XmInstrument {
                 };
                 let mut id = InstrDefault {
                     sample_for_note: xmi.sample_for_notes,
-                    volume_envelope: 
-                        Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt]).unwrap(),
-                    panning_envelope: 
-                        Self::envelope_from_slice(&xmi.panning_envelope[0..num_pan_pt]).unwrap(),
+                    volume_envelope: Self::envelope_from_slice(&xmi.volume_envelope[0..num_vol_pt])
+                        .unwrap(),
+                    panning_envelope: Self::envelope_from_slice(
+                        &xmi.panning_envelope[0..num_pan_pt],
+                    )
+                    .unwrap(),
                     vibrato: InstrVibrato::default(),
                     volume_fadeout: xmi.volume_fadeout as f32 / 4095.0 / 4.0 / 2.0,
                     midi: InstrMidi::default(),
