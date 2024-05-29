@@ -1,7 +1,6 @@
 /// Original XM Module
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 use super::xmheader::{XmFlagType, XmHeader};
 use super::xminstrument::XmInstrument;
@@ -69,11 +68,11 @@ impl XmModule {
         };
 
         for p in &self.pattern {
-            module.pattern.push(Arc::new(p.pattern.clone()));
+            module.pattern.push(p.pattern.clone());
         }
 
         for i in &self.instrument {
-            module.instrument.push(Arc::new(i.to_instrument()))
+            module.instrument.push(i.to_instrument())
         }
 
         module

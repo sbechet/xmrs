@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
@@ -38,9 +37,9 @@ pub struct Module {
     pub default_bpm: u16,
     /// Defines the exact order for the patterns playback
     pub pattern_order: Vec<u8>,
-    pub pattern: Vec<Arc<Pattern>>,
+    pub pattern: Vec<Pattern>,
     /// Instrument 1 has index 0, instrument 2 has index 1, etc.
-    pub instrument: Vec<Arc<Instrument>>,
+    pub instrument: Vec<Instrument>,
 }
 
 impl Default for Module {
