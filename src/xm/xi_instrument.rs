@@ -64,15 +64,15 @@ pub struct XiInstrument {
 }
 
 impl XiInstrument {
-    pub fn load(data: &[u8]) -> Result<XmInstrument, Box<DecodeError>> {
+    pub fn load(data: &[u8]) -> Result<XmInstrument, DecodeError> {
         let xi = bincode::serde::decode_from_slice::<XiInstrument, _>(data, bincode::config::legacy())?.0;
         let seek = XMINSTRUMENT_HEADER + XMINSTRDEFAULT_SIZE + 15 + 2;
         let data = &data[seek..];
 
         if xi.header.id_text != "Extended Instrument:" {
-            return Err(Box::new(DecodeError::Other(
+            return Err(DecodeError::Other(
                 "Not an Extended Instrument?",
-            )));
+            ));
         }
 
         //---

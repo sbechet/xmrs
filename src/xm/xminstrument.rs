@@ -33,9 +33,9 @@ pub enum XmInstrumentType {
 }
 
 impl XmInstrumentType {
-    pub fn save(&self) -> Result<Vec<u8>, Box<EncodeError>> {
+    pub fn save(&self) -> Result<Vec<u8>, EncodeError> {
         match self {
-            XmInstrumentType::Default(xmid) => bincode::encode_to_vec(xmid, bincode::config::legacy()).map_err(|e| Box::new(e)),
+            XmInstrumentType::Default(xmid) => bincode::encode_to_vec(xmid, bincode::config::legacy()),
             _ => Ok(vec![]),
         }
     }
@@ -208,8 +208,8 @@ impl Default for XmInstrumentHeader {
 }
 
 impl XmInstrumentHeader {
-    pub fn save(&self) -> Result<Vec<u8>, Box<EncodeError>> {
-        bincode::encode_to_vec(&self, bincode::config::legacy()).map_err(|e| Box::new(e))
+    pub fn save(&self) -> Result<Vec<u8>, EncodeError> {
+        bincode::encode_to_vec(&self, bincode::config::legacy())
     }
 
     pub fn from_instr(i: &Instrument) -> Self {
@@ -244,7 +244,7 @@ impl Default for XmInstrument {
 }
 
 impl XmInstrument {
-    pub fn load(data: &[u8]) -> Result<(&[u8], XmInstrument), Box<DecodeError>> {
+    pub fn load(data: &[u8]) -> Result<(&[u8], XmInstrument), DecodeError> {
         let mut sample: Vec<XmSample> = vec![];
 
         // xmih
@@ -292,7 +292,7 @@ impl XmInstrument {
         Ok((data, xmi))
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<EncodeError>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, EncodeError> {
         let mut i = self.instr.save()?;
         let mut vs: Vec<u8> = vec![];
 

@@ -40,7 +40,7 @@ impl fmt::Debug for AmigaSample {
 }
 
 impl AmigaSample {
-    pub fn load(ser_sample: &[u8]) -> Result<(&[u8], Self), Box<DecodeError>> {
+    pub fn load(ser_sample: &[u8]) -> Result<(&[u8], Self), DecodeError> {
         match bincode::serde::decode_from_slice::<AmigaSample, _>(&ser_sample, bincode::config::legacy()) {
             Ok((mut aspl, _)) => {
                 // bincode::DefaultOptions::new().with_big_endian() seems not working?
@@ -50,7 +50,7 @@ impl AmigaSample {
                 aspl.repeat_length = 2 * aspl.repeat_length.rotate_right(8);
                 Ok((&ser_sample[30..], aspl))
             }
-            Err(e) => Err(Box::new(e)),
+            Err(e) => Err(e),
         }
     }
 

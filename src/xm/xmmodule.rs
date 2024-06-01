@@ -26,7 +26,7 @@ pub struct XmModule {
 }
 
 impl XmModule {
-    pub fn load(data: &[u8]) -> Result<Self, Box<DecodeError>> {
+    pub fn load(data: &[u8]) -> Result<Self, DecodeError> {
         let (data, header, pattern_order) = XmHeader::load(data)?;
         let mut data = data;
 
@@ -98,7 +98,7 @@ impl XmModule {
         xmm
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<EncodeError>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, EncodeError> {
         let po_len = self.pattern_order.len();
         self.header.header_size = 20 + po_len as u32;
         let mut header_ser = bincode::encode_to_vec(&self.header, bincode::config::legacy()).unwrap();

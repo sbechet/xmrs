@@ -79,7 +79,7 @@ impl Default for Module {
 
 impl Module {
     /// Load module using bincode
-    pub fn load(data: &[u8]) -> Result<Module, Box<DecodeError>> {
+    pub fn load(data: &[u8]) -> Result<Module, DecodeError> {
         let version = env!("CARGO_PKG_VERSION_MAJOR");
         let mut header: [u8; 5] = *b"XMrs ";
         header[4] = version.as_bytes()[0];
@@ -87,9 +87,9 @@ impl Module {
         let ver_data = &data[0..5];
         let real_data = &data[5..];
         if ver_data != header {
-            Err(Box::new(DecodeError::Other(
+            Err(DecodeError::Other(
                 "Bad Module version",
-            )))
+            ))
         } else {
             let mut decoder = Decoder::new(real_data);
             let mut decoded_data = Vec::new();
@@ -100,7 +100,7 @@ impl Module {
     }
 
     /// Save module using bincode
-    pub fn save(&self) -> Result<Vec<u8>, Box<EncodeError>> {
+    pub fn save(&self) -> Result<Vec<u8>, EncodeError> {
         let version = env!("CARGO_PKG_VERSION_MAJOR");
         let mut header: [u8; 5] = *b"XMrs ";
         header[4] = version.as_bytes()[0];
@@ -109,9 +109,9 @@ impl Module {
 
         // EncodeError doesn't support core2, only contains Io variant when std present
         #[cfg(feature = "std")]
-        let io_error_wrap = |e| Box::new(EncodeError::Io{inner:e, index:0});
+        let io_error_wrap = |e| EncodeError::Io{inner:e, index:0};
         #[cfg(not(feature = "std"))]
-        let io_error_wrap = |_| Box::new(EncodeError::Other("LZ77 compreession failed"));
+        let io_error_wrap = |_| EncodeError::Other("LZ77 compreession failed");
         let ser_mod1 = bincode::encode_to_vec(&self, bincode::config::legacy())?;
         let mut encoder = Encoder::new(Vec::new());
         encoder.write_all(&ser_mod1).map_err(io_error_wrap)?;

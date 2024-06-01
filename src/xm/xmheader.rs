@@ -78,24 +78,24 @@ impl Default for XmHeader {
 
 impl XmHeader {
     /* return like nom (&[u8], (XmHeader, PatternOrder) ) */
-    pub fn load(ser_xmheader: &[u8]) -> Result<(&[u8], XmHeader, Vec<u8>), Box<DecodeError>> {
+    pub fn load(ser_xmheader: &[u8]) -> Result<(&[u8], XmHeader, Vec<u8>), DecodeError> {
         match bincode::serde::decode_from_slice::<XmHeader, _>(ser_xmheader, bincode::config::legacy()) {
             Ok((xmh, _)) => {
                 if xmh.id_text != "Extended Module:" {
-                    return Err(Box::new(DecodeError::Other(
+                    return Err(DecodeError::Other(
                         "Not an Extended Module?",
-                    )));
+                    ));
                 }
                 match xmh.get_pattern_order(&ser_xmheader[80..]) {
                     Ok((data, pattern_order)) => Ok((data, xmh, pattern_order)),
                     Err(e) => Err(e),
                 }
             }
-            Err(e) => Err(Box::new(e)),
+            Err(e) => Err(e),
         }
     }
 
-    fn get_pattern_order<'a>(&self, data: &'a [u8]) -> Result<(&'a [u8], Vec<u8>), Box<DecodeError>> {
+    fn get_pattern_order<'a>(&self, data: &'a [u8]) -> Result<(&'a [u8], Vec<u8>), DecodeError> {
         let pattern_order_and_maybe_more_len: usize = self.header_size as usize - 20;
         if data.len() >= pattern_order_and_maybe_more_len
             && self.song_length as usize <= pattern_order_and_maybe_more_len
@@ -103,7 +103,7 @@ impl XmHeader {
             let pattern_order: Vec<u8> = data[0..self.song_length as usize].to_vec();
             Ok((&data[pattern_order_and_maybe_more_len..], pattern_order))
         } else {
-            Err(Box::new(DecodeError::Other("XmHeader.header_size too big?")))
+            Err(DecodeError::Other("XmHeader.header_size too big?"))
         }
     }
 

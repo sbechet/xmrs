@@ -11,7 +11,7 @@ use alloc::vec::Vec;
 pub type XmPatternSlot = PatternSlot;
 
 impl XmPatternSlot {
-    pub fn load(src: &[u8]) -> Result<(&[u8], XmPatternSlot), Box<DecodeError>> {
+    pub fn load(src: &[u8]) -> Result<(&[u8], XmPatternSlot), DecodeError> {
         let mut dst: [u8; 5] = [0; 5];
         let mut i = 0;
         let mut j = 0;

@@ -63,7 +63,7 @@ impl AmigaModule {
         1 + *self.positions.iter().max().unwrap_or(&0) as usize
     }
 
-    pub fn load(ser_amiga_module: &[u8]) -> Result<AmigaModule, Box<DecodeError>> {
+    pub fn load(ser_amiga_module: &[u8]) -> Result<AmigaModule, DecodeError> {
         let mut amiga = AmigaModule {
             ..Default::default()
         };
@@ -102,9 +102,9 @@ impl AmigaModule {
         let number_of_tracks = match amiga.get_number_of_tracks() {
             Some(n) => n as usize,
             None => {
-                return Result::Err(Box::new(DecodeError::Other(
+                return Result::Err(DecodeError::Other(
                     "Not an amiga module?",
-                )))
+                ))
             }
         };
 
