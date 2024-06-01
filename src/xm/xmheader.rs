@@ -9,8 +9,6 @@ use super::serde_helper::{deserialize_string_20, serialize_string_20};
 use crate::module::{FrequencyType, Module};
 
 #[cfg(not(feature = "std"))]
-use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
 #[cfg(not(feature = "std"))]
 use alloc::string::ToString;

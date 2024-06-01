@@ -208,13 +208,8 @@ impl Default for XmInstrumentHeader {
 }
 
 impl XmInstrumentHeader {
-<<<<<<< working copy
     pub fn save(&self) -> Result<Vec<u8>, EncodeError> {
-        bincode::encode_to_vec(&self, bincode::config::legacy())
-=======
-    pub fn save(&self) -> Result<Vec<u8>, Box<EncodeError>> {
-        bincode::serde::encode_to_vec(&self, bincode::config::legacy()).map_err(|e| Box::new(e))
->>>>>>> merge rev
+        bincode::serde::encode_to_vec(&self, bincode::config::legacy())
     }
 
     pub fn from_instr(i: &Instrument) -> Self {

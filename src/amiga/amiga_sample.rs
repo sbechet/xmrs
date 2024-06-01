@@ -7,8 +7,6 @@ use std::fmt;
 #[cfg(not(feature = "std"))]
 use core::fmt;
 #[cfg(not(feature = "std"))]
-use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
 
 use crate::prelude::*;

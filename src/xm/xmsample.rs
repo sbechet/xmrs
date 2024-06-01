@@ -8,8 +8,6 @@ use crate::instrument::{Instrument, InstrumentType};
 use crate::sample::{LoopType, Sample, SampleDataType};
 
 #[cfg(not(feature = "std"))]
-use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;

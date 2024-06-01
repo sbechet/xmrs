@@ -7,8 +7,6 @@ use crate::module::Module;
 use super::xmpatternslot::XmPatternSlot;
 
 #[cfg(not(feature = "std"))]
-use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
 #[derive(Serialize, Deserialize, Debug)]

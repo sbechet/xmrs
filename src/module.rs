@@ -11,8 +11,6 @@ use std::sync::Arc;
 #[cfg(not(feature = "std"))]
 use alloc::sync::Arc;
 #[cfg(not(feature = "std"))]
-use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
 #[cfg(not(feature = "std"))]
 use alloc::string::ToString;
@@ -111,7 +109,7 @@ impl Module {
         #[cfg(feature = "std")]
         let io_error_wrap = |e| EncodeError::Io{inner:e, index:0};
         #[cfg(not(feature = "std"))]
-        let io_error_wrap = |_| EncodeError::Other("LZ77 compreession failed");;
+        let io_error_wrap = |_| EncodeError::Other("LZ77 compression failed");
         let ser_mod1 = bincode::serde::encode_to_vec(&self, bincode::config::legacy())?;
         let mut encoder = Encoder::new(Vec::new());
         encoder.write_all(&ser_mod1).map_err(io_error_wrap)?;
