@@ -11,7 +11,7 @@ use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XmPatternHeader {
     pattern_header_len: u32,
     packing_type: u8,
@@ -44,7 +44,7 @@ impl XmPatternHeader {
 
 type Lines = Vec<Vec<XmPatternSlot>>;
 
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmPattern {
     pub header: XmPatternHeader,
     pub pattern: Lines,
@@ -137,7 +137,7 @@ impl XmPattern {
         }
         self.header.pattern_data_size = p_output.len() as u16;
 
-        let mut output = bincode::encode_to_vec(&self.header, bincode::config::legacy())?;
+        let mut output = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy())?;
         output.append(&mut p_output);
         Ok(output)
     }

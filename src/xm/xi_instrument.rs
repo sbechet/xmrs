@@ -22,7 +22,7 @@ use alloc::vec::Vec;
 
 const XMINSTRUMENT_HEADER: usize = 21 + 22 + 1 + 20 + 2;
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XiInstrumentHeader {
     #[serde(
         deserialize_with = "deserialize_string_21",
@@ -55,7 +55,7 @@ impl Default for XiInstrumentHeader {
     }
 }
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XiInstrument {
     header: XiInstrumentHeader,
     instr: XmInstrDefault,

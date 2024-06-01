@@ -26,7 +26,7 @@ pub const DEFAULT_PATTERN_LENGTH: usize = 64;
 pub const MAX_NUM_ROWS: usize = 256;
 
 /// Historical Frequencies to load old data. Default is Linear.
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Copy, Debug)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum FrequencyType {
     AmigaFrequencies,
     LinearFrequencies,
@@ -45,7 +45,7 @@ pub type Row = Vec<PatternSlot>;
 pub type Pattern = Vec<Row>;
 
 /// SoundTracker Module with Steroid
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Module {
     pub name: String,
     pub comment: String,
@@ -111,8 +111,8 @@ impl Module {
         #[cfg(feature = "std")]
         let io_error_wrap = |e| EncodeError::Io{inner:e, index:0};
         #[cfg(not(feature = "std"))]
-        let io_error_wrap = |_| EncodeError::Other("LZ77 compreession failed");
-        let ser_mod1 = bincode::encode_to_vec(&self, bincode::config::legacy())?;
+        let io_error_wrap = |_| EncodeError::Other("LZ77 compreession failed");;
+        let ser_mod1 = bincode::serde::encode_to_vec(&self, bincode::config::legacy())?;
         let mut encoder = Encoder::new(Vec::new());
         encoder.write_all(&ser_mod1).map_err(io_error_wrap)?;
         let mut ser_mod2 = encoder.finish().into_result().map_err(io_error_wrap)?;

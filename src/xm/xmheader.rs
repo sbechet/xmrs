@@ -17,7 +17,7 @@ use alloc::string::ToString;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Serialize, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
 #[serde(into = "u16", try_from = "u16")]
 #[repr(u16)]
 pub enum XmFlagType {
@@ -25,7 +25,7 @@ pub enum XmFlagType {
     XmLinearFrequencies = 1,
 }
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XmHeader {
     #[serde(
         deserialize_with = "deserialize_string_17",

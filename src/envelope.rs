@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use alloc::vec::Vec;
 
 /// Envelope Point, frame for the abscissa, value for the ordinate
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone, Debug)]
+#[derive(Default, Serialize, Deserialize, Copy, Clone, Debug)]
 pub struct EnvelopePoint {
     /// Frame number of the point (X-coordinate)
     pub frame: u16,
@@ -27,7 +27,7 @@ impl EnvelopePoint {
 }
 
 /// Envelope with Steroid
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Debug)]
+#[derive(Default, Serialize, Deserialize, Clone, Debug)]
 pub struct Envelope {
     pub enabled: bool,
     /// 12 points maximum for XM compatibility

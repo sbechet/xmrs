@@ -13,7 +13,7 @@ use alloc::string::String;
 
 use crate::prelude::*;
 
-#[derive(Default, bincode::Decode, Deserialize)]
+#[derive(Default, Deserialize)]
 pub struct AmigaSample {
     #[serde(deserialize_with = "deserialize_string_22")]
     pub name: String,

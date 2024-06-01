@@ -7,7 +7,7 @@ use alloc::string::String;
 use alloc::vec::Vec;
 
 /// How to play sample
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone, IntoPrimitive, TryFromPrimitive, Debug)]
+#[derive(Default, Serialize, Deserialize, Copy, Clone, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]
 pub enum LoopType {
     #[default]
@@ -17,14 +17,14 @@ pub enum LoopType {
 }
 
 /// is sample recorded with 8 or 16 bits depth
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum SampleDataType {
     Depth8(Vec<i8>),
     Depth16(Vec<i16>),
 }
 
 /// A Real Data sample
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Sample {
     /// Name
     pub name: String,

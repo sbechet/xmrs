@@ -7,7 +7,7 @@ use std::fmt::*;
 use core::fmt::*;
 
 /// 8 octaves with notes
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]
+#[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]
 #[repr(u8)]
 pub enum Note {
     /// No note

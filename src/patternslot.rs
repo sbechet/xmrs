@@ -13,7 +13,7 @@ use core::primitive::char;
 use alloc::string::ToString;
 
 /// A typical pattern slot
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Copy, Clone)]
+#[derive(Serialize, Deserialize, Copy, Clone)]
 #[repr(C)]
 pub struct PatternSlot {
     pub note: Note,

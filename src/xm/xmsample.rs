@@ -16,7 +16,7 @@ use alloc::vec::Vec;
 
 pub const XMSAMPLE_HEADER_SIZE: usize = 40;
 
-#[derive(Default, bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[repr(C)]
 pub struct XmSampleHeader {
     length: u32,
@@ -35,7 +35,7 @@ pub struct XmSampleHeader {
     name: String,
 }
 
-#[derive(bincode::Encode, Serialize, bincode::Decode, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct XmSample {
     header: XmSampleHeader,
     data: Option<SampleDataType>,
@@ -90,7 +90,7 @@ impl XmSample {
             }
             None => 0,
         };
-        let h = bincode::encode_to_vec(&self.header, bincode::config::legacy())?;
+        let h = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy())?;
         Ok(h)
     }
 
