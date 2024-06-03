@@ -15,8 +15,8 @@ categories = ["multimedia::audio", "embedded", "no-std"]
 [dependencies]
 bincode = "1.3"
 clap = { version = "4.5", optional = true, features = ["cargo", "derive"] }
-num_enum = "0.7"
-serde = { version = "1.0", features = ["derive", "alloc"] }
+num_enum = { version = "0.7", default-features = false }
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 serde-big-array = "0.5"
 
 [features]
@@ -26,6 +26,10 @@ demo = ["clap"]
 [lib]
 name = "xmrs"
 path = "src/lib.rs"
+
+[examples]
+rodio_player = { name = "rodio_player", path = "examples/rodio_player.rs", features=["demo"] }
+cpal_player = { name = "cpal_player", path = "examples/cpal_player.rs", features=["demo"] }
 
 [profile.release]
 strip = true
