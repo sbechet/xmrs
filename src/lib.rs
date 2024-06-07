@@ -48,11 +48,9 @@ pub mod patternslot;
 pub mod sample;
 
 /// Load and Save Historical XM files
-#[cfg(feature = "loaders")]
 pub mod xm;
 
 /// Load only Historical MOD files
-#[cfg(feature = "loaders")]
 pub mod amiga;
 
 pub mod f32helper;
