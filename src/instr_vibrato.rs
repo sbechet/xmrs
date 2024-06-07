@@ -1,6 +1,8 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
+use crate::f32helper;
+
 /// Vibrato Waveform
 #[derive(Default, Serialize, Deserialize, Clone, Copy, IntoPrimitive, TryFromPrimitive, Debug)]
 #[repr(u8)]
@@ -17,7 +19,7 @@ impl Waveform {
     pub fn value(&self, step: f32) -> f32 {
         let step = step % 1.0;
         return match &self {
-            Waveform::Sine => (core::f32::consts::TAU * step).sin(),
+            Waveform::Sine => f32helper::sin(core::f32::consts::TAU * step),
             Waveform::Square => {
                 if step < 0.5 {
                     1.0
