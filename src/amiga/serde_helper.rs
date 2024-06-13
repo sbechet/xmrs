@@ -1,8 +1,8 @@
 use serde::Deserialize;
 use serde::Deserializer;
 
-use alloc::string::String;
-use alloc::string::ToString;
+#[cfg(not(feature = "std"))]
+use alloc::string::{String, ToString};
 
 // --- deserialize -------------------------
 

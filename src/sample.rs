@@ -1,7 +1,9 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
+#[cfg(not(feature = "std"))]
 use alloc::string::String;
+#[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
 /// How to play sample

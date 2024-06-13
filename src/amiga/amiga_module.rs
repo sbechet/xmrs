@@ -4,9 +4,11 @@ use bincode::ErrorKind;
 
 use crate::prelude::*;
 
+#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
-use alloc::string::String;
-use alloc::string::ToString;
+#[cfg(not(feature = "std"))]
+use alloc::string::{String, ToString};
+#[cfg(not(feature = "std"))]
 use alloc::{vec, vec::Vec};
 
 #[derive(Default, Debug)]

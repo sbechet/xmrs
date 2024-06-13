@@ -1,4 +1,7 @@
+#[cfg(not(feature = "std"))]
 use core::fmt::*;
+#[cfg(feature = "std")]
+use std::fmt::*;
 
 pub struct Element {
     pub note: u8,

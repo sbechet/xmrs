@@ -6,6 +6,7 @@ use crate::instr_midi::InstrMidi;
 use crate::instr_vibrato::InstrVibrato;
 use crate::sample::Sample;
 
+#[cfg(not(feature = "std"))]
 use alloc::{vec, vec::Vec};
 
 /// Historical XM Instrument
