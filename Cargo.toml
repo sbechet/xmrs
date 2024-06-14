@@ -16,8 +16,7 @@ categories = ["multimedia::audio", "embedded", "no-std"]
 bincode = { version = "2.0.0-rc.3", features=["alloc", "derive", "serde"], default-features = false }
 clap = { version = "4.5", optional = true, features = ["cargo", "derive"] }
 num_enum = { version = "0.7", default-features = false }
-num_enum = "0.7"
-serde = { version = "1.0", features = ["derive", "alloc"] }
+serde = { version = "1.0", features = ["derive", "alloc"], default-features = false }
 serde-big-array = "0.5"
 core2 = { version = "0.4.0", features = ["alloc"], default-features = false } # std::io compatibility lib
 num-traits = { version = "0.2.17",default-features = false, optional=true } # libm wrapper
@@ -25,7 +24,7 @@ micromath = { version = "2.1.0", optional=true }
 
 [features]
 default = ["std"]
-std = ["bincode/std", "core2/std", "libflate/std", "num_enum/std", "serde/std"]
+std = ["bincode/std", "core2/std", "num_enum/std", "serde/std"]
 demo = ["clap"]
 libm = ["num-traits/libm"]
 micromath = ["dep:micromath"]

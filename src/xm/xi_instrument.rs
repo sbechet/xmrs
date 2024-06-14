@@ -91,7 +91,7 @@ impl XiInstrument {
         }
 
         // all samples headers, then data...
-        let mut sample: Vec<_> = vec![];
+        let mut sample = vec![];
 
         let mut d3 = data;
         for _ in 0..xi.num_samples {
