@@ -3,11 +3,8 @@ use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
 
-#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
-#[cfg(not(feature = "std"))]
 use alloc::{vec, vec::Vec};
 
 use crate::envelope::{Envelope, EnvelopePoint};

@@ -2,11 +2,8 @@ use super::serde_helper::deserialize_string_22;
 use bincode::ErrorKind;
 use serde::Deserialize;
 
-#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
-#[cfg(not(feature = "std"))]
 use alloc::vec;
 use core::fmt;
 

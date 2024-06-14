@@ -2,9 +2,7 @@
 use bincode::ErrorKind;
 use serde::{Deserialize, Serialize};
 
-#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::{vec, vec::Vec};
 
 use crate::module::Module;

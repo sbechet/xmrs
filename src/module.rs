@@ -3,9 +3,8 @@ use serde::{Deserialize, Serialize};
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
 
-#[cfg(not(feature = "std"))]
-use alloc::string::{String, ToString};
-#[cfg(not(feature = "std"))]
+use alloc::string::String;
+use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 
 pub const DEFAULT_PATTERN_LENGTH: usize = 64;

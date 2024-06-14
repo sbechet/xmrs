@@ -6,7 +6,6 @@ use crate::instr_midi::InstrMidi;
 use crate::instr_robsid::InstrRobSid;
 use crate::instr_sid::InstrSid;
 
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
 
 //===========================================================================

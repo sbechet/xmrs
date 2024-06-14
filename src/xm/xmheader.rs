@@ -3,11 +3,9 @@ use bincode::ErrorKind;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
-#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
-use alloc::string::{String, ToString};
-#[cfg(not(feature = "std"))]
+use alloc::string::String;
+use alloc::string::ToString;
 use alloc::vec::Vec;
 
 use super::serde_helper::{deserialize_string_17, serialize_string_17};

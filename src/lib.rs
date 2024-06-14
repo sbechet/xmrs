@@ -1,4 +1,3 @@
-#![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
 //!
 //! XMrs is a Safe SoundTracker Library
@@ -20,7 +19,7 @@
 //! You can load (and save) your work using `load()` and `save()` serde fn
 //!
 
-#[cfg(not(feature = "std"))]
+#![no_std]
 extern crate alloc;
 
 /// Envelope with Steroid
