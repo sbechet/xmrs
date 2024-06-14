@@ -20,7 +20,7 @@
 //! You can load (and save) your work using `load()` and `save()` serde fn
 //!
 
-#![no_std]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate alloc;
 
