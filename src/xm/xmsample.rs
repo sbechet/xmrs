@@ -2,15 +2,14 @@
 use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::{vec, vec::Vec};
+
 use super::helper::*;
 use super::serde_helper::{deserialize_string_22, serialize_string_22};
 use crate::instrument::{Instrument, InstrumentType};
 use crate::sample::{LoopType, Sample, SampleDataType};
-
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
 
 pub const XMSAMPLE_HEADER_SIZE: usize = 40;
 
@@ -138,7 +137,7 @@ impl XmSample {
             loop_start: loop_start,
             loop_length: loop_length,
             volume: self.header.volume as f32 / 64.0,
-            finetune: self.header.finetune as f32 / 127.0,
+            finetune: (self.header.finetune as f32 / 127.0).clamp(-1.0, 1.0),
             flags: match self.header.flags & 0b000000_11 {
                 1 => LoopType::Forward,
                 2 => LoopType::PingPong,

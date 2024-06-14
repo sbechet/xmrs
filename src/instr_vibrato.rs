@@ -1,11 +1,6 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "std")]
-use std::f32;
-#[cfg(not(feature = "std"))]
-use core::f32;
-
 #[cfg(not(any(feature = "std", feature = "libm", feature = "micromath")))]
 ::core::compile_error!("Must enable at least one of features `std`, `libm`, or `micromath`");
 #[cfg(feature = "libm")]
@@ -29,7 +24,7 @@ impl Waveform {
     pub fn value(&self, step: f32) -> f32 {
         let step = step % 1.0;
         return match &self {
-            Waveform::Sine => (f32::consts::TAU * step).sin(),
+            Waveform::Sine => (core::f32::consts::TAU * step).sin(),
             Waveform::Square => {
                 if step < 0.5 {
                     1.0

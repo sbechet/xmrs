@@ -2,18 +2,11 @@ use bincode::error::DecodeError;
 use crate::amiga::amiga_sample::AmigaSample;
 use crate::amiga::element::*;
 
-#[cfg(feature = "std")]
-use std::sync::Arc;
-#[cfg(not(feature = "std"))]
-use alloc::sync::Arc;
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-#[cfg(not(feature = "std"))]
-use alloc::string::ToString;
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
-
 use crate::prelude::*;
+
+use alloc::string::String;
+use alloc::string::ToString;
+use alloc::{vec, vec::Vec};
 
 #[derive(Default, Debug)]
 pub struct AmigaModule {
@@ -134,7 +127,7 @@ impl AmigaModule {
         Result::Ok(amiga)
     }
 
-    fn to_instr(&self, sample_index: usize) -> Arc<Instrument> {
+    fn to_instr(&self, sample_index: usize) -> Instrument {
         let mut instr: Instrument = Instrument::default();
 
         let mut sample: Sample = self.samples[sample_index].to_sample();
@@ -143,11 +136,11 @@ impl AmigaModule {
         instr.name = sample.name.clone();
 
         let mut idef = InstrDefault::default();
-        idef.sample.push(Arc::new(sample));
+        idef.sample.push(sample);
 
-        instr.instr_type = InstrumentType::Default(Arc::new(idef));
+        instr.instr_type = InstrumentType::Default(idef);
 
-        return Arc::new(instr);
+        return instr;
     }
 
     fn amiga_to_module_pattern(p: &Vec<Vec<Element>>) -> Pattern {
@@ -181,7 +174,7 @@ impl AmigaModule {
 
         for p in &self.patterns {
             let p2 = Self::amiga_to_module_pattern(p);
-            module.pattern.push(Arc::new(p2));
+            module.pattern.push(p2);
         }
 
         for i in 0..self.samples.len() {

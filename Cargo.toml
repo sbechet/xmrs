@@ -1,6 +1,6 @@
 [package]
 name = "xmrs"
-version = "0.5.14"
+version = "0.6.0"
 edition = "2021"
 description = "A library to edit SoundTracker data with pleasure "
 license = "MIT"
@@ -9,15 +9,15 @@ documentation = "https://docs.rs/xmrs"
 repository = "https://codeberg.org/sbechet/xmrs"
 readme = "README.md"
 
-keywords = ["xm", "module", "mod", "s3m", "tracker"]
-categories = ["multimedia::audio"]
+keywords = ["xm", "module", "mod", "s3m", "soundtracker"]
+categories = ["multimedia::audio", "embedded", "no-std"]
 
 [dependencies]
 bincode = { version = "2.0.0-rc.3", features=["alloc", "derive", "serde"], default-features = false }
 clap = { version = "4.5", optional = true, features = ["cargo", "derive"] }
-libflate = { version = "2.0", default-features = false }
 num_enum = { version = "0.7", default-features = false }
-serde = { version = "1.0", features = ["derive", "rc", "alloc"], default-features = false }
+num_enum = "0.7"
+serde = { version = "1.0", features = ["derive", "alloc"] }
 serde-big-array = "0.5"
 core2 = { version = "0.4.0", features = ["alloc"], default-features = false } # std::io compatibility lib
 num-traits = { version = "0.2.17",default-features = false, optional=true } # libm wrapper
@@ -33,13 +33,6 @@ micromath = ["dep:micromath"]
 [lib]
 name = "xmrs"
 path = "src/lib.rs"
-
-[examples]
-infos = { name = "infos", path = "examples/infos.rs", features=["demo"] }
-
-[[bin]]
-name = "xmrs"
-path = "src/bin/xmrs.rs"
 
 [profile.release]
 strip = true

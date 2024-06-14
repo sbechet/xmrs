@@ -1,17 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "std")]
-use std::sync::Arc;
-#[cfg(not(feature = "std"))]
-use alloc::sync::Arc;
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-
 use crate::instr_default::InstrDefault;
 use crate::instr_ekn::InstrEkn;
 use crate::instr_midi::InstrMidi;
 use crate::instr_robsid::InstrRobSid;
 use crate::instr_sid::InstrSid;
+
+use alloc::string::String;
 
 //===========================================================================
 
@@ -22,15 +17,15 @@ pub enum InstrumentType {
     #[default]
     Empty,
     /// Historical XM Instrument
-    Default(Arc<InstrDefault>),
+    Default(InstrDefault),
     /// Euclidian Rythm Instrument
-    Euclidian(Arc<InstrEkn>),
+    Euclidian(InstrEkn),
     /// Midi Instrument
-    Midi(Arc<InstrMidi>),
+    Midi(InstrMidi),
     /// MOS6581 SID Voice
-    Sid(Arc<InstrSid>),
+    Sid(InstrSid),
     /// Rob Hubbard Instrument,
-    RobSid(Arc<InstrRobSid>),
+    RobSid(InstrRobSid),
 }
 
 /// Instrument with Steroid

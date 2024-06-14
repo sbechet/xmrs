@@ -2,12 +2,9 @@
 use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "std")]
-use std::sync::Arc;
-#[cfg(not(feature = "std"))]
-use alloc::sync::Arc;
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
+use alloc::boxed::Box;
+use alloc::format;
+use alloc::{vec, vec::Vec};
 
 use super::xmheader::{XmFlagType, XmHeader};
 use super::xminstrument::XmInstrument;
@@ -75,11 +72,11 @@ impl XmModule {
         };
 
         for p in &self.pattern {
-            module.pattern.push(Arc::new(p.pattern.clone()));
+            module.pattern.push(p.pattern.clone());
         }
 
         for i in &self.instrument {
-            module.instrument.push(Arc::new(i.to_instrument()))
+            module.instrument.push(i.to_instrument())
         }
 
         module

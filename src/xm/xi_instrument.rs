@@ -1,6 +1,11 @@
 use bincode::error::DecodeError;
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::string::ToString;
+use alloc::vec;
+
 use super::serde_helper::{deserialize_string_20, serialize_string_20};
 use super::serde_helper::{deserialize_string_21, serialize_string_21};
 use super::serde_helper::{deserialize_string_22, serialize_string_22};
@@ -10,15 +15,6 @@ use super::xminstrument::{
     XMINSTRUMENT_SIZE,
 };
 use super::xmsample::{XmSample, XMSAMPLE_HEADER_SIZE};
-
-#[cfg(not(feature = "std"))]
-use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-#[cfg(not(feature = "std"))]
-use alloc::string::ToString;
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
 
 const XMINSTRUMENT_HEADER: usize = 21 + 22 + 1 + 20 + 2;
 

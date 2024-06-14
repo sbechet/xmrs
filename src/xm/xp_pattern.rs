@@ -1,7 +1,5 @@
 use crate::prelude::PatternSlot;
-
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
+use alloc::{vec, vec::Vec};
 
 pub struct XpPattern;
 

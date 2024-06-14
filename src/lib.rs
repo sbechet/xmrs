@@ -21,8 +21,8 @@
 //! You can load (and save) your work using `load()` and `save()` serde fn
 //!
 
-#[cfg(not(feature = "std"))]
-#[macro_use]
+#![no_std]
+
 extern crate alloc;
 
 /// Envelope with Steroid

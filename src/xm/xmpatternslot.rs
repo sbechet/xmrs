@@ -3,7 +3,7 @@ use bincode::error::DecodeError;
 use crate::note::Note;
 use crate::patternslot::PatternSlot;
 
-#[cfg(not(feature = "std"))]
+use alloc::boxed::Box;
 use alloc::vec::Vec;
 
 pub type XmPatternSlot = PatternSlot;

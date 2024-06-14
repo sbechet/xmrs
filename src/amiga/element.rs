@@ -1,6 +1,3 @@
-#[cfg(feature = "std")]
-use std::fmt::*;
-#[cfg(not(feature = "std"))]
 use core::fmt::*;
 
 pub struct Element {

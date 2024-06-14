@@ -2,12 +2,9 @@ use bincode::error::DecodeError;
 use super::serde_helper::deserialize_string_22;
 use serde::Deserialize;
 
-#[cfg(feature = "std")]
-use std::fmt;
-#[cfg(not(feature = "std"))]
-use core::fmt;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
+use alloc::vec;
+use core::fmt;
 
 use crate::prelude::*;
 
@@ -53,7 +50,7 @@ impl AmigaSample {
     }
 
     pub fn to_sample(&self) -> Sample {
-        let f = ((self.finetune << 4) as i8) as f32 / 127.0;
+        let f = (((self.finetune << 4) as i8) as f32 / 127.0).clamp(-1.0, 1.0);
         let ro = if self.repeat_offset < self.length {
             self.repeat_offset
         } else {

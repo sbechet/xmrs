@@ -2,12 +2,12 @@
 use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::{vec, vec::Vec};
+
 use crate::module::Module;
 
 use super::xmpatternslot::XmPatternSlot;
-
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XmPatternHeader {
@@ -113,7 +113,7 @@ impl XmPattern {
         let mut all: Vec<Self> = vec![];
         for p in &module.pattern {
             let mut xmp = XmPattern {
-                pattern: (&**p).clone(),
+                pattern: p.clone(),
                 ..Default::default()
             };
             xmp.header.num_rows = p.len() as u16;

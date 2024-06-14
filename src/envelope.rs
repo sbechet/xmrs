@@ -1,7 +1,5 @@
-use serde::{Deserialize, Serialize};
-
-#[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
+use serde::{Deserialize, Serialize};
 
 /// Envelope Point, frame for the abscissa, value for the ordinate
 #[derive(Default, Serialize, Deserialize, Copy, Clone, Debug)]

@@ -1,6 +1,6 @@
 # XMrs File format library
 
-A library to edit Sound Tracker data with pleasure.
+A no_std-supporting library to edit Sound Tracker data with pleasure.
 
 Because "Representation is the Essence of Programming".
 
@@ -40,13 +40,3 @@ Useful struct parts:
 Edit data using rustified structs, use `Module` struct.
 
 Note: You can only save `InstrDefault` using XM fileformat.
-
-## Load XMrs fileformat (deflate then bincode)
-
-let mut mod = Module::load(&data)?;
-
-## Save XMrs fileformat (bincode then deflate)
-
-let data = mod.save()?;
-
-data contain a small five bytes header b"XMrs" + version coming from CARGO_PKG_VERSION_MAJOR.

@@ -1,10 +1,6 @@
+use core::fmt::*;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
-
-#[cfg(feature = "std")]
-use std::fmt::*;
-#[cfg(not(feature = "std"))]
-use core::fmt::*;
 
 /// 8 octaves with notes
 #[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]

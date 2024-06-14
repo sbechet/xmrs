@@ -3,17 +3,15 @@ use bincode::error::DecodeError;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
+use alloc::boxed::Box;
+use alloc::string::String;
+use alloc::string::ToString;
+use alloc::vec::Vec;
+
 use super::serde_helper::{deserialize_string_17, serialize_string_17};
 use super::serde_helper::{deserialize_string_20, serialize_string_20};
 
 use crate::module::{FrequencyType, Module};
-
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-#[cfg(not(feature = "std"))]
-use alloc::string::ToString;
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
 #[serde(into = "u16", try_from = "u16")]
