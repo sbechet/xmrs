@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use bincode::error::{DecodeError, EncodeError};
 
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
