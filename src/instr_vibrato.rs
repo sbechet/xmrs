@@ -1,8 +1,6 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
-#[cfg(not(any(feature = "std", feature = "libm", feature = "micromath")))]
-::core::compile_error!("Must enable at least one of features `std`, `libm`, or `micromath`");
 #[cfg(feature = "libm")]
 use num_traits::float::Float;
 #[cfg(feature = "micromath")]
