@@ -1,6 +1,6 @@
 # XMrs File format library
 
-A no_std-supporting library to edit Sound Tracker data with pleasure.
+A no_std library to edit Sound Tracker data with pleasure.
 
 Because "Representation is the Essence of Programming".
 
@@ -40,3 +40,15 @@ Useful struct parts:
 Edit data using rustified structs, use `Module` struct.
 
 Note: You can only save `InstrDefault` using XM fileformat.
+
+## About no_std
+
+micromath is used by default in no_std. If you prefer libm, use `cargo build --no-default-features --features=libm --release`.
+
+## About std
+
+if you want to use std feature use `cargo build --no-default-features --features=std --release`
+
+## About std demo
+
+if you want to test examples use `cargo build --no-default-features --features=std,demo --release`

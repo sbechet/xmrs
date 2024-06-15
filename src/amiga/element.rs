@@ -224,8 +224,7 @@ impl Element {
         let note = match Self::amiga_note(period) {
             Some(n) => n,
             None => {
-                #[cfg(feature = "std")]
-                println!("Amiga Module Strange Period: {}?", period);
+                // period is not an Amiga one?
                 0
             }
         };
