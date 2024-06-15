@@ -1,8 +1,7 @@
 /// Original XM Module
-use bincode::ErrorKind;
+use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
-use alloc::boxed::Box;
 use alloc::format;
 use alloc::{vec, vec::Vec};
 
@@ -21,7 +20,7 @@ pub struct XmModule {
 }
 
 impl XmModule {
-    pub fn load(data: &[u8]) -> Result<Self, Box<ErrorKind>> {
+    pub fn load(data: &[u8]) -> Result<Self, DecodeError> {
         let (data, header, pattern_order) = XmHeader::load(data)?;
         let mut data = data;
 
@@ -93,10 +92,10 @@ impl XmModule {
         xmm
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, EncodeError> {
         let po_len = self.pattern_order.len();
         self.header.header_size = 20 + po_len as u32;
-        let mut header_ser = bincode::serialize(&self.header).unwrap();
+        let mut header_ser = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy()).unwrap();
         let mut pattern_order_ser = self.pattern_order.clone();
         let mut pattern_ser: Vec<u8> = vec![];
         for xmp in &mut self.pattern {

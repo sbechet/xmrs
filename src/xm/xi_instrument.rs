@@ -1,4 +1,4 @@
-use bincode::ErrorKind;
+use bincode::error::DecodeError;
 use serde::{Deserialize, Serialize};
 
 use alloc::boxed::Box;
@@ -60,15 +60,15 @@ pub struct XiInstrument {
 }
 
 impl XiInstrument {
-    pub fn load(data: &[u8]) -> Result<XmInstrument, Box<ErrorKind>> {
-        let xi = bincode::deserialize::<XiInstrument>(data)?;
+    pub fn load(data: &[u8]) -> Result<XmInstrument, DecodeError> {
+        let xi = bincode::serde::decode_from_slice::<XiInstrument, _>(data, bincode::config::legacy())?.0;
         let seek = XMINSTRUMENT_HEADER + XMINSTRDEFAULT_SIZE + 15 + 2;
         let data = &data[seek..];
 
         if xi.header.id_text != "Extended Instrument:" {
-            return Err(Box::new(ErrorKind::Custom(
-                "Not an Extended Instrument?".to_string(),
-            )));
+            return Err(DecodeError::Other(
+                "Not an Extended Instrument?",
+            ));
         }
 
         //---

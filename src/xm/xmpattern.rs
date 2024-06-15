@@ -1,8 +1,7 @@
 /// Original XM Pattern
-use bincode::ErrorKind;
+use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
-use alloc::boxed::Box;
 use alloc::{vec, vec::Vec};
 
 use crate::module::Module;
@@ -29,9 +28,9 @@ impl Default for XmPatternHeader {
 }
 
 impl XmPatternHeader {
-    pub fn load(data: &[u8]) -> Result<(&[u8], XmPatternHeader), Box<ErrorKind>> {
-        match bincode::deserialize::<XmPatternHeader>(data) {
-            Ok(xmph) => {
+    pub fn load(data: &[u8]) -> Result<(&[u8], XmPatternHeader), DecodeError> {
+        match bincode::serde::decode_from_slice::<XmPatternHeader, _>(data, bincode::config::legacy()) {
+            Ok((xmph, _)) => {
                 let hl = xmph.pattern_header_len as usize;
                 Ok((&data[hl..], xmph))
             }
@@ -52,7 +51,7 @@ impl XmPattern {
     pub fn load(
         data: &[u8],
         number_of_channels: u16,
-    ) -> Result<(&[u8], XmPattern), Box<ErrorKind>> {
+    ) -> Result<(&[u8], XmPattern), DecodeError> {
         let (data, xmph) = XmPatternHeader::load(data)?;
         let (_data_out, xmps) = Self::get_slots(
             &data[0..xmph.pattern_data_size as usize],
@@ -83,7 +82,7 @@ impl XmPattern {
         data: &[u8],
         number_of_channels: usize,
         number_of_rows: usize,
-    ) -> Result<(&[u8], Vec<Vec<XmPatternSlot>>), Box<ErrorKind>> {
+    ) -> Result<(&[u8], Vec<Vec<XmPatternSlot>>), DecodeError> {
         let mut lines: Vec<Vec<XmPatternSlot>> = vec![];
         let mut row: Vec<XmPatternSlot> = vec![];
 
@@ -124,7 +123,7 @@ impl XmPattern {
         all
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, EncodeError> {
         let mut p_output: Vec<u8> = vec![];
 
         for p in &self.pattern {
@@ -135,7 +134,7 @@ impl XmPattern {
         }
         self.header.pattern_data_size = p_output.len() as u16;
 
-        let mut output = bincode::serialize(&self.header)?;
+        let mut output = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy())?;
         output.append(&mut p_output);
         Ok(output)
     }

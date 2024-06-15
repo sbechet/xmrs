@@ -1,8 +1,7 @@
 /// Original XM Sample
-use bincode::ErrorKind;
+use bincode::error::{DecodeError, EncodeError};
 use serde::{Deserialize, Serialize};
 
-use alloc::boxed::Box;
 use alloc::string::String;
 use alloc::{vec, vec::Vec};
 
@@ -48,8 +47,8 @@ impl Default for XmSample {
 }
 
 impl XmSample {
-    pub fn load(data: &[u8]) -> Result<(&[u8], XmSample), Box<ErrorKind>> {
-        let sh = bincode::deserialize::<XmSampleHeader>(data)?;
+    pub fn load(data: &[u8]) -> Result<(&[u8], XmSample), DecodeError> {
+        let sh = bincode::serde::decode_from_slice::<XmSampleHeader, _>(data, bincode::config::legacy())?.0;
         // Now create XmSample
         let xms = XmSample {
             header: sh,
@@ -58,7 +57,7 @@ impl XmSample {
         Ok((&data[XMSAMPLE_HEADER_SIZE..], xms))
     }
 
-    pub fn add_sample<'a>(&mut self, data: &'a [u8]) -> Result<&'a [u8], Box<ErrorKind>> {
+    pub fn add_sample<'a>(&mut self, data: &'a [u8]) -> Result<&'a [u8], DecodeError> {
         let data_len: usize = self.header.length as usize;
         let slice = &data[..data_len];
 
@@ -78,7 +77,7 @@ impl XmSample {
         Ok(&data[data_len..])
     }
 
-    pub fn save(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save(&mut self) -> Result<Vec<u8>, EncodeError> {
         self.header.length = match &self.data {
             Some(SampleDataType::Depth8(d)) => d.len() as u32,
             Some(SampleDataType::Depth16(d)) => {
@@ -87,12 +86,12 @@ impl XmSample {
             }
             None => 0,
         };
-        let h = bincode::serialize(&self.header)?;
+        let h = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy())?;
         Ok(h)
     }
 
     /// You must call save() before to save good length size to header
-    pub fn save_sample(&mut self) -> Result<Vec<u8>, Box<ErrorKind>> {
+    pub fn save_sample(&mut self) -> Result<Vec<u8>, EncodeError> {
         let d = match &self.data {
             Some(SampleDataType::Depth8(d)) => sample8_to_delta(d),
             Some(SampleDataType::Depth16(d)) => {

@@ -1,6 +1,6 @@
 # XMrs File format library
 
-A no_std library to edit Sound Tracker data with pleasure.
+A no_std-supporting library to edit Sound Tracker data with pleasure.
 
 Because "Representation is the Essence of Programming".
 

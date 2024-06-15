@@ -1,4 +1,5 @@
 #![forbid(unsafe_code)]
+
 //!
 //! XMrs is a Safe SoundTracker Library
 //!
@@ -19,7 +20,8 @@
 //! You can load (and save) your work using `load()` and `save()` serde fn
 //!
 
-#![no_std]
+#![cfg_attr(not(feature = "std"), no_std)]
+
 extern crate alloc;
 
 /// Envelope with Steroid
@@ -52,8 +54,6 @@ pub mod xm;
 
 /// Load only Historical MOD files
 pub mod amiga;
-
-pub mod f32helper;
 
 /// The Xmrs Prelude
 pub mod prelude;

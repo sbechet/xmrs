@@ -1,10 +1,9 @@
+use bincode::error::DecodeError;
 use crate::amiga::amiga_sample::AmigaSample;
 use crate::amiga::element::*;
-use bincode::ErrorKind;
 
 use crate::prelude::*;
 
-use alloc::boxed::Box;
 use alloc::string::String;
 use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
@@ -55,7 +54,7 @@ impl AmigaModule {
         1 + *self.positions.iter().max().unwrap_or(&0) as usize
     }
 
-    pub fn load(ser_amiga_module: &[u8]) -> Result<AmigaModule, Box<ErrorKind>> {
+    pub fn load(ser_amiga_module: &[u8]) -> Result<AmigaModule, DecodeError> {
         let mut amiga = AmigaModule {
             ..Default::default()
         };
@@ -94,9 +93,9 @@ impl AmigaModule {
         let number_of_tracks = match amiga.get_number_of_tracks() {
             Some(n) => n as usize,
             None => {
-                return Result::Err(Box::new(ErrorKind::Custom(
-                    "Not an amiga module?".to_string(),
-                )))
+                return Result::Err(DecodeError::Other(
+                    "Not an amiga module?",
+                ))
             }
         };
 

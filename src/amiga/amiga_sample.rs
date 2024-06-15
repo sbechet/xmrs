@@ -1,8 +1,7 @@
+use bincode::error::DecodeError;
 use super::serde_helper::deserialize_string_22;
-use bincode::ErrorKind;
 use serde::Deserialize;
 
-use alloc::boxed::Box;
 use alloc::string::String;
 use alloc::vec;
 use core::fmt;
@@ -36,9 +35,9 @@ impl fmt::Debug for AmigaSample {
 }
 
 impl AmigaSample {
-    pub fn load(ser_sample: &[u8]) -> Result<(&[u8], Self), Box<ErrorKind>> {
-        match bincode::deserialize::<AmigaSample>(&ser_sample) {
-            Ok(mut aspl) => {
+    pub fn load(ser_sample: &[u8]) -> Result<(&[u8], Self), DecodeError> {
+        match bincode::serde::decode_from_slice::<AmigaSample, _>(&ser_sample, bincode::config::legacy()) {
+            Ok((mut aspl, _)) => {
                 // bincode::DefaultOptions::new().with_big_endian() seems not working?
                 // manual ROR with * 2...
                 aspl.length = 2 * aspl.length.rotate_right(8);
