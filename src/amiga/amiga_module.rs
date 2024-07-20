@@ -170,7 +170,7 @@ impl AmigaModule {
         module.frequency_type = FrequencyType::AmigaFrequencies;
         module.default_tempo = 6;
         module.default_bpm = 125;
-        module.pattern_order = self.positions.clone();
+        module.pattern_order = self.positions[..usize::from(self.song_length)].to_vec();
 
         for p in &self.patterns {
             let p2 = Self::amiga_to_module_pattern(p);
