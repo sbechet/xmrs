@@ -29,7 +29,10 @@ impl Default for XmPatternHeader {
 
 impl XmPatternHeader {
     pub fn load(data: &[u8]) -> Result<(&[u8], XmPatternHeader), DecodeError> {
-        match bincode::serde::decode_from_slice::<XmPatternHeader, _>(data, bincode::config::legacy()) {
+        match bincode::serde::decode_from_slice::<XmPatternHeader, _>(
+            data,
+            bincode::config::legacy(),
+        ) {
             Ok((xmph, _)) => {
                 let hl = xmph.pattern_header_len as usize;
                 Ok((&data[hl..], xmph))
@@ -48,10 +51,7 @@ pub struct XmPattern {
 }
 
 impl XmPattern {
-    pub fn load(
-        data: &[u8],
-        number_of_channels: u16,
-    ) -> Result<(&[u8], XmPattern), DecodeError> {
+    pub fn load(data: &[u8], number_of_channels: u16) -> Result<(&[u8], XmPattern), DecodeError> {
         let (data, xmph) = XmPatternHeader::load(data)?;
         let (_data_out, xmps) = Self::get_slots(
             &data[0..xmph.pattern_data_size as usize],

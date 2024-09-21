@@ -1,6 +1,6 @@
-use bincode::error::DecodeError;
 use crate::amiga::amiga_sample::AmigaSample;
 use crate::amiga::element::*;
+use bincode::error::DecodeError;
 
 use crate::prelude::*;
 
@@ -92,11 +92,7 @@ impl AmigaModule {
         // patterns
         let number_of_tracks = match amiga.get_number_of_tracks() {
             Some(n) => n as usize,
-            None => {
-                return Result::Err(DecodeError::Other(
-                    "Not an amiga module?",
-                ))
-            }
+            None => return Result::Err(DecodeError::Other("Not an amiga module?")),
         };
 
         let number_of_patterns = amiga.get_number_of_patterns();

@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::instrument::Instrument;
 use crate::patternslot::PatternSlot;
+use crate::period_helper::FrequencyType;
 
 use alloc::string::String;
 use alloc::string::ToString;
@@ -9,19 +10,6 @@ use alloc::{vec, vec::Vec};
 
 pub const DEFAULT_PATTERN_LENGTH: usize = 64;
 pub const MAX_NUM_ROWS: usize = 256;
-
-/// Historical Frequencies to load old data. Default is Linear.
-#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
-pub enum FrequencyType {
-    AmigaFrequencies,
-    LinearFrequencies,
-}
-
-impl Default for FrequencyType {
-    fn default() -> Self {
-        Self::LinearFrequencies
-    }
-}
 
 /// A row contains its column elements
 pub type Row = Vec<PatternSlot>;

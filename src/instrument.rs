@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::instr_default::InstrDefault;
 use crate::instr_ekn::InstrEkn;
 use crate::instr_midi::InstrMidi;
+use crate::instr_opl::InstrOpl;
 use crate::instr_robsid::InstrRobSid;
 use crate::instr_sid::InstrSid;
 
@@ -22,6 +23,8 @@ pub enum InstrumentType {
     Euclidian(InstrEkn),
     /// Midi Instrument
     Midi(InstrMidi),
+    /// Yamaha OPL
+    Opl(InstrOpl),
     /// MOS6581 SID Voice
     Sid(InstrSid),
     /// Rob Hubbard Instrument,

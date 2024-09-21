@@ -28,7 +28,9 @@ pub enum XmInstrumentType {
 impl XmInstrumentType {
     pub fn save(&self) -> Result<Vec<u8>, EncodeError> {
         match self {
-            XmInstrumentType::Default(xmid) => bincode::serde::encode_to_vec(xmid, bincode::config::legacy()),
+            XmInstrumentType::Default(xmid) => {
+                bincode::serde::encode_to_vec(xmid, bincode::config::legacy())
+            }
             _ => Ok(vec![]),
         }
     }
@@ -241,7 +243,11 @@ impl XmInstrument {
         let mut sample: Vec<XmSample> = vec![];
 
         // xmih
-        let xmih = bincode::serde::decode_from_slice::<XmInstrumentHeader, _>(data, bincode::config::legacy())?.0;
+        let xmih = bincode::serde::decode_from_slice::<XmInstrumentHeader, _>(
+            data,
+            bincode::config::legacy(),
+        )?
+        .0;
         let xmih_len = xmih.instrument_header_len as usize;
 
         if xmih.num_samples == 0 {
@@ -257,9 +263,13 @@ impl XmInstrument {
 
         // samples header
         let d2 = &data[XMINSTRUMENT_SIZE..];
-        let _sample_header_size: u32 = bincode::serde::decode_from_slice::<u32, _>(d2, bincode::config::legacy())?.0;
+        let _sample_header_size: u32 =
+            bincode::serde::decode_from_slice::<u32, _>(d2, bincode::config::legacy())?.0;
         let d2 = &d2[4..];
-        let xmid = Box::new(bincode::serde::decode_from_slice::<XmInstrDefault, _>(d2, bincode::config::legacy())?.0);
+        let xmid = Box::new(
+            bincode::serde::decode_from_slice::<XmInstrDefault, _>(d2, bincode::config::legacy())?
+                .0,
+        );
 
         // all samples headers, then data...
 
@@ -305,7 +315,8 @@ impl XmInstrument {
         self.header.instrument_header_len = XMINSTRUMENT_SIZE as u32 + 4 + i.len() as u32;
         let mut h = self.header.save()?;
         let sample_header_size = XMSAMPLE_HEADER_SIZE as u32;
-        let mut sample_header_size_v = bincode::serde::encode_to_vec::<u32, _>(sample_header_size, bincode::config::legacy())?;
+        let mut sample_header_size_v =
+            bincode::serde::encode_to_vec::<u32, _>(sample_header_size, bincode::config::legacy())?;
 
         let mut all: Vec<u8> = vec![];
         all.append(&mut h);

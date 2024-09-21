@@ -9,6 +9,7 @@
 //!       |              |                +--->vibrato
 //!       |              +--->instr_ekn
 //!       |              +--->instr_midi
+//!       |              +--->instr_opl
 //!       |              +--->instr_sid
 //!       |              +-+->instr_robrs
 //!       |                +--->instr_sid
@@ -32,6 +33,8 @@ pub mod instr_default;
 pub mod instr_ekn;
 /// Midi Instrument
 pub mod instr_midi;
+/// Yamaha OPL Instrument
+pub mod instr_opl;
 /// Rob Hubbard Instrument
 pub mod instr_robsid;
 /// MOS6581 SID Instrument
@@ -46,6 +49,8 @@ pub mod module;
 pub mod note;
 /// A typical pattern slot
 pub mod patternslot;
+/// Period Helper
+pub mod period_helper;
 /// Sample with Steroid
 pub mod sample;
 

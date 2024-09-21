@@ -10,7 +10,8 @@ use alloc::vec::Vec;
 use super::serde_helper::{deserialize_string_17, serialize_string_17};
 use super::serde_helper::{deserialize_string_20, serialize_string_20};
 
-use crate::module::{FrequencyType, Module};
+use crate::module::Module;
+use crate::period_helper::FrequencyType;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, IntoPrimitive, TryFromPrimitive)]
 #[serde(into = "u16", try_from = "u16")]
@@ -74,12 +75,13 @@ impl Default for XmHeader {
 impl XmHeader {
     /* return like nom (&[u8], (XmHeader, PatternOrder) ) */
     pub fn load(ser_xmheader: &[u8]) -> Result<(&[u8], XmHeader, Vec<u8>), DecodeError> {
-        match bincode::serde::decode_from_slice::<XmHeader, _>(ser_xmheader, bincode::config::legacy()) {
+        match bincode::serde::decode_from_slice::<XmHeader, _>(
+            ser_xmheader,
+            bincode::config::legacy(),
+        ) {
             Ok((xmh, _)) => {
                 if xmh.id_text != "Extended Module:" {
-                    return Err(DecodeError::Other(
-                        "Not an Extended Module?",
-                    ));
+                    return Err(DecodeError::Other("Not an Extended Module?"));
                 }
                 match xmh.get_pattern_order(&ser_xmheader[80..]) {
                     Ok((data, pattern_order)) => Ok((data, xmh, pattern_order)),

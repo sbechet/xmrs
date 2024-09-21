@@ -9,7 +9,9 @@ impl XtTrack {
         let mut data: Vec<u8> = vec![];
         let version: u16 = 1;
         let nrow: u16 = track.len() as u16;
-        data.append(&mut bincode::serde::encode_to_vec(&version, bincode::config::legacy()).unwrap());
+        data.append(
+            &mut bincode::serde::encode_to_vec(&version, bincode::config::legacy()).unwrap(),
+        );
         data.append(&mut bincode::serde::encode_to_vec(&nrow, bincode::config::legacy()).unwrap());
         for xmps in track {
             let mut d = xmps.save_unpack();

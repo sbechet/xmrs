@@ -9,7 +9,8 @@ use super::xmheader::{XmFlagType, XmHeader};
 use super::xminstrument::XmInstrument;
 use super::xmpattern::XmPattern;
 
-use crate::module::{FrequencyType, Module};
+use crate::module::Module;
+use crate::period_helper::FrequencyType;
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct XmModule {
@@ -95,7 +96,8 @@ impl XmModule {
     pub fn save(&mut self) -> Result<Vec<u8>, EncodeError> {
         let po_len = self.pattern_order.len();
         self.header.header_size = 20 + po_len as u32;
-        let mut header_ser = bincode::serde::encode_to_vec(&self.header, bincode::config::legacy()).unwrap();
+        let mut header_ser =
+            bincode::serde::encode_to_vec(&self.header, bincode::config::legacy()).unwrap();
         let mut pattern_order_ser = self.pattern_order.clone();
         let mut pattern_ser: Vec<u8> = vec![];
         for xmp in &mut self.pattern {

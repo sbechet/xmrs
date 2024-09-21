@@ -1,5 +1,5 @@
-use bincode::error::DecodeError;
 use super::serde_helper::deserialize_string_22;
+use bincode::error::DecodeError;
 use serde::Deserialize;
 
 use alloc::string::String;
@@ -36,7 +36,10 @@ impl fmt::Debug for AmigaSample {
 
 impl AmigaSample {
     pub fn load(ser_sample: &[u8]) -> Result<(&[u8], Self), DecodeError> {
-        match bincode::serde::decode_from_slice::<AmigaSample, _>(&ser_sample, bincode::config::legacy()) {
+        match bincode::serde::decode_from_slice::<AmigaSample, _>(
+            &ser_sample,
+            bincode::config::legacy(),
+        ) {
             Ok((mut aspl, _)) => {
                 // bincode::DefaultOptions::new().with_big_endian() seems not working?
                 // manual ROR with * 2...
