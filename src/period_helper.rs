@@ -5,8 +5,6 @@ use micromath::F32Ext;
 #[cfg(feature = "libm")]
 use num_traits::float::Float;
 
-
-
 /// Historical Frequencies to load old data. Default is Linear.
 #[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum FrequencyType {
@@ -36,7 +34,8 @@ impl Default for PeriodHelper {
 }
 
 impl PeriodHelper {
-    pub const C4_FREQ:f32 = 8363.0; // historical amiga module sample frequency (Paula chipset related)
+    /// historical amiga module sample frequency (Paula chipset related)
+    pub const C4_FREQ: f32 = 8363.0;
 
     pub fn new(freq_type: FrequencyType, historical: bool) -> Self {
         Self {
@@ -80,7 +79,6 @@ impl PeriodHelper {
     fn linear_frequency_to_period(freq: f32) -> f32 {
         (6.0 * 12.0 * 16.0 * 4.0) - (12.0 * 16.0 * 4.0) * (freq / Self::C4_FREQ).log2()
     }
-
 
     // ==== Amiga
 
@@ -163,12 +161,14 @@ impl PeriodHelper {
         Some(self.period_to_frequency(c4_period))
     }
 
-    /// return relative note including finetune
-    pub fn c4freq_to_relative_note(&self, freq: f32) -> f32 {
+    /// return relative note and finetune
+    pub fn c4freq_to_relative_note(&self, freq: f32) -> (i8, f32) {
         const NOTE_C4: f32 = 4.0 * 12.0;
         let period = self.frequency_to_period(freq);
         let note = self.period_to_note(period);
-        note - NOTE_C4
+        let relative_note = (note - NOTE_C4).ceil();
+        let finetune = note - relative_note;
+        (relative_note as i8, finetune)
     }
 
     //-----------------------------------------------------

@@ -32,7 +32,7 @@ pub struct Sample {
     pub loop_length: u32,
     /// [0..1] linear value
     pub volume: f32,
-    /// [-1..1] <=> [-1/2..+1/2] halftone
+    /// [-1..1]
     pub finetune: f32,
     /// loop type
     pub flags: LoopType,

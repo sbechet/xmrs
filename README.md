@@ -18,6 +18,7 @@ Useful struct parts:
       - [Sample](https://docs.rs/xmrs/latest/xmrs/sample/struct.Sample.html)
     - [InstrEkn](https://docs.rs/xmrs/latest/xmrs/instr_ekn/struct.InstrEkn.html) for Euclidian Rythm Instrument
     - [InstrMidi](https://docs.rs/xmrs/latest/xmrs/instr_midi/struct.InstrMidi.html) for Midi Instrument
+    - [InstrOpl](https://docs.rs/xmrs/latest/xmrs/instr_opl/struct.InstrOpl.html) for Yamaha OPL Instrument
     - [InstrSid](https://docs.rs/xmrs/latest/xmrs/instr_sid/struct.InstrSid.html) for MOS6581 SID Instrument
     - [InstrRobSid](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.InstrRobSid.html) for historical Rob Hubbard Instrument
       - [RobEffects](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.RobEffects.html)
