@@ -475,10 +475,9 @@ impl S3mModule {
         if what & 0x40 != 0 {
             if k < packed_data.len() {
                 slot.volume = packed_data[k];
-                if slot.volume <= 64 {
-                    slot.volume += 0x10;
-                } else {
-                    slot.volume = 0;
+                // FIXME: we ignore 255 as default instrument volume
+                if slot.volume > 64 {
+                    slot.volume = 64;
                 }
                 k += 1;
             }

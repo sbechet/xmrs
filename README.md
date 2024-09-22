@@ -4,7 +4,7 @@ A no_std library to edit Sound Tracker data with pleasure.
 
 Because "Representation is the Essence of Programming".
 
-For now MOD **Amiga Modules** and XM **FastTracker II** files are supported.
+For now MOD **Amiga Modules**, S3M **Scream Tracker III** and XM **FastTracker II** files are supported.
 
 Useful struct parts:
 
