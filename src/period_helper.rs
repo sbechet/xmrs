@@ -166,8 +166,9 @@ impl PeriodHelper {
         const NOTE_C4: f32 = 4.0 * 12.0;
         let period = self.frequency_to_period(freq);
         let note = self.period_to_note(period);
-        let relative_note = (note - NOTE_C4).ceil();
-        let finetune = note - relative_note;
+        let note_ceil = note.ceil();
+        let relative_note = note_ceil - NOTE_C4;
+        let finetune = note - note_ceil;
         (relative_note as i8, finetune)
     }
 

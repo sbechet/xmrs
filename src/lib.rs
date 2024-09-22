@@ -60,6 +60,9 @@ pub mod xm;
 /// Load only Historical MOD files
 pub mod amiga;
 
+/// Load only Historical S3M files
+pub mod s3m;
+
 /// The Xmrs Prelude
 pub mod prelude;
 
