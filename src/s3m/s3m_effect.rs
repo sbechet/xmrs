@@ -129,7 +129,7 @@ impl S3mEffect {
                     }
 
                     n.effect_type = tmp;
-                    
+
                     if n.effect_type == 0x21 && n.effect_parameter == 0 {
                         n.effect_type = 0;
                     }

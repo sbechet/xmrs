@@ -28,6 +28,11 @@ Useful struct parts:
 1. Deserialize `AmigaModule` struct using `AmigaModule::load(&amiga)`
 2. Convert to struct `Module` using `.to_module()`
 
+## Load S3M file
+
+1. Deserialize `S3mModule` struct using `S3mModule::load(&s3m)`
+2. Convert to struct `Module` using `.to_module()`
+
 ## Load XM file
 
 1. Deserialize `XmModule` struct using `XmModule::load(&XM)`

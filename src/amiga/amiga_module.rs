@@ -113,7 +113,12 @@ impl AmigaModule {
 
         // audio
         for i_spl in 0..amiga.samples.len() {
-            let l = amiga.samples[i_spl].length as usize;
+            // small hack to force COUNTRY.MOD loading
+            let l = if amiga.samples[i_spl].length as usize <= data.len() {
+                amiga.samples[i_spl].length as usize
+            } else {
+                data.len()
+            };
             let s = &data[0..l];
             let vec_i8: Vec<i8> = s.iter().map(|&x| x as i8).collect();
             amiga.audio.push(vec_i8);

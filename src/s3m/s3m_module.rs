@@ -205,11 +205,11 @@ impl S3mOplInstr {
             feedback: self.mod10 >> 1,
             attack: self.mod4 >> 4,
             sustain: self.mod6 >> 4,
-            eg: (self.mod0 & 0b0010_0000) != 0, // Sustain?
+            eg: (self.mod0 & 0b0010_0000) != 0, // FIXME: Sustain?
             decay: self.mod4 & 0b0000_1111,
             release: self.mod6 & 0b0000_1111,
             total_level: self.mod2 & 0b0011_1111,
-            am: (self.mod0 & 0b1000_0000) != 0, // Tremolo?
+            am: (self.mod0 & 0b1000_0000) != 0, // FIXME: Tremolo?
             vib: (self.mod0 & 0b0100_0000) != 0,
             ksr: (self.mod0 & 0b0001_0000) != 0,
             con: (self.mod10 & 0b0000_0001) != 0,
@@ -220,11 +220,11 @@ impl S3mOplInstr {
             feedback: self.mod10 >> 1, // no way for carrier
             attack: self.car5 >> 4,
             sustain: self.car7 >> 4,
-            eg: (self.car1 & 0b0010_0000) != 0, // Sustain?
+            eg: (self.car1 & 0b0010_0000) != 0, // FIXME: Sustain?
             decay: self.car5 & 0b0000_1111,
             release: self.car7 & 0b0000_1111,
             total_level: self.car3 & 0b0011_1111,
-            am: (self.car1 & 0b1000_0000) != 0, // Tremolo
+            am: (self.car1 & 0b1000_0000) != 0, // FIXME: Tremolo?
             vib: (self.car1 & 0b0100_0000) != 0,
             ksr: (self.car1 & 0b0001_0000) != 0,
             con: (self.mod10 & 0b0000_0001) != 0, // no way for carrier
