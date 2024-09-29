@@ -2,7 +2,7 @@ use core::fmt::*;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
-/// 8 octaves with notes
+/// 10 octaves with notes
 #[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]
 #[repr(u8)]
 pub enum Note {
@@ -113,8 +113,34 @@ pub enum Note {
     A7 = 94,
     As7 = 95,
     B7 = 96,
+    /// Octave 8
+    C8 = 97, // NOT KeyOff in XmRs!
+    Cs8 = 98,
+    D8 = 99,
+    Ds8 = 100,
+    E8 = 101,
+    F8 = 102,
+    Fs8 = 103,
+    G8 = 104,
+    Gs8 = 105,
+    A8 = 106,
+    As8 = 107,
+    B8 = 108,
+    /// Octave 9
+    C9 = 109,
+    Cs9 = 110,
+    D9 = 111,
+    Ds9 = 112,
+    E9 = 113,
+    F9 = 114,
+    Fs9 = 115,
+    G9 = 116,
+    Gs9 = 117,
+    A9 = 118,
+    As9 = 119,
+    B9 = 120,
     /// Stop note
-    KeyOff = 97,
+    KeyOff = 254, // Like S3M...NOT like XM (97)
 }
 
 impl Debug for Note {
@@ -225,6 +251,32 @@ impl Debug for Note {
             Note::A7 => "A-7",
             Note::As7 => "A#7",
             Note::B7 => "B-7",
+            // Octave 8
+            Note::C8 => "C-8",
+            Note::Cs8 => "C#8",
+            Note::D8 => "D-8",
+            Note::Ds8 => "D#8",
+            Note::E8 => "E-8",
+            Note::F8 => "F-8",
+            Note::Fs8 => "F#8",
+            Note::G8 => "G-8",
+            Note::Gs8 => "G#8",
+            Note::A8 => "A-8",
+            Note::As8 => "A#8",
+            Note::B8 => "B-8",
+            // Octave 9
+            Note::C9 => "C-9",
+            Note::Cs9 => "C#9",
+            Note::D9 => "D-9",
+            Note::Ds9 => "D#9",
+            Note::E9 => "E-9",
+            Note::F9 => "F-9",
+            Note::Fs9 => "F#9",
+            Note::G9 => "G-9",
+            Note::Gs9 => "G#9",
+            Note::A9 => "A-9",
+            Note::As9 => "A#9",
+            Note::B9 => "B-9",
             // Stop note
             Note::KeyOff => "===",
         };
@@ -240,13 +292,13 @@ impl Note {
 
     #[inline(always)]
     pub fn is_keyoff(&self) -> bool {
-        self.value() == 97
+        self.value() == 254
     }
 
     #[inline(always)]
     pub fn is_valid(&self) -> bool {
         let n: u8 = *self as u8;
-        n > 0 && n < 97
+        n > 0 && n <= 120
     }
 
     #[inline(always)]

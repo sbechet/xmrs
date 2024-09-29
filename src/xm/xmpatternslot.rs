@@ -69,9 +69,18 @@ impl XmPatternSlot {
         Ok((
             &src[i..],
             XmPatternSlot {
-                note: match Note::try_from(dst[0]) {
-                    Ok(n) => n,
-                    Err(_e) => Note::None,
+                note: {
+                    if dst[0] == 97 {
+                        // Special case: we don't want to use 97, because we want more octaves...
+                        Note::KeyOff
+                    } else {
+                        match Note::try_from(dst[0]) {
+                            Ok(n) => n,
+                            Err(_e) => {
+                                Note::None
+                            },
+                        }
+                    }
                 },
                 instrument: dst[1],
                 volume: dst[2],
@@ -83,7 +92,13 @@ impl XmPatternSlot {
 
     pub fn save_unpack(&self) -> Vec<u8> {
         let mut bytes: [u8; 5] = [0; 5];
-        bytes[0] = self.note.into();
+        bytes[0] = {
+            if self.note.is_keyoff() {
+                97
+            } else {
+                self.note.into()
+            }
+        };
         bytes[1] = self.instrument;
         bytes[2] = self.volume;
         bytes[3] = self.effect_type;
@@ -93,7 +108,13 @@ impl XmPatternSlot {
 
     pub fn save(&self) -> Vec<u8> {
         let mut bytes: [u8; 5] = [0; 5];
-        bytes[0] = self.note.into();
+        bytes[0] = {
+            if self.note.is_keyoff() {
+                97
+            } else {
+                self.note.into()
+            }
+        };
         bytes[1] = self.instrument;
         bytes[2] = self.volume;
         bytes[3] = self.effect_type;
