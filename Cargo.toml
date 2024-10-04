@@ -1,6 +1,6 @@
 [package]
 name = "xmrs"
-version = "0.7.2"
+version = "0.8.0"
 edition = "2021"
 description = "A library to edit SoundTracker data with pleasure "
 license = "MIT"
@@ -24,17 +24,18 @@ micromath = { version = "2.1.0", optional=true }
 [features]
 default = ["micromath"]
 std = ["bincode/std", "num_enum/std", "serde/std"]
-demo = ["clap"]
+demo = ["clap", "import"]
 libm = ["num-traits/libm"]
 micromath = ["dep:micromath"]
+import = ["import_amiga", "import_s3m", "import_sid", "import_xm"]
+import_amiga = []
+import_s3m = []
+import_sid = []
+import_xm = []
 
 [lib]
 name = "xmrs"
 path = "src/lib.rs"
-
-[examples]
-rodio_player = { name = "rodio_player", path = "examples/rodio_player.rs", features=["demo"] }
-cpal_player = { name = "cpal_player", path = "examples/cpal_player.rs", features=["demo"] }
 
 [profile.release]
 strip = true

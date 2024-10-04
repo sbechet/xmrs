@@ -55,13 +55,20 @@ pub mod period_helper;
 pub mod sample;
 
 /// Load and Save Historical XM files
+#[cfg(feature = "import_xm")]
 pub mod xm;
 
 /// Load only Historical MOD files
+#[cfg(feature = "import_amiga")]
 pub mod amiga;
 
 /// Load only Historical S3M files
+#[cfg(feature = "import_s3m")]
 pub mod s3m;
+
+/// Load only Historical SID files
+#[cfg(feature = "import_sid")]
+pub mod sid;
 
 /// The Xmrs Prelude
 pub mod prelude;

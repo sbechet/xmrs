@@ -29,7 +29,7 @@ pub struct RobEffects {
 }
 
 /// Rob Hubbard Generalized Instrument
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 pub struct InstrRobSid {
     pub sid: InstrSid,
     pub fx: [RobEffects; 3],

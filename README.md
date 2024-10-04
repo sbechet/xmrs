@@ -6,6 +6,8 @@ Because "Representation is the Essence of Programming".
 
 For now MOD **Amiga Modules**, S3M **Scream Tracker III** and XM **FastTracker II** files are supported.
 
+Rob Hubbard C64 **SID** import is a WIP.
+
 Useful struct parts:
 
 - [Module](https://docs.rs/xmrs/latest/xmrs/module/struct.Module.html)
@@ -25,15 +27,21 @@ Useful struct parts:
 
 ## Load MOD file
 
+Use import_mod feature
+
 1. Deserialize `AmigaModule` struct using `AmigaModule::load(&amiga)`
 2. Convert to struct `Module` using `.to_module()`
 
 ## Load S3M file
 
+Use import_s3m feature
+
 1. Deserialize `S3mModule` struct using `S3mModule::load(&s3m)`
 2. Convert to struct `Module` using `.to_module()`
 
 ## Load XM file
+
+Use import_xm feature
 
 1. Deserialize `XmModule` struct using `XmModule::load(&XM)`
 2. Convert to struct `Module` using `.to_module()`

@@ -5,7 +5,7 @@ use core::fmt::*;
 use serde::{Deserialize, Serialize};
 
 /// A typical pattern slot
-#[derive(Serialize, Deserialize, Copy, Clone)]
+#[derive(Serialize, Deserialize, Copy, Clone, Eq, Hash, PartialEq)]
 #[repr(C)]
 pub struct PatternSlot {
     pub note: Note,

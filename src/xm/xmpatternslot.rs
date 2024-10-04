@@ -76,9 +76,7 @@ impl XmPatternSlot {
                     } else {
                         match Note::try_from(dst[0]) {
                             Ok(n) => n,
-                            Err(_e) => {
-                                Note::None
-                            },
+                            Err(_e) => Note::None,
                         }
                     }
                 },

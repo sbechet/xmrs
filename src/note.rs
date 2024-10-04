@@ -1,9 +1,21 @@
+use core::cmp::PartialEq;
 use core::fmt::*;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 
 /// 10 octaves with notes
-#[derive(Default, Serialize, Deserialize, TryFromPrimitive, IntoPrimitive, Copy, Clone)]
+#[derive(
+    Default,
+    Serialize,
+    Deserialize,
+    TryFromPrimitive,
+    IntoPrimitive,
+    Copy,
+    Clone,
+    Eq,
+    Hash,
+    PartialEq,
+)]
 #[repr(u8)]
 pub enum Note {
     /// No note

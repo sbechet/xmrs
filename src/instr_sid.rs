@@ -27,8 +27,45 @@ pub struct SidVoice {
     pub sr: u8,
 }
 
+impl SidVoice {
+    pub fn update_from_ctrl_register(&mut self, ctrl: u8) {
+        // 7 noise
+        if ctrl & 0b1000_0000 != 0 {
+            self.ctrl_noise = true;
+        }
+        // 6 pulse
+        if ctrl & 0b0100_0000 != 0 {
+            self.ctrl_pulse = true;
+        }
+        // 5 sawtooth
+        if ctrl & 0b0010_0000 != 0 {
+            self.ctrl_sawtooth = true;
+        }
+        // 4 triangle
+        if ctrl & 0b0001_0000 != 0 {
+            self.ctrl_triangle = true;
+        }
+        // 3 test
+        if ctrl & 0b0000_1000 != 0 {
+            self.ctrl_test = true;
+        }
+        // 2 ring modulation with voice X
+        if ctrl & 0b0000_0100 != 0 {
+            self.ctrl_rm = true;
+        }
+        // 1 synchronize with voice X
+        if ctrl & 0b0000_0010 != 0 {
+            self.ctrl_sync = true;
+        }
+        // 0 gate
+        if ctrl & 0b0000_0001 != 0 {
+            self.ctrl_gate = true;
+        }
+    }
+}
+
 /// MOS6581 SID Instrument
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct InstrSid {
     pub voice: [SidVoice; 3],
     pub fc: u16, // Filter cutoff frequency (0..2047) - Used by (Low, Band, High)Pass
