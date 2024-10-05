@@ -25,35 +25,43 @@ Useful struct parts:
     - [InstrRobSid](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.InstrRobSid.html) for historical Rob Hubbard Instrument
       - [RobEffects](https://docs.rs/xmrs/latest/xmrs/instr_robsid/struct.RobEffects.html)
 
+
+
+To edit data, use `Module` struct.
+
+You can serialize `Module` using serde bincode (see `std` feature).
+
+
 ## Load MOD file
 
-Use import_mod feature
+Use `import_mod` feature
 
 1. Deserialize `AmigaModule` struct using `AmigaModule::load(&amiga)`
 2. Convert to struct `Module` using `.to_module()`
 
 ## Load S3M file
 
-Use import_s3m feature
+Use `import_s3m` feature
 
 1. Deserialize `S3mModule` struct using `S3mModule::load(&s3m)`
 2. Convert to struct `Module` using `.to_module()`
 
-## Load XM file
+## XM file
 
-Use import_xm feature
+Use `import_xm` feature
+
+### Load
 
 1. Deserialize `XmModule` struct using `XmModule::load(&XM)`
 2. Convert to struct `Module` using `.to_module()`
 
-## Save XM file
+### Save
 
 1. Convert `Module` to `XmModule`: `XmModule::from_module(&module)`
 2. Serialize using `XmModule` `save()` fn
 
-Edit data using rustified structs, use `Module` struct.
+Note: You can only save `InstrDefault` in XM fileformat.
 
-Note: You can only save `InstrDefault` using XM fileformat.
 
 ## About no_std
 
