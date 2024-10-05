@@ -42,7 +42,7 @@ pub struct XmHeader {
     pub version_number: u16,
     pub header_size: u32, // 20 (starting from here to PatternOrder start) + pattern size (default 256, can be less...or more)
     song_length: u16,     // pattern order table "size" in bytes
-    pub restart_position: usize, // PatternOrder index
+    pub restart_position: u16, // PatternOrder index
     pub number_of_channels: u16, // 0..32/64
     pub number_of_patterns: u16, // 1..256
     pub number_of_instruments: u16, // 0..128
@@ -109,7 +109,7 @@ impl XmHeader {
         let mut xmh = XmHeader {
             name: module.name.clone(),
             song_length: module.pattern_order.len() as u16,
-            restart_position: module.restart_position,
+            restart_position: module.restart_position as u16,
             number_of_channels: if !module.pattern.is_empty() {
                 module.pattern[0][0].len() as u16
             } else {

@@ -63,7 +63,7 @@ impl XmModule {
                 XmFlagType::XmAmigaFrequencies => FrequencyType::AmigaFrequencies,
                 XmFlagType::XmLinearFrequencies => FrequencyType::LinearFrequencies,
             },
-            restart_position: self.header.restart_position,
+            restart_position: self.header.restart_position as usize,
             default_tempo: self.header.default_tempo,
             default_bpm: self.header.default_bpm,
             pattern_order: self.pattern_order.iter().map(|&x| x as usize).collect(),
