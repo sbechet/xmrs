@@ -108,7 +108,7 @@ impl PatternHelper {
             }
 
             // FIXME: last high bit from last byte is a bool about reset effect
-            let reset_effect = if self.version == 30 && source[index] & 0b1000_0000 == 0 {
+            let _reset_effect = if self.version == 30 && source[index] & 0b1000_0000 == 0 {
                 false
             } else {
                 true
@@ -132,7 +132,6 @@ impl PatternHelper {
     }
 
     fn get_tracks(&self) -> Vec<Vec<PatternSlot>> {
-        let mut last_instr: [u8; 3] = [0; 3];
         let mut tracks: Vec<Vec<PatternSlot>> = vec![];
         for t in &self.tracks {
             tracks.push(self.get_track(t));
