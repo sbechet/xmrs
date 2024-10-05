@@ -12,10 +12,10 @@ use alloc::{vec, vec::Vec};
 pub const MAX_NUM_ROWS: usize = 255;
 
 #[cfg(target_pointer_width = "32")]
-pub const MAX_NUM_ROWS: usize = 1024;
+pub const MAX_NUM_ROWS: usize = 4095;
 
 #[cfg(target_pointer_width = "64")]
-pub const MAX_NUM_ROWS: usize = 1024;
+pub const MAX_NUM_ROWS: usize = 4095;
 
 /// A row contains its column elements
 pub type Row = Vec<PatternSlot>;
