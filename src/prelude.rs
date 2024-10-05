@@ -17,7 +17,7 @@ pub use crate::{
     instr_sid::InstrSid,
     instr_vibrato::{InstrVibrato, Waveform},
     instrument::{Instrument, InstrumentType},
-    module::{Module, Pattern, Row, DEFAULT_PATTERN_LENGTH, MAX_NUM_ROWS},
+    module::{Module, Pattern, Row, MAX_NUM_ROWS},
     note::Note,
     patternslot::PatternSlot,
     period_helper::{FrequencyType, PeriodHelper},

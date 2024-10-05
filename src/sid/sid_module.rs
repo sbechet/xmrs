@@ -19,7 +19,7 @@ pub struct SidModule {
 }
 
 impl SidModule {
-    pub fn to_module(&self) -> Vec<Module> {
+    pub fn to_modules(&self, original_instruments: bool) -> Vec<Module> {
         let mut modules: Vec<Module> = vec![];
 
         for song_number in 0..self.pattern_helper.songs.len() {
@@ -37,7 +37,7 @@ impl SidModule {
             module.pattern = patterns;
             module.pattern_order = pattern_order;
 
-            let idst = InstrHelper::irss_to_instruments(&self.instruments, false);
+            let idst = InstrHelper::irss_to_instruments(&self.instruments, original_instruments);
             module.instrument = idst;
 
             modules.push(module);

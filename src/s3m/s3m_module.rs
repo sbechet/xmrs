@@ -508,7 +508,7 @@ impl S3mModule {
         module.frequency_type = FrequencyType::LinearFrequencies;
         module.default_tempo = self.header.speed as u16;
         module.default_bpm = self.header.tempo as u16;
-        module.pattern_order = self.positions.clone();
+        module.pattern_order = self.positions.iter().map(|&x| x as usize).collect();
         module.pattern = self.patterns.clone();
 
         for s3m_meta_instr in &self.instruments {

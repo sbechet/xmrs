@@ -8,7 +8,7 @@ use xmrs::sid::sid_module::SidModule;
 use xmrs::xm::xmmodule::XmModule;
 
 fn save_xm(sid: &SidModule) -> Result<(), EncodeError> {
-    let modules: Vec<Module> = sid.to_module();
+    let modules: Vec<Module> = sid.to_modules(false); // for now, simulated instr
     for module in &modules {
         let mut xmmodule: XmModule = XmModule::from_module(&module);
         let xmodule_se = xmmodule.save()?;

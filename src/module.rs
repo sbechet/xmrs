@@ -8,8 +8,14 @@ use alloc::string::String;
 use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 
-pub const DEFAULT_PATTERN_LENGTH: usize = 64;
-pub const MAX_NUM_ROWS: usize = 256;
+#[cfg(target_pointer_width = "16")]
+pub const MAX_NUM_ROWS: usize = 255;
+
+#[cfg(target_pointer_width = "32")]
+pub const MAX_NUM_ROWS: usize = 1024;
+
+#[cfg(target_pointer_width = "64")]
+pub const MAX_NUM_ROWS: usize = 1024;
 
 /// A row contains its column elements
 pub type Row = Vec<PatternSlot>;
@@ -24,11 +30,11 @@ pub struct Module {
     pub comment: String,
     pub frequency_type: FrequencyType,
     /// Restart index in `pattern_order`
-    pub restart_position: u16,
+    pub restart_position: usize,
     pub default_tempo: u16,
     pub default_bpm: u16,
     /// Defines the exact order for the patterns playback
-    pub pattern_order: Vec<u8>,
+    pub pattern_order: Vec<usize>,
     pub pattern: Vec<Pattern>,
     /// Instrument 1 has index 0, instrument 2 has index 1, etc.
     pub instrument: Vec<Instrument>,

@@ -211,16 +211,16 @@ impl PatternHelper {
         }
     }
 
-    pub fn cleanup_patterns(source: &Vec<Pattern>) -> (Vec<Pattern>, Vec<u8>) {
+    pub fn cleanup_patterns(source: &Vec<Pattern>) -> (Vec<Pattern>, Vec<usize>) {
         let mut dest: Vec<Pattern> = Vec::new();
-        let mut order: Vec<u8> = Vec::new();
-        let mut seen_map: Vec<(Pattern, u8)> = Vec::new(); // Vec of (Pattern, index in dest)
+        let mut order: Vec<usize> = Vec::new();
+        let mut seen_map: Vec<(Pattern, usize)> = Vec::new(); // Vec of (Pattern, index in dest)
 
         for pattern in source.iter() {
             if let Some(&(_, idx)) = seen_map.iter().find(|(p, _)| p == pattern) {
                 order.push(idx);
             } else {
-                let new_idx = dest.len() as u8;
+                let new_idx = dest.len();
                 dest.push(pattern.clone());
                 seen_map.push((pattern.clone(), new_idx));
                 order.push(new_idx);
