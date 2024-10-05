@@ -31,7 +31,8 @@ impl SidModule {
             );
             module.default_tempo = (1 + self.sid.resetspd) as u16;
 
-            let patterns = self.pattern_helper.get_patterns(song_number);
+            let mut patterns = self.pattern_helper.get_patterns(song_number);
+            PatternHelper::split_large_patterns(&mut patterns);
             let (patterns, pattern_order) = PatternHelper::cleanup_patterns(&patterns);
 
             module.pattern = patterns;

@@ -229,4 +229,29 @@ impl PatternHelper {
 
         (dest, order)
     }
+
+    pub fn split_large_patterns(patterns: &mut Vec<Pattern>) {
+        let max_size = 256;
+        let mut i = 0;
+    
+        while i < patterns.len() {
+            let current_pattern = &patterns[i];
+            
+            if current_pattern.len() > max_size {
+                let num_splits = (current_pattern.len() + max_size - 1) / max_size;
+                let mut new_patterns = Vec::new();
+                
+                for j in 0..num_splits {
+                    let start = j * max_size;
+                    let end = current_pattern.len().min(start + max_size);
+                    let new_pattern = current_pattern[start..end].to_vec();
+                    new_patterns.push(new_pattern);
+                }
+    
+                patterns.splice(i..=i, new_patterns);
+            } else {
+                i += 1;
+            }
+        }
+    }
 }
