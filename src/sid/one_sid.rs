@@ -50,13 +50,8 @@ impl OneSid {
             let file_offset = *offset as usize + 126 - self.load_adress;
             let mut tracks: Vec<u8> = vec![];
             let mut j = 0;
-            loop {
-                if self.song[file_offset + j] != 0xff {
-                    tracks.push(self.song[file_offset + j]);
-                }
-                if self.song[file_offset + j] == 0xfe || self.song[file_offset + j] == 0xff {
-                    break;
-                }
+            while self.song[file_offset + j] & 0x80 == 0 {
+                tracks.push(self.song[file_offset + j]);
                 j += 1;
             }
             channels.push(tracks);
