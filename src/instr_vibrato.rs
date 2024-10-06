@@ -21,13 +21,13 @@ impl Waveform {
     // instr autovib
     pub fn value(&self, step: f32) -> f32 {
         let step = step % 1.0;
-        return 0.5 + 0.5 * match &self {
-            Waveform::Sine => (core::f32::consts::TAU * step).sin(),
+        return match &self {
+            Waveform::Sine => 0.5 + 0.5 * (core::f32::consts::TAU * step).sin(),
             Waveform::Square => {
                 if step < 0.5 {
                     1.0
                 } else {
-                    -1.0
+                    0.0
                 }
             }
             Waveform::RampUp => {
