@@ -24,7 +24,7 @@ impl PatternHelper {
         }
     }
 
-    fn get_track(&self, source: &Vec<u8>) -> Vec<PatternSlot> {
+    fn get_track(&self, track_index: usize, source: &Vec<u8>) -> Vec<PatternSlot> {
         let mut track: Vec<PatternSlot> = vec![];
         let mut index: usize = 0;
         let mut last_instr = 0;
@@ -69,16 +69,24 @@ impl PatternHelper {
                                 current.instrument = 1 + source[index] & 0b0111_1111;
                                 last_instr = current.instrument;
                             } else {
-                                let p: u16 = ((source[index] as u16 & 0b0011_1111) << 8)
-                                    | source[index + 1] as u16;
-                                index += 1;
-                                if p != 0 {
-                                    // FIXME: can i do better with that 6+8=14 bits type?
-                                    current.effect_parameter = p as u8;
-                                    if source[index] & 0b0100_0000 == 0 {
-                                        current.effect_type = 1; // portamento up
-                                    } else {
-                                        current.effect_type = 2; // portamento down
+                                if index + 2 >= source.len() {
+                                    println!(
+                                        "Track {}, International Karate overflow?",
+                                        track_index
+                                    );
+                                    index -= 2;
+                                } else {
+                                    let p: u16 = ((source[index] as u16 & 0b0011_1111) << 8)
+                                        | source[index + 1] as u16;
+                                    index += 1;
+                                    if p != 0 {
+                                        // FIXME: can i do better with that 6+8=14 bits type?
+                                        current.effect_parameter = p as u8;
+                                        if source[index] & 0b0100_0000 == 0 {
+                                            current.effect_type = 1; // portamento up
+                                        } else {
+                                            current.effect_type = 2; // portamento down
+                                        }
                                     }
                                 }
                             }
@@ -118,7 +126,7 @@ impl PatternHelper {
             if release {
                 if current.note == Note::None {
                     // current.note = Note::KeyOff;
-                // FIXME: Hack, KeyOff currently forget instrument value?
+                    // FIXME: Hack, KeyOff currently forget instrument value?
                     current.volume = 0x10;
                 } else {
                     current.volume = 0x50;
@@ -141,8 +149,8 @@ impl PatternHelper {
 
     fn get_tracks(&self) -> Vec<Vec<PatternSlot>> {
         let mut tracks: Vec<Vec<PatternSlot>> = vec![];
-        for t in &self.tracks {
-            tracks.push(self.get_track(t));
+        for (i, t) in self.tracks.iter().enumerate() {
+            tracks.push(self.get_track(i, t));
         }
         return tracks;
     }
@@ -159,6 +167,7 @@ impl PatternHelper {
         let tracks = self.get_tracks();
         let pattern_order = self.get_pattern_order(song_number);
         let po_len = pattern_order.len();
+        let mut all_ok: Vec<bool> = vec![false; po_len];
         let mut i_n: [usize; 3] = [0; 3];
         let mut patterns: Vec<Pattern> = vec![];
 
@@ -167,7 +176,6 @@ impl PatternHelper {
             for k in 0..po_len {
                 trks.push(&tracks[pattern_order[k][i_n[k]] as usize]);
             }
-            // let mut trks_total_len = trks[0].len().max(trks[1].len().max(trks[2].len()));
             let mut trks_total_len = trks.iter().map(|sublist| sublist.len()).max().unwrap_or(0);
             let mut pattern: Vec<Vec<PatternSlot>> = vec![];
             let mut j: [usize; 3] = [0; 3];
@@ -178,18 +186,10 @@ impl PatternHelper {
                         i_n[k] += 1;
                         if i_n[k] >= pattern_order[k].len() {
                             i_n[k] = 0;
-                        } else {
-                            if pattern_order[k][i_n[k]] == 254 {
-                                //FIXME
-                                pattern.push(line);
-                                patterns.push(pattern);
-                                return patterns;
-                            }
                         }
                         j[k] = 0;
                         trks[k] = &tracks[pattern_order[k][i_n[k]] as usize];
                         if trks[k].len() > trks_total_len {
-                            // trks_total_len += trks[k].len();
                             trks_total_len = trks[k].len();
                         }
                     }
@@ -205,16 +205,17 @@ impl PatternHelper {
                 i_n[k] += 1;
                 if i_n[k] >= pattern_order[k].len() {
                     i_n[k] = 0;
+                    // A hack to exit
+                    all_ok[k] = true;
+                    if all_ok.iter().all(|&b| b) {
+                        return patterns;
+                    }
                 } else {
+                    // Original way to exit
                     if pattern_order[k][i_n[k]] == 254 {
                         return patterns;
                     }
                 }
-            }
-
-            // last option to exit...
-            if i_n[0] == 0 && i_n[1] == 0 && i_n[1] == 0 {
-                return patterns;
             }
         }
     }
@@ -241,21 +242,21 @@ impl PatternHelper {
     pub fn split_large_patterns(patterns: &mut Vec<Pattern>) {
         let max_size = 256;
         let mut i = 0;
-    
+
         while i < patterns.len() {
             let current_pattern = &patterns[i];
-            
+
             if current_pattern.len() > max_size {
                 let num_splits = (current_pattern.len() + max_size - 1) / max_size;
                 let mut new_patterns = Vec::new();
-                
+
                 for j in 0..num_splits {
                     let start = j * max_size;
                     let end = current_pattern.len().min(start + max_size);
                     let new_pattern = current_pattern[start..end].to_vec();
                     new_patterns.push(new_pattern);
                 }
-    
+
                 patterns.splice(i..=i, new_patterns);
             } else {
                 i += 1;

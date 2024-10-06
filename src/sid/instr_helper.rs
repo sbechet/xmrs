@@ -73,7 +73,7 @@ impl InstrHelper {
 
     fn generate_sawtooth_sample() -> SampleDataType {
         let sawtooth_data: Vec<i8> = (0..128)
-            .map(|x| (x as u8).wrapping_sub(128) as i8)
+            .map(|x| (2 * x as u8).wrapping_sub(128) as i8)
             .collect();
         SampleDataType::Depth8(sawtooth_data)
     }
