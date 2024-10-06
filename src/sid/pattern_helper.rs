@@ -66,8 +66,12 @@ impl PatternHelper {
                         }
                         _ => {
                             if source[index] & 0b1000_0000 == 0 {
+                                current.instrument = 1 + source[index] & 0b0111_1111;
+                                last_instr = current.instrument;
+                            } else {
                                 let p: u16 = ((source[index] as u16 & 0b0011_1111) << 8)
                                     | source[index + 1] as u16;
+                                index += 1;
                                 if p != 0 {
                                     // FIXME: can i do better with that 6+8=14 bits type?
                                     current.effect_parameter = p as u8;
@@ -77,9 +81,6 @@ impl PatternHelper {
                                         current.effect_type = 2; // portamento down
                                     }
                                 }
-                            } else {
-                                current.instrument = 1 + source[index] & 0b0111_1111;
-                                last_instr = current.instrument;
                             }
                         }
                     }
@@ -108,13 +109,20 @@ impl PatternHelper {
             }
 
             // FIXME: last high bit from last byte is a bool about reset effect
-            let _reset_effect = if self.version == 30 && source[index] & 0b1000_0000 == 0 {
-                false
-            } else {
-                true
-            };
+            // let reset_effect = if self.version == 30 && source[index] & 0b1000_0000 == 0 {
+            //     false
+            // } else {
+            //     true
+            // };
 
             if release {
+                if current.note == Note::None {
+                    // current.note = Note::KeyOff;
+                // FIXME: Hack, KeyOff currently forget instrument value?
+                    current.volume = 0x10;
+                } else {
+                    current.volume = 0x50;
+                }
                 current.instrument = last_instr;
             }
 
@@ -139,32 +147,33 @@ impl PatternHelper {
         return tracks;
     }
 
-    fn get_pattern_order(&self, song_number: usize) -> [&Vec<u8>; 3] {
-        let song = &self.songs[song_number];
-        [
-            &self.channels[song[0]],
-            &self.channels[song[1]],
-            &self.channels[song[2]],
-        ]
+    fn get_pattern_order(&self, song_number: usize) -> Vec<&Vec<u8>> {
+        let mut pattern_order: Vec<&Vec<u8>> = vec![];
+        for s_index in &self.songs[song_number] {
+            pattern_order.push(&self.channels[*s_index]);
+        }
+        pattern_order
     }
 
     pub fn get_patterns(&self, song_number: usize) -> Vec<Pattern> {
         let tracks = self.get_tracks();
         let pattern_order = self.get_pattern_order(song_number);
+        let po_len = pattern_order.len();
         let mut i_n: [usize; 3] = [0; 3];
         let mut patterns: Vec<Pattern> = vec![];
 
         loop {
             let mut trks: Vec<&Vec<PatternSlot>> = vec![];
-            for k in 0..3 {
+            for k in 0..po_len {
                 trks.push(&tracks[pattern_order[k][i_n[k]] as usize]);
             }
-            let mut trks_total_len = trks[0].len().max(trks[1].len().max(trks[2].len()));
+            // let mut trks_total_len = trks[0].len().max(trks[1].len().max(trks[2].len()));
+            let mut trks_total_len = trks.iter().map(|sublist| sublist.len()).max().unwrap_or(0);
             let mut pattern: Vec<Vec<PatternSlot>> = vec![];
             let mut j: [usize; 3] = [0; 3];
             while trks_total_len != 0 {
                 let mut line: Vec<PatternSlot> = vec![];
-                for k in 0..3 {
+                for k in 0..po_len {
                     if j[k] >= trks[k].len() {
                         i_n[k] += 1;
                         if i_n[k] >= pattern_order[k].len() {
@@ -192,7 +201,7 @@ impl PatternHelper {
             }
 
             patterns.push(pattern);
-            for k in 0..3 {
+            for k in 0..po_len {
                 i_n[k] += 1;
                 if i_n[k] >= pattern_order[k].len() {
                     i_n[k] = 0;

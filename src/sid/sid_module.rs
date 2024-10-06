@@ -116,7 +116,7 @@ impl SidModule {
     }
 
     pub fn get_sid_spellbound() -> Self {
-        let sid = OneSid::get_sid_sanxion_song_2();
+        let sid = OneSid::get_sid_spellbound();
         return sid.to_sidmodule();
     }
 }
