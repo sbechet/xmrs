@@ -111,7 +111,7 @@ impl InstrHelper {
 
     fn sid_to_xi(sid: &SidVoice) -> InstrDefault {
         // let adr_frames = Self::gen_adr_frames(125, 2);
-        let adr_frames: [u16; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let adr_frames: [usize; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
         // ADSR
         let attack = (sid.ad >> 4) & 0x0F;
@@ -120,7 +120,7 @@ impl InstrHelper {
         let release = sid.sr & 0x0F;
 
         let mut point: Vec<EnvelopePoint> = vec![];
-        let mut seek: u16 = 0;
+        let mut seek: usize = 0;
         let mut seek_point = 0;
 
         if attack != 0 {

@@ -129,9 +129,9 @@ impl XmInstrDefault {
 
                 xmid.volume_envelope = Self::from_envelope(&id.volume_envelope);
                 xmid.number_of_volume_points = id.volume_envelope.point.len() as u8;
-                xmid.volume_sustain_point = id.volume_envelope.sustain_point;
-                xmid.volume_loop_start_point = id.volume_envelope.loop_start_point;
-                xmid.volume_loop_end_point = id.volume_envelope.loop_end_point;
+                xmid.volume_sustain_point = id.volume_envelope.sustain_point as u8;
+                xmid.volume_loop_start_point = id.volume_envelope.loop_start_point as u8;
+                xmid.volume_loop_end_point = id.volume_envelope.loop_end_point as u8;
                 if id.volume_envelope.enabled {
                     xmid.volume_flag |= 0b0001;
                 }
@@ -144,9 +144,9 @@ impl XmInstrDefault {
 
                 xmid.panning_envelope = Self::from_envelope(&id.panning_envelope);
                 xmid.number_of_panning_points = id.panning_envelope.point.len() as u8;
-                xmid.panning_sustain_point = id.panning_envelope.sustain_point;
-                xmid.panning_loop_start_point = id.panning_envelope.loop_start_point;
-                xmid.panning_loop_end_point = id.panning_envelope.loop_end_point;
+                xmid.panning_sustain_point = id.panning_envelope.sustain_point as u8;
+                xmid.panning_loop_start_point = id.panning_envelope.loop_start_point as u8;
+                xmid.panning_loop_end_point = id.panning_envelope.loop_end_point as u8;
                 if id.panning_envelope.enabled {
                     xmid.panning_flag |= 0b0001;
                 }
@@ -333,7 +333,7 @@ impl XmInstrument {
             .map(|chunk| u16::from_le_bytes([chunk[0], chunk[1]]));
         for _i in 0..src.len() / 4 {
             let ep = EnvelopePoint {
-                frame: iter.next()?,
+                frame: iter.next()? as usize,
                 value: iter.next()? as f32 / 64.0,
             };
             e.point.push(ep);
@@ -343,9 +343,9 @@ impl XmInstrument {
 
     fn is_envelope_nok(e: &Envelope) -> bool {
         e.point.len() > 12
-            || e.sustain_point >= e.point.len() as u8
-            || e.loop_start_point >= e.point.len() as u8
-            || e.loop_end_point >= e.point.len() as u8
+            || e.sustain_point >= e.point.len()
+            || e.loop_start_point >= e.point.len()
+            || e.loop_end_point >= e.point.len()
             || e.loop_start_point > e.loop_end_point
     }
 
@@ -389,10 +389,10 @@ impl XmInstrument {
                     let ve = &mut id.volume_envelope;
                     ve.enabled = xmi.volume_flag & 0b0001 != 0;
                     ve.sustain_enabled = xmi.volume_flag & 0b0010 != 0;
-                    ve.sustain_point = xmi.volume_sustain_point;
+                    ve.sustain_point = xmi.volume_sustain_point as usize;
                     ve.loop_enabled = xmi.volume_flag & 0b0100 != 0;
-                    ve.loop_start_point = xmi.volume_loop_start_point;
-                    ve.loop_end_point = xmi.volume_loop_end_point;
+                    ve.loop_start_point = xmi.volume_loop_start_point as usize;
+                    ve.loop_end_point = xmi.volume_loop_end_point as usize;
                 }
 
                 // copy panning envelope data
@@ -400,10 +400,10 @@ impl XmInstrument {
                     let pe = &mut id.panning_envelope;
                     pe.enabled = xmi.panning_flag & 0b0001 != 0;
                     pe.sustain_enabled = xmi.panning_flag & 0b0010 != 0;
-                    pe.sustain_point = xmi.panning_sustain_point;
+                    pe.sustain_point = xmi.panning_sustain_point as usize;
                     pe.loop_enabled = xmi.panning_flag & 0b0100 != 0;
-                    pe.loop_start_point = xmi.panning_loop_start_point;
-                    pe.loop_end_point = xmi.panning_loop_end_point;
+                    pe.loop_start_point = xmi.panning_loop_start_point as usize;
+                    pe.loop_end_point = xmi.panning_loop_end_point as usize;
                 }
 
                 // cleanup bad envelope

@@ -5,14 +5,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Default, Serialize, Deserialize, Copy, Clone, Debug)]
 pub struct EnvelopePoint {
     /// Frame number of the point (X-coordinate)
-    pub frame: u16,
+    pub frame: usize,
     /// Value of the point (Y-coordinate)
     pub value: f32,
 }
 
 impl EnvelopePoint {
     /// Linear interpolation between two envelope points
-    pub fn lerp(a: &EnvelopePoint, b: &EnvelopePoint, pos: u16) -> f32 {
+    pub fn lerp(a: &EnvelopePoint, b: &EnvelopePoint, pos: usize) -> f32 {
         if pos <= a.frame {
             return a.value;
         } else if pos >= b.frame {
@@ -33,11 +33,11 @@ pub struct Envelope {
 
     pub sustain_enabled: bool,
     /// index in `point`
-    pub sustain_point: u8,
+    pub sustain_point: usize,
 
     pub loop_enabled: bool,
     /// index in `point`
-    pub loop_start_point: u8,
+    pub loop_start_point: usize,
     /// index in `point`
-    pub loop_end_point: u8,
+    pub loop_end_point: usize,
 }
