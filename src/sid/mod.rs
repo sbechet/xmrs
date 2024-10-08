@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 
-pub mod instr_helper;
-pub mod one_sid;
-pub mod pattern_helper;
+pub(crate) mod instr_helper;
+pub(crate) mod one_sid;
+pub(crate) mod pattern_helper;
 pub mod sid_module;
-pub mod sound_fx;
+pub(crate) mod sound_fx;

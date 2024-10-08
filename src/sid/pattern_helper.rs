@@ -24,7 +24,7 @@ impl PatternHelper {
         }
     }
 
-    fn get_track(&self, track_index: usize, source: &Vec<u8>) -> Vec<PatternSlot> {
+    fn get_track(&self, _track_index: usize, source: &Vec<u8>) -> Vec<PatternSlot> {
         let mut track: Vec<PatternSlot> = vec![];
         let mut index: usize = 0;
         let mut last_instr = 0;
@@ -70,9 +70,10 @@ impl PatternHelper {
                                 last_instr = current.instrument;
                             } else {
                                 if index + 2 >= source.len() {
+                                    #[cfg(feature = "std")]
                                     println!(
                                         "Track {}, International Karate overflow?",
-                                        track_index
+                                        _track_index
                                     );
                                     index -= 2;
                                 } else {
@@ -174,7 +175,19 @@ impl PatternHelper {
         loop {
             let mut trks: Vec<&Vec<PatternSlot>> = vec![];
             for k in 0..po_len {
-                trks.push(&tracks[pattern_order[k][i_n[k]] as usize]);
+                if pattern_order[k][i_n[k]] as usize >= tracks.len() {
+                    #[cfg(feature = "std")]
+                    println!("No way!? {}", pattern_order[k][i_n[k]]);
+                    // special case for commando!?
+                    let what_to_do: usize = match pattern_order[k][i_n[k]] {
+                        111 => 3,
+                        112 => 2,
+                        _ => 0,
+                    };
+                    trks.push(&tracks[what_to_do]);
+                } else {
+                    trks.push(&tracks[pattern_order[k][i_n[k]] as usize]);
+                }
             }
             let mut trks_total_len = trks.iter().map(|sublist| sublist.len()).max().unwrap_or(0);
             let mut pattern: Vec<Vec<PatternSlot>> = vec![];
@@ -188,7 +201,19 @@ impl PatternHelper {
                             i_n[k] = 0;
                         }
                         j[k] = 0;
-                        trks[k] = &tracks[pattern_order[k][i_n[k]] as usize];
+                        if pattern_order[k][i_n[k]] as usize >= tracks.len() {
+                            #[cfg(feature = "std")]
+                            println!("No way!? {}", pattern_order[k][i_n[k]]);
+                            // special case for commando!?
+                            let what_to_do: usize = match pattern_order[k][i_n[k]] {
+                                111 => 3,
+                                112 => 2,
+                                _ => 0,
+                            };
+                            trks[k] = &tracks[what_to_do];
+                        } else {
+                            trks[k] = &tracks[pattern_order[k][i_n[k]] as usize];
+                        }
                         if trks[k].len() > trks_total_len {
                             trks_total_len = trks[k].len();
                         }

@@ -141,8 +141,8 @@ impl OneSid {
             re.pw_speed = (self.song[start + 6] & mask_hi) as i8;
 
             //FIXME
-            let commando_change_pw_effect = (self.song[start + 7] & 0b0000_1000) != 0;
-            let fx_use = (self.song[start + 7] & 0b00_111_000) >> 3;
+            let _commando_change_pw_effect = (self.song[start + 7] & 0b0000_1000) != 0;
+            let _fx_use = (self.song[start + 7] & 0b00_111_000) >> 3;
             if self.song[start + 7] & 0b0000_0001 != 0 {
                 re.drum = true;
             }
