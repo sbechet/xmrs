@@ -111,7 +111,7 @@ impl XmInstrDefault {
         let mut i = 0;
         for ep in &e.point {
             let f = ep.frame.to_le_bytes();
-            let v = ep.value.to_le_bytes();
+            let v = ((64.0 * ep.value) as u16).to_le_bytes();
             dst[i] = f[0];
             dst[i + 1] = f[1];
             dst[i + 2] = v[0];
@@ -334,7 +334,7 @@ impl XmInstrument {
         for _i in 0..src.len() / 4 {
             let ep = EnvelopePoint {
                 frame: iter.next()?,
-                value: iter.next()?,
+                value: iter.next()? as f32 / 64.0,
             };
             e.point.push(ep);
         }

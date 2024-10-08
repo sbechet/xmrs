@@ -7,19 +7,19 @@ pub struct EnvelopePoint {
     /// Frame number of the point (X-coordinate)
     pub frame: u16,
     /// Value of the point (Y-coordinate)
-    pub value: u16,
+    pub value: f32,
 }
 
 impl EnvelopePoint {
     /// Linear interpolation between two envelope points
     pub fn lerp(a: &EnvelopePoint, b: &EnvelopePoint, pos: u16) -> f32 {
         if pos <= a.frame {
-            return a.value as f32;
+            return a.value;
         } else if pos >= b.frame {
-            return b.value as f32;
+            return b.value;
         } else {
             let p: f32 = (pos - a.frame) as f32 / (b.frame - a.frame) as f32;
-            return a.value as f32 * (1.0 - p) + b.value as f32 * p;
+            return a.value * (1.0 - p) + b.value * p;
         }
     }
 }

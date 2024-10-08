@@ -125,17 +125,17 @@ impl InstrHelper {
 
         if attack != 0 {
             let attack_frame = adr_frames[attack as usize];
-            point.push(EnvelopePoint { frame: 0, value: 0 });
+            point.push(EnvelopePoint { frame: 0, value: 0.0 });
             seek += attack_frame;
             point.push(EnvelopePoint {
                 frame: attack_frame,
-                value: 64,
+                value: 1.0,
             });
             seek_point = 1;
         } else {
             point.push(EnvelopePoint {
                 frame: 0,
-                value: 64,
+                value: 1.0,
             });
         }
 
@@ -146,7 +146,7 @@ impl InstrHelper {
         }
         point.push(EnvelopePoint {
             frame: seek,
-            value: sustain as u16 * 4,
+            value: 4.0 * sustain as f32 / 64.0,
         });
         seek_point += 1;
 
@@ -157,7 +157,7 @@ impl InstrHelper {
         }
         point.push(EnvelopePoint {
             frame: seek,
-            value: 0,
+            value: 0.0,
         });
 
         let volume_envelope = Envelope {

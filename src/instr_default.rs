@@ -13,8 +13,8 @@ use alloc::{vec, vec::Vec};
 pub struct InstrDefault {
     #[serde(with = "BigArray")]
     pub sample_for_note: [u8; 96],
-    pub volume_envelope: Envelope, // Envelope.points[].value: 0x00..0x3F
-    pub panning_envelope: Envelope, // Envelope.points[].value: 0x00..0x3F
+    pub volume_envelope: Envelope, // Envelope.points[].value: 0.0..1.0
+    pub panning_envelope: Envelope, // Envelope.points[].value: 0.0..1.0
     pub vibrato: InstrVibrato,
     pub volume_fadeout: f32, // 0.0..1.0
     pub sample: Vec<Sample>,
