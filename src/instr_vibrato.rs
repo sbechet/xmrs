@@ -22,7 +22,7 @@ impl Waveform {
     pub fn value(&self, step: f32) -> f32 {
         let step = step % 1.0;
         return match &self {
-            Waveform::Sine => 0.5 + 0.5 * (core::f32::consts::TAU * step).sin(),
+            Waveform::Sine => 0.5 + 0.5 * (core::f32::consts::TAU * (step + 0.25)).sin(),
             Waveform::Square => {
                 if step < 0.5 {
                     1.0
