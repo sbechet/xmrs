@@ -12,7 +12,7 @@ use super::serde_helper::{deserialize_string_22, serialize_string_22};
 
 use super::xminstrument::{
     XmInstrDefault, XmInstrument, XmInstrumentHeader, XmInstrumentType, XMINSTRDEFAULT_SIZE,
-    XMINSTRUMENT_SIZE,
+    XMINSTRUMENT_HEADER_SIZE,
 };
 use super::xmsample::{XmSample, XMSAMPLE_HEADER_SIZE};
 
@@ -74,7 +74,6 @@ impl XiInstrument {
         //---
 
         let header = XmInstrumentHeader {
-            instrument_header_len: XMINSTRUMENT_SIZE as u32,
             name: xi.header.name,
             instr_type: 0,
             num_samples: xi.num_samples,
@@ -82,6 +81,7 @@ impl XiInstrument {
 
         if xi.num_samples == 0 {
             let xmi = XmInstrument {
+                instrument_header_len: 4 + XMINSTRUMENT_HEADER_SIZE as u32,
                 header: header,
                 sample_header_size: XMSAMPLE_HEADER_SIZE as u32,
                 instr: XmInstrumentType::Default(Box::new(xi.instr)),
@@ -106,6 +106,7 @@ impl XiInstrument {
         }
 
         let xmi = XmInstrument {
+            instrument_header_len: 4 + XMINSTRUMENT_HEADER_SIZE as u32,
             header: header,
             sample_header_size: XMSAMPLE_HEADER_SIZE as u32,
             instr: XmInstrumentType::Default(Box::new(xi.instr)),
