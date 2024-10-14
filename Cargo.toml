@@ -1,6 +1,6 @@
 [package]
 name = "xmrs"
-version = "0.8.1"
+version = "0.8.2"
 edition = "2021"
 description = "A library to edit SoundTracker data with pleasure "
 license = "MIT"
