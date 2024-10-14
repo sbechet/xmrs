@@ -54,6 +54,14 @@ impl OneSid {
                 tracks.push(self.song[file_offset + j]);
                 j += 1;
             }
+            if self.name == "Delta" {
+                // FIX another historical memory overflow
+                for elem in tracks.iter_mut() {
+                    if *elem == 111 || *elem == 112 {
+                        *elem = 0;
+                    }
+                }
+            }
             channels.push(tracks);
         }
 
